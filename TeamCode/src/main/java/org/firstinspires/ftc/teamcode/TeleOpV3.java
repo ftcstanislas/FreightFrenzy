@@ -1,0 +1,128 @@
+package org.firstinspires.ftc.teamcode.RobotParts;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.io.File;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Hardware;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+
+
+@TeleOp(name="Final OpMode 3.1", group="Iterative Opmode")
+
+public class TeleOpV3 extends OpMode {
+    
+    //get objects
+    TankDrive drivetrain = new TankDrive();
+    Arm arm = new Arm();
+    Intake intake = new Intake();
+    Spinner spinner = new Spinner();
+    
+    // telemetry
+    Telemetry.Item status = null;
+    Telemetry.Item telemetryDrivetrain = null;
+    Telemetry.Item telemetryArm = null;
+    Telemetry.Item telemetryIntake = null;
+    Telemetry.Item telemetrySpinner = null;
+
+    // make runtime
+    ElapsedTime runtime = new ElapsedTime();
+    
+    // shit
+    double previousPos = 0;
+    double countPos = 0;
+    
+    @Override
+    public void init() {
+        
+        
+        //add telemetry
+        telemetry.setAutoClear(false);
+        String startInfo = "";
+        status = telemetry.addData("Status", "X");
+        telemetryDrivetrain = telemetry.addData("Robot", "X");
+        telemetryArm = telemetry.addData("Arm", "X");
+        telemetryIntake = telemetry.addData("Intake", "X");
+        telemetrySpinner = telemetry.addData("Spinner", "X");
+
+        // position
+        // File xFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
+        // File yFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
+        // File OrientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
+        // double x = Double.parseDouble(ReadWriteFile.readFile(xFile).trim());
+        // double y = Double.parseDouble(ReadWriteFile.readFile(yFile).trim());
+        // double o = Double.parseDouble(ReadWriteFile.readFile(OrientationFile).trim());
+        // globalPositionUpdate.setPosition(x,y,o);
+        // positionThread = new Thread(globalPositionUpdate);
+        // positionThread.start();
+        // globalPositionUpdate.reverseNormalEncoder();
+        // globalPositionUpdate.reverseRightEncoder();
+        // globalPositionUpdate.reverseLeftEncoder();
+        
+        //Initialize objects part 2
+        drivetrain.init(hardwareMap, telemetryDrivetrain, runtime);
+        drivetrain.setBrake(true);
+        arm.init(hardwareMap, telemetryArm);
+        intake.init(hardwareMap, telemetryIntake);
+        spinner.init(hardwareMap, telemetrySpinner);
+        
+        status.setValue("Initialized");
+    }
+    
+    @Override
+    public void init_loop() {
+        status.setValue("Init looping");
+    }
+
+    
+    @Override
+    public void start() {
+        status.setValue("Starting");
+        status.setValue("Started");
+    }
+
+    @Override
+    public void loop() {
+        // telemetry
+        status.setValue("Looping for " + runtime.toString());
+        // telemetryDrivetrain.setValue(drivetrain.getDisplay());
+        
+        // WHAT IS THIS
+        // if (Math.abs(previousPos - arm.getArmCurrentPos()) < 1) {
+        //     countPos++;
+        //     if (countPos == 10) {
+        //         motors.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //         status.setValue("doen");
+        //         arm.setGripperPos(1);
+        //     }
+        // } else {
+        //     previousPos = arm.getArmCurrentPos();
+        // }
+        
+        // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
+        // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
+        
+        drivetrain.checkController(gamepad1, gamepad2);
+        arm.checkController(gamepad1, gamepad2);
+        intake.checkController(gamepad1, gamepad2);
+        spinner.checkController(gamepad1, gamepad2);
+        
+
+        // telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        status.setValue("Stopping");
+        
+    }
+
+}
