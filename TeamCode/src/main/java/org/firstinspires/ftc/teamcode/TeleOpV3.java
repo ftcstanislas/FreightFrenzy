@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.RobotParts;
+//comment
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,9 +15,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+import org.firstinspires.ftc.teamcode.RobotParts.Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Intake;
+import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
+import org.firstinspires.ftc.teamcode.RobotParts.TankDrive;
+import org.firstinspires.ftc.teamcode.testing.IMU_test;
 
-
-@TeleOp(name="Final OpMode 3.1", group="Iterative Opmode")
+@TeleOp(name="Final OpMode 3.5", group="Iterative Opmode")
 
 public class TeleOpV3 extends OpMode {
     
@@ -25,6 +30,7 @@ public class TeleOpV3 extends OpMode {
     Arm arm = new Arm();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
+    IMU_test imu = new IMU_test();
     
     // telemetry
     Telemetry.Item status = null;
@@ -32,6 +38,7 @@ public class TeleOpV3 extends OpMode {
     Telemetry.Item telemetryArm = null;
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
+    Telemetry.Item telemetryIMU = null;
 
     // make runtime
     ElapsedTime runtime = new ElapsedTime();
@@ -52,6 +59,7 @@ public class TeleOpV3 extends OpMode {
         telemetryArm = telemetry.addData("Arm", "X");
         telemetryIntake = telemetry.addData("Intake", "X");
         telemetrySpinner = telemetry.addData("Spinner", "X");
+        telemetryIMU = telemetry.addData("IMU angle", "X");
 
         // position
         // File xFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
@@ -69,10 +77,11 @@ public class TeleOpV3 extends OpMode {
         
         //Initialize objects part 2
         drivetrain.init(hardwareMap, telemetryDrivetrain, runtime);
-        drivetrain.setBrake(true);
+//        drivetrain.setBrake(true);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
+        imu.init(hardwareMap, telemetryIMU);
         
         status.setValue("Initialized");
     }
@@ -114,7 +123,7 @@ public class TeleOpV3 extends OpMode {
         arm.checkController(gamepad1, gamepad2);
         intake.checkController(gamepad1, gamepad2);
         spinner.checkController(gamepad1, gamepad2);
-        
+        imu.getRotation();
 
         // telemetry.update();
     }

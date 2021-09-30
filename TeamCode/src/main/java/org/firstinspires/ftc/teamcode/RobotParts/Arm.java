@@ -62,7 +62,7 @@ public class Arm extends RobotPart{
     }
     
     public void setPowerState(boolean tipping){
-        double totalMotorCounts = -1120; // aantal counts per volle rotatie (DIT VERANDEREN PAUL EN KEVIN)
+        double totalMotorCounts = -360; // aantal counts per volle rotatie (DIT VERANDEREN PAUL EN KEVIN)
         double totalServoCounts = 1.6;
         
         // position motor and servo
