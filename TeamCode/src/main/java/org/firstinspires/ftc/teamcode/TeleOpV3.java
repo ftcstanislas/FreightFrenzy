@@ -1,4 +1,3 @@
-//comment
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -135,3 +134,4 @@ public class TeleOpV3 extends OpMode {
     }
 
 }
+// the quick brown fox jumps over the lazy dog
