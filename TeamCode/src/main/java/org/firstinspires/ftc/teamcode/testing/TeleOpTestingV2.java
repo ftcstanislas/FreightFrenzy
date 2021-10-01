@@ -51,9 +51,8 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Testing OpMode 2.0", group="Iterative Opmode")
-@Disabled
-public class TeleOpTestingV2 extends OpMode
-{
+
+public class TeleOpTestingV2 extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor motor = null;
