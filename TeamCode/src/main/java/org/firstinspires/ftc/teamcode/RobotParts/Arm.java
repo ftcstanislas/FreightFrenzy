@@ -51,6 +51,7 @@ public class Arm extends RobotPart{
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
         boolean tipping = false;
+        checkSensorInput();
         if (gamepad1.dpad_up) {
             state = "lvl2";
         } else if (gamepad1.dpad_right) {
@@ -71,7 +72,14 @@ public class Arm extends RobotPart{
 
     public void checkSensorInput() {
         sensorInput.put("red", colorSensor.red());
-
+        sensorInput.put("green", colorSensor.blue());
+        sensorInput.put("blue", colorSensor.blue());
+        sensorInput.put("argb", colorSensor.argb());
+        additionalTelemetry = "\n" + "Color Sensor Input:" +
+                "red: " + sensorInput.get("red") + "\n" +
+                "green: " + sensorInput.get("green") + "\n" +
+                "blue: " + sensorInput.get("blue") + "\n" +
+                "argb: " + sensorInput.get("argb") + "\n";
     }
     
     public void setPowerState(boolean tipping){
@@ -108,7 +116,7 @@ public class Arm extends RobotPart{
         
         updateTelemetry();
     }
-    
+
     public void updateTelemetry(){
         debug();
     }

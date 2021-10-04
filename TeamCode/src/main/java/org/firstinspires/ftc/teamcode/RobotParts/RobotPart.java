@@ -22,6 +22,7 @@ public abstract class RobotPart {
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
     protected Map<String, Double> modes = new HashMap<String, Double>();
+    protected String additionalTelemetry = "";
     
     abstract void updateTelemetry();
     
@@ -44,6 +45,7 @@ public abstract class RobotPart {
             Servo servo = entry.getValue();
             text += "\n" + entry.getKey() + " | servo " + servo.getPosition();
         };
+        text += additionalTelemetry;
         telemetry.setValue(text);
     }
     
