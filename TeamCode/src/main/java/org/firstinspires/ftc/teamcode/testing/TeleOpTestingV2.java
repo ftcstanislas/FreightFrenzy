@@ -64,7 +64,7 @@ public class TeleOpTestingV2 extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        motor  = hardwareMap.get(DcMotor.class, "lifter");
+        motor  = hardwareMap.get(DcMotor.class, "gobilda");
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");

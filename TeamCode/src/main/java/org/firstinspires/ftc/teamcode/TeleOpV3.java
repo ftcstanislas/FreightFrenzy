@@ -103,18 +103,6 @@ public class TeleOpV3 extends OpMode {
         status.setValue("Looping for " + runtime.toString());
         // telemetryDrivetrain.setValue(drivetrain.getDisplay());
         
-        // WHAT IS THIS
-        // if (Math.abs(previousPos - arm.getArmCurrentPos()) < 1) {
-        //     countPos++;
-        //     if (countPos == 10) {
-        //         motors.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //         status.setValue("doen");
-        //         arm.setGripperPos(1);
-        //     }
-        // } else {
-        //     previousPos = arm.getArmCurrentPos();
-        // }
-        
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
@@ -130,7 +118,6 @@ public class TeleOpV3 extends OpMode {
     @Override
     public void stop() {
         status.setValue("Stopping");
-        
     }
 
 }

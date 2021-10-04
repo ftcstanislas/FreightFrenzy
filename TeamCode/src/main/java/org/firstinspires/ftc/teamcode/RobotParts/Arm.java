@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
 import java.util.Arrays;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -18,6 +20,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Arm extends RobotPart{
     
     String state = "input";
+    ColorSensor colorSensor;
+
+    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // set modes
@@ -30,12 +35,15 @@ public class Arm extends RobotPart{
         motors.put("lifter", map.get(DcMotor.class, "lifter"));
         motors.get("lifter").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.get("lifter").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motors.get("lifter").setDirection(DcMotor.Direction.FORWARD);   
+        motors.get("lifter").setDirection(DcMotor.Direction.FORWARD);
         setBrake(true);
         
         
         // get servos
         servos.put("fork", map.get(Servo.class, "fork"));
+
+        // get sensors
+        colorSensor = map.get(ColorSensor.class, "color_sensor");
 
         // setup
         telemetry = telemetryInit;
@@ -60,9 +68,14 @@ public class Arm extends RobotPart{
         // set power
         setPowerState(tipping);
     }
+
+    public void checkSensorInput() {
+        sensorInput.put("red", colorSensor.red());
+
+    }
     
     public void setPowerState(boolean tipping){
-        double totalMotorCounts = -360; // aantal counts per volle rotatie (DIT VERANDEREN PAUL EN KEVIN)
+        double totalMotorCounts = -1100;
         double totalServoCounts = 1.6;
         
         // position motor and servo

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
 import java.util.Arrays;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -51,9 +53,6 @@ public class Intake extends RobotPart{
         if (gamepad1.a) {
             motors.get("intake").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             setPower(1);
-            // } else {
-            //     targetPos = Math.round(motors.get("intake").getCurrentPosition()) * 300;
-            // }
         } else {
             //288
             double rotateAmount = motors.get("intake").getCurrentPosition() / 288.0;
