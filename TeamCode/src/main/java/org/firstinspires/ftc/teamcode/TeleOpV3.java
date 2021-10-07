@@ -19,8 +19,9 @@ import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.RobotParts.TankDrive;
 import org.firstinspires.ftc.teamcode.testing.IMU_test;
+import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
-@TeleOp(name="Final OpMode 3.5", group="Iterative Opmode")
+@TeleOp(name="Final OpMode 3.6", group="Iterative Opmode")
 
 public class TeleOpV3 extends OpMode {
     
@@ -30,6 +31,7 @@ public class TeleOpV3 extends OpMode {
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
     IMU_test imu = new IMU_test();
+    Camera camera = new Camera(); // Dit afmaken later
     
     // telemetry
     Telemetry.Item status = null;
@@ -76,7 +78,7 @@ public class TeleOpV3 extends OpMode {
         
         //Initialize objects part 2
         drivetrain.init(hardwareMap, telemetryDrivetrain, runtime);
-//        drivetrain.setBrake(true);
+        //drivetrain.setBrake(true);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
