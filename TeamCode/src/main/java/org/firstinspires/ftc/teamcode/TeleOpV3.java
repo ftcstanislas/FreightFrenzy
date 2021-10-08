@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.Location;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.RobotParts.TankDrive;
+import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import org.firstinspires.ftc.teamcode.testing.IMU_test;
 import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
@@ -34,6 +35,7 @@ public class TeleOpV3 extends OpMode {
     Spinner spinner = new Spinner();
     Location location = new Location();
     Camera camera = new Camera(); // Dit afmaken later
+    ColorDetector colorSensor = new ColorDetector();
     
     // telemetry
     Telemetry.Item status = null;
@@ -42,6 +44,7 @@ public class TeleOpV3 extends OpMode {
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
     Telemetry.Item telemetryLocation = null;
+    Telemetry.Item telemetryColorSensor = null;
 
     // make runtime
     ElapsedTime runtime = new ElapsedTime();
@@ -57,6 +60,7 @@ public class TeleOpV3 extends OpMode {
         telemetryIntake = telemetry.addData("Intake", "X");
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
+        telemetryColorSensor = telemetry.addData("Color Sensor", "X");
 
         // position
         // File xFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
@@ -108,6 +112,7 @@ public class TeleOpV3 extends OpMode {
 //        arm.checkController(gamepad1, gamepad2);
 //        intake.checkController(gamepad1, gamepad2);
 //        spinner.checkController(gamepad1, gamepad2);
+        colorSensor.update();
         location.updateTelemetry();
 
     }

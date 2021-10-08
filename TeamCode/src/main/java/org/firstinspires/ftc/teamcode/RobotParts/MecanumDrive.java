@@ -42,6 +42,7 @@ public class MecanumDrive extends RobotPart{
 
         // turning
         double turning = gamepad1.left_trigger - gamepad1.right_trigger;
+
         turning = turning*Math.abs(turning); //experimental
         if (gamepad1.x){
             turning *= 0.45;
