@@ -16,8 +16,11 @@ import com.qualcomm.robotcore.util.ReadWriteFile;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.RobotParts.Arm;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
+import org.firstinspires.ftc.teamcode.RobotParts.Location;
+import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.RobotParts.TankDrive;
+import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import org.firstinspires.ftc.teamcode.testing.IMU_test;
 import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
@@ -26,12 +29,13 @@ import org.firstinspires.ftc.teamcode.Sensors.Camera;
 public class TeleOpV3 extends OpMode {
     
     //get objects
-    TankDrive drivetrain = new TankDrive();
+    MecanumDrive drivetrain = new MecanumDrive();
     Arm arm = new Arm();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
-    IMU_test imu = new IMU_test();
+    Location location = new Location();
     Camera camera = new Camera(); // Dit afmaken later
+    ColorDetector colorSensor = new ColorDetector();
     
     // telemetry
     Telemetry.Item status = null;
@@ -39,28 +43,24 @@ public class TeleOpV3 extends OpMode {
     Telemetry.Item telemetryArm = null;
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
-    Telemetry.Item telemetryIMU = null;
+    Telemetry.Item telemetryLocation = null;
+    Telemetry.Item telemetryColorSensor = null;
 
     // make runtime
     ElapsedTime runtime = new ElapsedTime();
     
-    // shit
-    double previousPos = 0;
-    double countPos = 0;
-    
     @Override
     public void init() {
         
-        
         //add telemetry
         telemetry.setAutoClear(false);
-        String startInfo = "";
         status = telemetry.addData("Status", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
         telemetryArm = telemetry.addData("Arm", "X");
         telemetryIntake = telemetry.addData("Intake", "X");
         telemetrySpinner = telemetry.addData("Spinner", "X");
-        telemetryIMU = telemetry.addData("IMU angle", "X");
+        telemetryLocation = telemetry.addData("Location", "X");
+        telemetryColorSensor = telemetry.addData("Color Sensor", "X");
 
         // position
         // File xFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
@@ -77,12 +77,12 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.reverseLeftEncoder();
         
         //Initialize objects part 2
-        drivetrain.init(hardwareMap, telemetryDrivetrain, runtime);
-        //drivetrain.setBrake(true);
-        arm.init(hardwareMap, telemetryArm);
-        intake.init(hardwareMap, telemetryIntake);
-        spinner.init(hardwareMap, telemetrySpinner);
-        imu.init(hardwareMap, telemetryIMU);
+        drivetrain.init(hardwareMap, telemetryDrivetrain, location);
+        drivetrain.setBrake(true);
+//        arm.init(hardwareMap, telemetryArm);
+//        intake.init(hardwareMap, telemetryIntake);
+//        spinner.init(hardwareMap, telemetrySpinner);
+        location.init(hardwareMap, telemetryLocation);
         
         status.setValue("Initialized");
     }
@@ -109,12 +109,12 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
         drivetrain.checkController(gamepad1, gamepad2);
-        arm.checkController(gamepad1, gamepad2);
-        intake.checkController(gamepad1, gamepad2);
-        spinner.checkController(gamepad1, gamepad2);
-        imu.getRotation();
+//        arm.checkController(gamepad1, gamepad2);
+//        intake.checkController(gamepad1, gamepad2);
+//        spinner.checkController(gamepad1, gamepad2);
+        colorSensor.update();
+        location.updateTelemetry();
 
-        // telemetry.update();
     }
 
     @Override
