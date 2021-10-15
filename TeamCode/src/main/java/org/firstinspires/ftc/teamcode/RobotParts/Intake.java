@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 import java.util.Arrays;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -17,49 +18,36 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public class Intake extends RobotPart{
-    
-    double[] modes = {0,1};
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // get motors
         motors.put("intake", map.get(DcMotor.class, "intake"));
-        motors.get("intake").setDirection(DcMotor.Direction.REVERSE);
-        motors.get("intake").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motors.get("intake").setDirection(DcMotor.Direction.FORWARD);
+//        motors.get("intake").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setBrake(true);
+
+        // set modes
+        modes.put("stop", new double[] {0.0});
+        modes.put("intaking", new double[] {1.0});
         
         // setup
         telemetry = telemetryInit;
+
+        setMode("stop");
     }
     
-    // public void setMode(int mode) {
-    //     double speed = modes[mode];
-    //     setPower(speed);
-    // }
-    
-    // public double getPower() {
-    //     return motors.get("intake").getPower();
-    // }
-    
-    // public void switchMode() {
-    //     if (getPower() != modes[0]) {
-    //         setMode(0);
-    //     } else {
-    //         setMode(1);
-    //     }
-    // }
-    
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
+        switchMode(gamepad1.a, "stop","intaking");
         // speed
-        if (gamepad1.a) {
-            motors.get("intake").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            setPower(1);
-        } else {
-            //288
-            double rotateAmount = motors.get("intake").getCurrentPosition() / 288.0;
-            double targetPos = 288 * Math.round(rotateAmount);
-            motors.get("intake").setTargetPosition((int) targetPos);
-            motors.get("intake").setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+//        if (gamepad1.a) {
+//            motors.get("intake").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            setPower(1);
+//        } else {
+//            double rotateAmount = motors.get("intake").getCurrentPosition() / 288.0;
+//            double targetPos = 288 * Math.round(rotateAmount);
+//            motors.get("intake").setTargetPosition((int) targetPos);
+//            motors.get("intake").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        }
     }
     
     public void updateTelemetry() {

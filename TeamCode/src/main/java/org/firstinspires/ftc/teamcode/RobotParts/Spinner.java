@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,8 +24,8 @@ public class Spinner extends RobotPart{
         setBrake(true);
 
         // set modes
-        modes.put("stop",0.0);
-        modes.put("spin",1.0);
+        modes.put("stop", new double[] {0.0});
+        modes.put("spin", new double[] {1.0});
         
         // setup telemetry
         telemetry = telemetryInit;

@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,7 +25,7 @@ public abstract class RobotPart {
     protected Telemetry.Item telemetry = null;
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
-    protected Map<String, Double> modes = new HashMap<String, Double>();
+    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
     protected String currentMode = "";
     protected String additionalTelemetry = "";
     
@@ -32,6 +35,9 @@ public abstract class RobotPart {
     
     protected void debug(){
         String text = "";
+        if (currentMode != ""){
+            text += "\nCurrent mode: "+currentMode;
+        }
         for (Map.Entry<String, DcMotor> entry : motors.entrySet()){
             DcMotor motor = entry.getValue();
             DcMotor.RunMode mode = motor.getMode();
@@ -57,6 +63,14 @@ public abstract class RobotPart {
         };
         updateTelemetry();
     }
+
+    protected void setPowers(double[] powers){
+        int index = 0;
+        for (DcMotor motor : motors.values()){
+            motor.setPower(powers[index]);
+            index+=1;
+        };
+    }
     
     public void setBrake(boolean check){
         DcMotor.ZeroPowerBehavior option;
@@ -73,7 +87,7 @@ public abstract class RobotPart {
     public void setMode(String mode){
         if (modes.containsKey(mode)){
             if (currentMode != mode){
-                setPower(modes.get(mode));
+                setPowers(modes.get(mode));
                 updateTelemetry();
             }
             currentMode = mode;

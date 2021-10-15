@@ -26,10 +26,10 @@ public class Arm extends RobotPart{
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // set modes
-        modes.put("lvl1", 1.5 * Math.PI);
-        modes.put("lvl2", 1.3 * Math.PI);
-        modes.put("lvl3", 0.9 * Math.PI);
-        modes.put("input", 0 * Math.PI);
+//        modes.put("lvl1", 1.5 * Math.PI);
+//        modes.put("lvl2", 1.3 * Math.PI);
+//        modes.put("lvl3", 0.9 * Math.PI);
+//        modes.put("input", 0 * Math.PI);
         
         // get motors
         motors.put("lifter", map.get(DcMotor.class, "lifter"));
@@ -87,7 +87,7 @@ public class Arm extends RobotPart{
         double totalServoCounts = 1.6;
         
         // position motor and servo
-        double radians = modes.get(state);
+        double radians = 0;//modes.get(state);
         double positionLifter = totalMotorCounts * (radians / (2 * Math.PI));
         double radiansLifter = motors.get("lifter").getCurrentPosition()/totalMotorCounts * (2 * Math.PI);
         double positionFork;
