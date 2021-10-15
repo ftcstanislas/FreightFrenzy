@@ -14,7 +14,7 @@ public class Odometry{
     //Position variables used for storage and calculations
     double verticalRightEncoderWheelPosition = 0, verticalLeftEncoderWheelPosition = 0, normalEncoderWheelPosition = 0,  changeInRobotOrientation = 0;
     private double robotGlobalXCoordinatePosition = 0, robotGlobalYCoordinatePosition = 0, robotOrientationRadians = 0;
-    private double previousVerticalRightEncoderWheelPosition = 0, previousVerticalLeftEncoderWheelPosition = 0, prevNormalEncoderWheelPosition = 0;
+    private double previousVerticalRightEncoderWheelPosition = 0, previousVerticalLeftEncoderWheelPosition = 0, previousNormalEncoderWheelPosition = 0;
 
     //Algorithm constants
     private double robotEncoderWheelDistance;
@@ -43,6 +43,10 @@ public class Odometry{
         this.verticalEncoderRight = verticalEncoderRight;
         this.horizontalEncoder = horizontalEncoder;
 
+        previousVerticalRightEncoderWheelPosition = (verticalEncoderRight.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
+        previousVerticalLeftEncoderWheelPosition = (verticalEncoderLeft.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
+        previousNormalEncoderWheelPosition = (horizontalEncoder.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
+
         robotEncoderWheelDistance = Double.parseDouble(ReadWriteFile.readFile(wheelBaseSeparationFile).trim()) * COUNTS_PER_INCH;
         this.horizontalEncoderTickPerDegreeOffset = Double.parseDouble(ReadWriteFile.readFile(horizontalTickOffsetFile).trim());
 
@@ -65,7 +69,7 @@ public class Odometry{
 
         //Get the components of the motion
         normalEncoderWheelPosition = (horizontalEncoder.getCurrentPosition()*normalEncoderPositionMultiplier);
-        double rawHorizontalChange = normalEncoderWheelPosition - prevNormalEncoderWheelPosition;
+        double rawHorizontalChange = normalEncoderWheelPosition - previousNormalEncoderWheelPosition;
         double horizontalChange = rawHorizontalChange - (changeInRobotOrientation*horizontalEncoderTickPerDegreeOffset);
 
         double p = ((rightChange + leftChange) / 2);
@@ -77,7 +81,7 @@ public class Odometry{
 
         previousVerticalLeftEncoderWheelPosition = verticalLeftEncoderWheelPosition;
         previousVerticalRightEncoderWheelPosition = verticalRightEncoderWheelPosition;
-        prevNormalEncoderWheelPosition = normalEncoderWheelPosition;
+        previousNormalEncoderWheelPosition = normalEncoderWheelPosition;
     }
 
     // set position
