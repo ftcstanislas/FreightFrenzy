@@ -78,6 +78,7 @@ public class TeleOpV3 extends OpMode {
 //        arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
+//        colorSensor.init(hardwareMap, telemetryColorSensor);
 
         status.setValue("Initialized");
     }
