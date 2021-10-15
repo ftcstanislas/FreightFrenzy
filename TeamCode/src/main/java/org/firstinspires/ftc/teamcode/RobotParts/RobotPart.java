@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,11 +20,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public abstract class RobotPart {
+    private boolean isSwitchPressed = false;
     
     protected Telemetry.Item telemetry = null;
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
-    protected Map<String, Double> modes = new HashMap<String, Double>();
+    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
+    protected String currentMode = "";
     protected String additionalTelemetry = "";
     
     abstract void updateTelemetry();
@@ -30,6 +35,9 @@ public abstract class RobotPart {
     
     protected void debug(){
         String text = "";
+        if (currentMode != ""){
+            text += "\nCurrent mode: "+currentMode;
+        }
         for (Map.Entry<String, DcMotor> entry : motors.entrySet()){
             DcMotor motor = entry.getValue();
             DcMotor.RunMode mode = motor.getMode();
@@ -55,6 +63,14 @@ public abstract class RobotPart {
         };
         updateTelemetry();
     }
+
+    protected void setPowers(double[] powers){
+        int index = 0;
+        for (DcMotor motor : motors.values()){
+            motor.setPower(powers[index]);
+            index+=1;
+        };
+    }
     
     public void setBrake(boolean check){
         DcMotor.ZeroPowerBehavior option;
@@ -66,6 +82,31 @@ public abstract class RobotPart {
         for (DcMotor motor : motors.values()){
             motor.setZeroPowerBehavior(option);
         };
+    }
+
+    public void setMode(String mode){
+        if (modes.containsKey(mode)){
+            if (currentMode != mode){
+                setPowers(modes.get(mode));
+                updateTelemetry();
+            }
+            currentMode = mode;
+        } else {
+            telemetry.setValue("Mode "+mode+" doesn't exit");
+        }
+    }
+
+    public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
+        if (trigger && !isSwitchPressed){
+            isSwitchPressed = true;
+            if (currentMode != defaultMode){
+                setMode(defaultMode);
+            } else {
+                setMode(alternativeMode);
+            }
+        } else if (!trigger){
+            isSwitchPressed = false;
+        }
     }
 }
 
