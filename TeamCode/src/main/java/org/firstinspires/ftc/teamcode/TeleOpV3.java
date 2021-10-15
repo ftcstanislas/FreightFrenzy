@@ -112,7 +112,7 @@ public class TeleOpV3 extends OpMode {
 //        arm.checkController(gamepad1, gamepad2);
 //        intake.checkController(gamepad1, gamepad2);
 //        spinner.checkController(gamepad1, gamepad2);
-        colorSensor.update();
+//        colorSensor.update();
         location.updateTelemetry();
 
     }

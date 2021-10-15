@@ -36,6 +36,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -50,21 +54,28 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Testing OpMode 2.0", group="Iterative Opmode")
+@TeleOp(name="Motors test", group="testing")
 
-public class TeleOpTestingV2 extends OpMode {
+public class MotorsTest extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor motor = null;
+    Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initializing");
 
-        motor = hardwareMap.get(DcMotor.class, "arm");
+        List<DcMotor> allMotors = null;
+        allMotors = hardwareMap.getAll(DcMotor.class);
+        for (DcMotor motor : allMotors) {
+            String name = hardwareMap.getNamesOf(motor).iterator().next();
+            motors.put(name, motor);
+//            telemetry.addData("motor",name);
+        }
+//        motor = hardwareMap.get(DcMotor.class, "arm");
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -92,12 +103,15 @@ public class TeleOpTestingV2 extends OpMode {
     public void loop() {
 
         double power = gamepad1.right_stick_y;
-
-        motor.setPower(power);
+        for (Map.Entry<String, DcMotor> entry : motors.entrySet()) {
+            DcMotor motor = entry.getValue();
+            String name = entry.getKey();
+            motor.setPower(power);
+            telemetry.addData(name, power);
+        }
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "power (%.2f)", power);
     }
 
     /*
