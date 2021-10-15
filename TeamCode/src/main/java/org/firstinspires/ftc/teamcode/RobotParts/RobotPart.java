@@ -17,11 +17,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public abstract class RobotPart {
+    private boolean isSwitchPressed = false;
     
     protected Telemetry.Item telemetry = null;
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
     protected Map<String, Double> modes = new HashMap<String, Double>();
+    protected String currentMode = "";
     protected String additionalTelemetry = "";
     
     abstract void updateTelemetry();
@@ -66,6 +68,31 @@ public abstract class RobotPart {
         for (DcMotor motor : motors.values()){
             motor.setZeroPowerBehavior(option);
         };
+    }
+
+    public void setMode(String mode){
+        if (modes.containsKey(mode)){
+            if (currentMode != mode){
+                setPower(modes.get(mode));
+                updateTelemetry();
+            }
+            currentMode = mode;
+        } else {
+            telemetry.setValue("Mode "+mode+" doesn't exit");
+        }
+    }
+
+    public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
+        if (trigger && !isSwitchPressed){
+            isSwitchPressed = true;
+            if (currentMode != defaultMode){
+                setMode(defaultMode);
+            } else {
+                setMode(alternativeMode);
+            }
+        } else if (!trigger){
+            isSwitchPressed = false;
+        }
     }
 }
 

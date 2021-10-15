@@ -21,18 +21,19 @@ public class Spinner extends RobotPart{
         // get motors
         motors.put("spinner", map.get(DcMotor.class, "spinner"));
         setBrake(true);
+
+        // set modes
+        modes.put("stop",0.0);
+        modes.put("spin",1.0);
         
-        // setup
+        // setup telemetry
         telemetry = telemetryInit;
+
+        setMode("stop");
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        // speed
-        if (gamepad1.b) {
-            setPower(1);
-        } else {
-            setPower(0);
-        }
+        switchMode(gamepad1.b, "stop","spin");
     }
     
     public void updateTelemetry(){

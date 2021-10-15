@@ -77,11 +77,11 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.reverseLeftEncoder();
         
         //Initialize objects part 2
-        drivetrain.init(hardwareMap, telemetryDrivetrain, location);
-        drivetrain.setBrake(true);
+//        drivetrain.init(hardwareMap, telemetryDrivetrain, location);
+//        drivetrain.setBrake(true);
 //        arm.init(hardwareMap, telemetryArm);
 //        intake.init(hardwareMap, telemetryIntake);
-//        spinner.init(hardwareMap, telemetrySpinner);
+        spinner.init(hardwareMap, telemetrySpinner);
         location.init(hardwareMap, telemetryLocation);
         
         status.setValue("Initialized");
@@ -103,15 +103,14 @@ public class TeleOpV3 extends OpMode {
     public void loop() {
         // telemetry
         status.setValue("Looping for " + runtime.toString());
-        // telemetryDrivetrain.setValue(drivetrain.getDisplay());
-        
+
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
-        drivetrain.checkController(gamepad1, gamepad2);
+//        drivetrain.checkController(gamepad1, gamepad2);
 //        arm.checkController(gamepad1, gamepad2);
 //        intake.checkController(gamepad1, gamepad2);
-//        spinner.checkController(gamepad1, gamepad2);
+        spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         location.updateTelemetry();
 
