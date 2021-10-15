@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Location {
     private Odometry odometry = null;
     private IMU IMU = null;
-    private Camera camera = null;
+//    private Camera camera = null;
     private Telemetry.Item telemetry = null;
 
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit){
@@ -22,8 +22,8 @@ public class Location {
         IMU = new IMU();
         IMU.init(hardwareMap);
 
-        camera = new Camera();
-        camera.init(hardwareMap, telemetryInit);
+//        camera = new Camera();
+//        camera.init(hardwareMap, telemetryInit);
         telemetry = telemetryInit;
     }
 
