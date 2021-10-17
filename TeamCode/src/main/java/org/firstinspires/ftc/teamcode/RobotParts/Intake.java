@@ -22,7 +22,7 @@ public class Intake extends RobotPart{
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // get motors
         motors.put("intake", map.get(DcMotor.class, "intake"));
-        motors.get("intake").setDirection(DcMotor.Direction.FORWARD);
+        motors.get("intake").setDirection(DcMotor.Direction.REVERSE);
 //        motors.get("intake").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setBrake(true);
 
@@ -37,8 +37,9 @@ public class Intake extends RobotPart{
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.a, "stop","intaking");
+        switchMode(gamepad1.b, "stop","intaking");
         // speed
+        setPowers(modes.get(currentMode));
 //        if (gamepad1.a) {
 //            motors.get("intake").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //            setPower(1);

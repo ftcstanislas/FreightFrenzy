@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Location;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -16,6 +17,7 @@ public class Location {
                 hardwareMap.get(DcMotor.class, "leftFront"),
                 hardwareMap.get(DcMotor.class, "rightFront"),
                 hardwareMap.get(DcMotor.class, "leftBack"),
+//                hardwareMap.get(Servo.class, "encoder"),
                 2048 * 9 * Math.PI);
         odometry.setPosition(0,0,0);
 
@@ -35,4 +37,8 @@ public class Location {
     public double getRotation(){
         return IMU.getRotation();
     }
+
+//    public void switchServo() {
+//        odometry.switchServo();
+//    }
 }

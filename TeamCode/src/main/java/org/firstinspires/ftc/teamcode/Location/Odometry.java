@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Location;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -10,6 +11,7 @@ import java.io.File;
 public class Odometry{
     //Odometry wheels
     private DcMotor verticalEncoderLeft, verticalEncoderRight, horizontalEncoder;
+    private Servo servo;
 
     //Position variables used for storage and calculations
     double verticalRightEncoderWheelPosition = 0, verticalLeftEncoderWheelPosition = 0, normalEncoderWheelPosition = 0,  changeInRobotOrientation = 0;
@@ -38,10 +40,12 @@ public class Odometry{
      * @param verticalEncoderRight right odometry encoder, facing the vertical direction
      * @param horizontalEncoder horizontal odometry encoder, perpendicular to the other two odometry encoder wheels
      */
-    public Odometry(DcMotor verticalEncoderLeft, DcMotor verticalEncoderRight, DcMotor horizontalEncoder, double COUNTS_PER_INCH){
+    public Odometry(DcMotor verticalEncoderLeft, DcMotor verticalEncoderRight, DcMotor horizontalEncoder, /*Servo servo, */ double COUNTS_PER_INCH){
         this.verticalEncoderLeft = verticalEncoderLeft;
         this.verticalEncoderRight = verticalEncoderRight;
         this.horizontalEncoder = horizontalEncoder;
+
+//        this.servo = servo;
 
         previousVerticalRightEncoderWheelPosition = (verticalEncoderRight.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
         previousVerticalLeftEncoderWheelPosition = (verticalEncoderLeft.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
@@ -114,6 +118,15 @@ public class Odometry{
         String text = "("+Math.round(returnXCoordinate())+";"+Math.round(returnYCoordinate())+") "+Math.round(returnOrientation())+"°";
         return text;
     }
+
+//    public void switchServo() {
+//        if (servo.getPosition() > 0) {
+//            servo.setPosition(0);
+//        } else {
+//            servo.setPosition(1);
+//        }
+//
+//    }
     /**
      * Stops the position update thread
      */

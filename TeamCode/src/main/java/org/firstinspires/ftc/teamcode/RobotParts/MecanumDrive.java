@@ -59,13 +59,18 @@ public class MecanumDrive extends RobotPart{
     
     public void setPowerDirection(double x, double y, double turn, double power){
         double straal = Math.hypot(x, y);
-        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
+//        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
+        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4;
         
         //calculate power wheels
-        double powerLeftFront = straal * Math.cos(robotAngle) + turn;
-        double powerRightFront = straal * Math.sin(robotAngle) - turn;
-        double powerLeftBack = straal * Math.sin(robotAngle) + turn;
-        double powerRightBack = straal * Math.cos(robotAngle) - turn;
+//        double powerLeftFront = straal * Math.cos(robotAngle) + turn;
+//        double powerRightFront = straal * Math.sin(robotAngle) - turn;
+//        double powerLeftBack = straal * Math.sin(robotAngle) + turn;
+//        double powerRightBack = straal * Math.cos(robotAngle) - turn;
+        double powerLeftBack = straal * Math.cos(robotAngle) + turn;
+        double powerRightBack = straal * Math.sin(robotAngle) - turn;
+        double powerLeftFront = straal * Math.sin(robotAngle) + turn;
+        double powerRightFront = straal * Math.cos(robotAngle) - turn;
 
         //setpower to correct power
         double[] powers = {Math.abs(powerLeftFront),Math.abs(powerRightFront),Math.abs(powerLeftBack),Math.abs(powerRightBack)};
