@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
-@TeleOp(name="Final OpMode 3.6", group="Iterative Opmode")
+@TeleOp(name="Final OpMode 3.7", group="Iterative Opmode")
 
 public class TeleOpV3 extends OpMode {
     
