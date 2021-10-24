@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
+import java.util.ArrayList;
+
 @TeleOp(name="Final OpMode 3.7", group="Iterative Opmode")
 
 public class TeleOpV3 extends OpMode {
@@ -43,6 +45,7 @@ public class TeleOpV3 extends OpMode {
 
     // variables
     long lastTime = 0;
+    ArrayList<long> loopTimes = new ArrayList<long>();
 
     @Override
     public void init() {
@@ -93,14 +96,16 @@ public class TeleOpV3 extends OpMode {
     public void start() {
         status.setValue("Starting");
         lastTime = System.nanoTime();
-        status.setValue("Started");
+        status.setValue("%s", getStatus());
+        
     }
 
     @Override
     public void loop() {
         // telemetry
         long time = System.nanoTime();
-        status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
+        loopTimes.add(time);
+        // status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
         lastTime = time;
 
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
@@ -122,6 +127,14 @@ public class TeleOpV3 extends OpMode {
     @Override
     public void stop() {
         status.setValue("Stopping");
+    }
+
+    private String getStatus() {
+        time = runtime.toString();
+        fastesLoop = Collections.max(loopTimes);
+        slowestLoop = Collections.min(loopTimes);
+        avarageLoop = loopTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
+        return "Runtime: "+time+", "+slowestLoop+"/"+fastesLoop+" ("+avarageLoop+")";
     }
 
 }
