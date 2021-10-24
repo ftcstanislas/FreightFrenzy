@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
 import java.util.ArrayList;
 
-@TeleOp(name="Final OpMode 3.8", group="Iterative Opmode")
+@TeleOp(name="Final OpMode 3.9", group="Iterative Opmode")
 
 public class TeleOpV3 extends OpMode {
     
