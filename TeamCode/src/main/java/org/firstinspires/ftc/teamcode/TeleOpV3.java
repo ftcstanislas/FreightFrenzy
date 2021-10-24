@@ -97,7 +97,7 @@ public class TeleOpV3 extends OpMode {
     public void start() {
         status.setValue("Starting");
         runtime.reset();
-        test = telemetry.addAction(getStatus);
+        String test = telemetry.addAction(getStatus);
         status.setValue("%s", test);
         lastTime = System.nanoTime();
     }

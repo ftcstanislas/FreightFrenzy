@@ -28,12 +28,15 @@ public class Intake extends RobotPart{
         setBrake(true);
 
         // set modes
-//        modes.put("stop", Map.ofEntries(
-//                Map.entry("a", "b"),
-//                Map.entry("c", "d")
-//        ));
-        modes.put("stop", new double[] {0.0});
-        modes.put("intaking", new double[] {1.0});
+        modes.put("stop", new HashMap<String, Double>() {{
+            put("intake", 0.0);
+        }});
+
+        modes.put("intaking", new HashMap<String, Double>() {{
+            put("intake", 1.0);
+        }});
+//        modes.put("stop", new double[] {0.0});
+//        modes.put("intaking", new double[] {1.0});
         
         // setup
         telemetry = telemetryInit;

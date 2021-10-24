@@ -25,8 +25,8 @@ public abstract class RobotPart {
     protected Telemetry.Item telemetry = null;
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
-    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
-//    protected HashMap<String, HashMap<String, double[]>> modes = new HashMap<String, HashMap<String, double[]>>();
+//    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
+    protected HashMap<String, HashMap<String, Double>> modes = new HashMap<String, HashMap<String, Double>>();
     protected String currentMode = "";
     protected String additionalTelemetry = "";
     abstract void updateTelemetry();
@@ -64,12 +64,12 @@ public abstract class RobotPart {
         updateTelemetry();
     }
 
-    protected void setPowers(double[] powers){
-        int index = 0;
-        for (DcMotor motor : motors.values()){
-            motor.setPower(powers[index]);
-            index+=1;
-        };
+    protected void setPowers(HashMap<String, Double> powers) {
+        for (Map.Entry<String, Double> entry : powers.entrySet()) {
+            String motorName = entry.getKey();
+            Double power = entry.getValue();
+            motors.get(motorName).setPower(power);
+        }
     }
     
     public void setBrake(boolean check){
