@@ -105,15 +105,15 @@ public class TeleOpV3 extends OpMode {
     public void loop() {
         // telemetry
         long time = System.nanoTime();
-        // status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
+        status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
         lastTime = time;
 
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
         // drivetrain.checkController(gamepad1, gamepad2);
-        // arm.checkController(gamepad1, gamepad2);
-        // intake.checkController(gamepad1, gamepad2);
+        arm.checkController(gamepad1, gamepad2);
+        intake.checkController(gamepad1, gamepad2);
 //        spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         // location.update();
