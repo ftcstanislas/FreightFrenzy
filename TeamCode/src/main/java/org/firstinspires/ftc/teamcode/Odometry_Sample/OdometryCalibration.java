@@ -34,8 +34,8 @@ public class OdometryCalibration extends LinearOpMode {
 
     final double PIVOT_SPEED = 0.5;
 
-    //The amount of encoder ticks for each inch the robot moves. THIS WILL CHANGE FOR EACH ROBOT AND NEEDS TO BE UPDATED HERE
-    final double COUNTS_PER_INCH = 2048 * 9 * Math.PI;
+    //The amount of encoder ticks for each mm the robot moves. THIS WILL CHANGE FOR EACH ROBOT AND NEEDS TO BE UPDATED HERE
+    final double COUNTS_PER_MM = 2048 * 9 * Math.PI;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -107,7 +107,7 @@ public class OdometryCalibration extends LinearOpMode {
 
         double verticalEncoderTickOffsetPerDegree = encoderDifference/angle;
 
-        double wheelBaseSeparation = (2*90*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_INCH);
+        double wheelBaseSeparation = (2*90*verticalEncoderTickOffsetPerDegree)/(Math.PI*COUNTS_PER_MM);
 
         horizontalTickOffset = horizontal.getCurrentPosition()*0.83333/Math.toRadians(getZAngle());
 
