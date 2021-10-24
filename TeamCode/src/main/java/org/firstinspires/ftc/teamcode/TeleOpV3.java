@@ -52,6 +52,7 @@ public class TeleOpV3 extends OpMode {
         
         //add telemetry
         telemetry.setAutoClear(false);
+        telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
         telemetryArm = telemetry.addData("Arm", "X");
@@ -97,7 +98,6 @@ public class TeleOpV3 extends OpMode {
         status.setValue("Starting");
         lastTime = System.nanoTime();
         runtime.reset();
-        loopTimes.add(1.0);
         status.setValue("%s", getStatus());
     }
 
