@@ -26,9 +26,9 @@ public abstract class RobotPart {
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
     protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
+//    protected HashMap<String, HashMap<String, double[]>> modes = new HashMap<String, HashMap<String, double[]>>();
     protected String currentMode = "";
     protected String additionalTelemetry = "";
-    
     abstract void updateTelemetry();
     
     abstract void checkController(Gamepad gamepad1, Gamepad gamepad2);
