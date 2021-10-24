@@ -27,6 +27,10 @@ public class Intake extends RobotPart{
         setBrake(true);
 
         // set modes
+        modes.put("stop", Map.ofEntries(
+                entry("a", "b"),
+                entry("c", "d")
+        ));
         modes.put("stop", new double[] {0.0});
         modes.put("intaking", new double[] {1.0});
         
@@ -35,7 +39,7 @@ public class Intake extends RobotPart{
 
         setMode("stop");
     }
-    
+
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
         switchMode(gamepad1.b, "stop","intaking");
         // speed
