@@ -16,7 +16,6 @@ import java.util.Arrays;
 
 public class IMU {
     private BNO055IMU imu;
-    double curHeading;
 
     public void init(HardwareMap map){
         //Init IMU
@@ -37,12 +36,12 @@ public class IMU {
         angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         imu.getPosition();
         // and save the heading
-        curHeading = angles.firstAngle;
+        double curHeading = angles.thirdAngle;
         return curHeading;
     }
 
     public String getDisplay() {
         double curHeading = getRotation();
-        return "Orientation: " + curHeading;
+        return "Orientation1: " + curHeading;
     }
 }
