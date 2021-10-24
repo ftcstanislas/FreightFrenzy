@@ -102,9 +102,9 @@ public class TeleOpV3 extends OpMode {
 
     @Override
     public void loop() {
-        // telemetry
+        // Telemetry
         long time = System.nanoTime();
-        loopTimes.add((time - lastTime)/1000000);
+        // loopTimes.add((time - lastTime)/1000000);
         status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
         lastTime = time;
 
