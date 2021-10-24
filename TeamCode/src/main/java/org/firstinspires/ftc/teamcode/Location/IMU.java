@@ -30,7 +30,7 @@ public class IMU {
         imu.initialize(parameters); // set parameters to gyro
     }
 
-    public double getRotation() {
+    public double getOrientation() {
         // Read the orientation of the robot
         Orientation angles = new Orientation();
         angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
@@ -41,7 +41,7 @@ public class IMU {
     }
 
     public String getDisplay() {
-        double curHeading = getRotation();
+        double curHeading = getOrientation();
         return "Orientation: " + curHeading;
     }
 }
