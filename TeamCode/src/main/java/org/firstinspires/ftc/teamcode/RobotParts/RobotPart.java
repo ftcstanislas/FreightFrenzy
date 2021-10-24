@@ -96,6 +96,10 @@ public abstract class RobotPart {
         }
     }
 
+    public void setPosition() {
+
+    }
+
     public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
         if (trigger && !isSwitchPressed){
             isSwitchPressed = true;
