@@ -138,7 +138,7 @@ public class TeleOpV3 extends OpMode {
     }
 
     private double getAvaregaLoopTime() {
-        Integer sum = 0;
+        double sum = 0;
         if(!loopTimes.isEmpty()) {
             for (Long mark : loopTimes) {
                 sum += mark;
