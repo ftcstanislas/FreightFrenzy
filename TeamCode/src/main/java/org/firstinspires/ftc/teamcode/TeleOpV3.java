@@ -130,12 +130,21 @@ public class TeleOpV3 extends OpMode {
     }
 
     private String getStatus() {
-        // String time = runtime.toString();
-        // double fastesLoop = Collections.max(loopTimes);
-        // double slowestLoop = Collections.min(loopTimes);
-        // double avarageLoop = loopTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
-        // return "Runtime: "+time+", "+slowestLoop+"/"+fastesLoop+" ("+avarageLoop+")";
-        return "test";
+        String time = runtime.toString();
+        double fastesLoop = Collections.max(loopTimes);
+        double slowestLoop = Collections.min(loopTimes);
+        double averageLoop = getAvaregaLoopTime();
+        return "Runtime: "+time+", "+slowestLoop+"/"+fastesLoop+" ("+averageLoop+")";
     }
 
+    private double getAvaregaLoopTime() {
+        Integer sum = 0;
+        if(!loopTimes.isEmpty()) {
+            for (Long mark : loopTimes) {
+                sum += mark;
+            }
+            return sum.doubleValue() / loopTimes.size();
+        }
+        return sum;
+    }
 }
