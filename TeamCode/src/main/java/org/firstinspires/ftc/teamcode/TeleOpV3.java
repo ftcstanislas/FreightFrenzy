@@ -96,7 +96,7 @@ public class TeleOpV3 extends OpMode {
         status.setValue("Starting");
         lastTime = System.nanoTime();
         runtime.reset();
-        status.setValue("%s", getStatus());
+        // status.setValue("%s", getStatus());
     }
 
     @Override
