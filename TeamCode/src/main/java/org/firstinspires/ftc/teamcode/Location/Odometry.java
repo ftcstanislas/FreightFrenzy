@@ -47,10 +47,6 @@ public class Odometry{
 
 //        this.servo = servo;
 
-        previousVerticalRightEncoderWheelPosition = (verticalEncoderRight.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
-        previousVerticalLeftEncoderWheelPosition = (verticalEncoderLeft.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
-        previousNormalEncoderWheelPosition = (horizontalEncoder.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
-
         robotEncoderWheelDistance = Double.parseDouble(ReadWriteFile.readFile(wheelBaseSeparationFile).trim()) * COUNTS_PER_MM;
         this.horizontalEncoderTickPerDegreeOffset = Double.parseDouble(ReadWriteFile.readFile(horizontalTickOffsetFile).trim());
     }
@@ -92,6 +88,10 @@ public class Odometry{
         robotGlobalXCoordinatePosition = x;
         robotGlobalYCoordinatePosition = y;
         robotOrientationRadians = Math.toRadians(orientation);
+
+        previousVerticalRightEncoderWheelPosition = (verticalEncoderRight.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
+        previousVerticalLeftEncoderWheelPosition = (verticalEncoderLeft.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
+        previousNormalEncoderWheelPosition = (horizontalEncoder.getCurrentPosition() * verticalLeftEncoderPositionMultiplier);
     }
 
     /**
