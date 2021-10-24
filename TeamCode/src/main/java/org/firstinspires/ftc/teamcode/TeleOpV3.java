@@ -116,7 +116,7 @@ public class TeleOpV3 extends OpMode {
         intake.checkController(gamepad1, gamepad2);
 //        spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
-        location.update();
+        // location.update();
 
 //        if (gamepad1.a) {
 //            location.switchServo();
