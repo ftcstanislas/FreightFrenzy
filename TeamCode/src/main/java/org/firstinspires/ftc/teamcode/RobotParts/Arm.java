@@ -71,8 +71,8 @@ public class Arm extends RobotPart{
 //
 //        // set power
 //        setPowerState(tipping);
-        double[] powers = {gamepad1.right_stick_y};
-        setPowers(powers);
+        double powers = gamepad1.right_stick_y;
+        setPower(powers);
 
         if (gamepad1.a) {
             switchServo();

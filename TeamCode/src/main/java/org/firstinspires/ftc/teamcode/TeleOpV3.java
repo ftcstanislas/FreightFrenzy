@@ -97,8 +97,8 @@ public class TeleOpV3 extends OpMode {
     public void start() {
         status.setValue("Starting");
         runtime.reset();
-        String test = telemetry.addAction(getStatus);
-        status.setValue("%s", test);
+//        String test = telemetry.addAction(getStatus);
+//        status.setValue("%s", test);
         lastTime = System.nanoTime();
     }
 
@@ -106,8 +106,8 @@ public class TeleOpV3 extends OpMode {
     public void loop() {
         // telemetry
         long time = System.nanoTime();
-        loopTimes.add((time - lastTime)/1000000);
-        // status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
+//        loopTimes.add((time - lastTime)/1000000);
+         status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
         lastTime = time;
 
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
