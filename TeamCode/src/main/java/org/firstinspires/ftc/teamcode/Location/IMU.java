@@ -31,17 +31,17 @@ public class IMU {
     }
 
     public double getRotation() {
-        // read the orientation of the robot
+        // Read the orientation of the robot
         Orientation angles = new Orientation();
         angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         imu.getPosition();
-        // and save the heading
+        // Save the heading
         double curHeading = angles.thirdAngle;
         return curHeading;
     }
 
     public String getDisplay() {
         double curHeading = getRotation();
-        return "Orientation1: " + curHeading;
+        return "Orientation: " + curHeading;
     }
 }
