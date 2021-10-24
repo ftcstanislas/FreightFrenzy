@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @TeleOp(name="Servos test", group="testing")
-public class TestServo extends OpMode {
+public class ServoTest extends OpMode {
     /* Declare OpMode members. */
     
     private Servo servo;

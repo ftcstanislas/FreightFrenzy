@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 @TeleOp(name="Final OpMode 3.9", group="Iterative Opmode")
 public class TeleOpV3 extends OpMode {
@@ -44,7 +45,7 @@ public class TeleOpV3 extends OpMode {
 
     // variables
     long lastTime = 0;
-    ArrayList<long> loopTimes = new ArrayList<long>();
+    ArrayList<Long> loopTimes = new ArrayList<Long>();
 
     @Override
     public void init() {
@@ -129,10 +130,10 @@ public class TeleOpV3 extends OpMode {
     }
 
     private String getStatus() {
-        time = runtime.toString();
-        fastesLoop = Collections.max(loopTimes);
-        slowestLoop = Collections.min(loopTimes);
-        avarageLoop = loopTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
+        String time = runtime.toString();
+        double fastesLoop = Collections.max(loopTimes);
+        double slowestLoop = Collections.min(loopTimes);
+        double avarageLoop = loopTimes.stream().mapToDouble(d -> d).average().orElse(0.0);
         return "Runtime: "+time+", "+slowestLoop+"/"+fastesLoop+" ("+avarageLoop+")";
     }
 
