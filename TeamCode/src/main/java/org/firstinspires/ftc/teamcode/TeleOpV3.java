@@ -143,7 +143,7 @@ public class TeleOpV3 extends OpMode {
             for (Long mark : loopTimes) {
                 sum += mark;
             }
-            return sum.doubleValue() / loopTimes.size();
+            return sum / loopTimes.size();
         }
         return sum;
     }
