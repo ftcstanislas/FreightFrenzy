@@ -45,7 +45,6 @@ public class TeleOpV3 extends OpMode {
 
     // variables
     long lastTime = 0;
-    ArrayList<Long> loopTimes = new ArrayList<Long>();
 
     @Override
     public void init() {
@@ -106,8 +105,7 @@ public class TeleOpV3 extends OpMode {
     public void loop() {
         // telemetry
         long time = System.nanoTime();
-//        loopTimes.add((time - lastTime)/1000000);
-//        status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
+        status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
         lastTime = time;
 
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
@@ -129,28 +127,5 @@ public class TeleOpV3 extends OpMode {
     @Override
     public void stop() {
         status.setValue("Stopping");
-    }
-
-    private String getStatus() {
-        String time = runtime.toString();
-        String text = "Runtime: "+time;
-        if (loopTimes != null && !loopTimes.isEmpty()) {
-            double fastesLoop = Collections.max(loopTimes);
-            double slowestLoop = Collections.min(loopTimes);
-            double averageLoop = getAvarageLoopTime();
-            text += ", Performance: "+slowestLoop+"/"+fastesLoop+" ("+averageLoop+")";
-        }
-        return text;
-    }
-
-    private double getAvarageLoopTime() {
-        double sum = 0;
-        if(!loopTimes.isEmpty()) {
-            for (Long mark : loopTimes) {
-                sum += mark;
-            }
-            return sum / loopTimes.size();
-        }
-        return sum;
     }
 }
