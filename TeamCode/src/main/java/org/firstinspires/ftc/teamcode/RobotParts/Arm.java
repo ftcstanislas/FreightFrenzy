@@ -46,7 +46,7 @@ public class Arm extends RobotPart{
 //        colorSensor = map.get(ColorSensor.class, "color_sensor");
 //
 //        // setup
-//        telemetry = telemetryInit;
+        telemetry = telemetryInit;
         motors.put("arm", map.get(DcMotor.class, "arm"));
         motors.get("arm").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporary
         servos.put("fork", map.get(Servo.class, "fork"));
