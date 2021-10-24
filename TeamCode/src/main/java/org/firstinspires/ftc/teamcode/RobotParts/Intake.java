@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Map.Entry;
+import static java.util.Map.Entry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,8 +29,8 @@ public class Intake extends RobotPart{
 
         // set modes
 //        modes.put("stop", Map.ofEntries(
-//                new Entry("a", "b"),
-//                new Entry("c", "d")
+//                Map.entry("a", "b"),
+//                Map.entry("c", "d")
 //        ));
         modes.put("stop", new double[] {0.0});
         modes.put("intaking", new double[] {1.0});
