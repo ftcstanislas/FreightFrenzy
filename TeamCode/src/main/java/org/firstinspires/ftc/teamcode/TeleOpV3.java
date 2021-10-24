@@ -111,10 +111,10 @@ public class TeleOpV3 extends OpMode {
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
-        // drivetrain.checkController(gamepad1, gamepad2);
-        arm.checkController(gamepad1, gamepad2);
+        drivetrain.checkController(gamepad1, gamepad2);
+//        arm.checkController(gamepad1, gamepad2);
         intake.checkController(gamepad1, gamepad2);
-//        spinner.checkController(gamepad1, gamepad2);
+        spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         // location.update();
 
