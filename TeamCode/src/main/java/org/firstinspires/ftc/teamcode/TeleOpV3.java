@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.Sensors.Camera;
 import java.util.ArrayList;
 
 @TeleOp(name="Final OpMode 3.9", group="Iterative Opmode")
-
 public class TeleOpV3 extends OpMode {
     
     //get objects
@@ -96,8 +95,8 @@ public class TeleOpV3 extends OpMode {
     public void start() {
         status.setValue("Starting");
         lastTime = System.nanoTime();
+        runtime.reset();
         status.setValue("%s", getStatus());
-        
     }
 
     @Override
