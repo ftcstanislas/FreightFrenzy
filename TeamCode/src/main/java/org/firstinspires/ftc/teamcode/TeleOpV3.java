@@ -137,7 +137,7 @@ public class TeleOpV3 extends OpMode {
             double fastesLoop = Collections.max(loopTimes);
             double slowestLoop = Collections.min(loopTimes);
             double averageLoop = getAvaregaLoopTime();
-            text += ", "+slowestLoop+"/"+fastesLoop+" ("+averageLoop+")";
+            text += ", Performance: "+slowestLoop+"/"+fastesLoop+" ("+averageLoop+")";
         }
         return text;
     }
