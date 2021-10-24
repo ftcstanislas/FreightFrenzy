@@ -97,6 +97,7 @@ public class TeleOpV3 extends OpMode {
         status.setValue("Starting");
         lastTime = System.nanoTime();
         runtime.reset();
+        loopTimes.add(1.0);
         status.setValue("%s", getStatus());
     }
 
@@ -133,17 +134,17 @@ public class TeleOpV3 extends OpMode {
         String time = runtime.toString();
         double fastesLoop = Collections.max(loopTimes);
         double slowestLoop = Collections.min(loopTimes);
-        double averageLoop = getAverageLoopTime();
+        double averageLoop = getAvaregaLoopTime();
         return "Runtime: "+time+", "+slowestLoop+"/"+fastesLoop+" ("+averageLoop+")";
     }
 
-    private double getAverageLoopTime() {
+    private double getAvaregaLoopTime() {
         double sum = 0;
         if(!loopTimes.isEmpty()) {
             for (Long mark : loopTimes) {
                 sum += mark;
             }
-            return sum / loopTimes.size();
+            return sum.doubleValue() / loopTimes.size();
         }
         return sum;
     }
