@@ -39,8 +39,7 @@ public class MecanumDrive extends RobotPart{
 
         // turning
         double turning = gamepad1.left_trigger - gamepad1.right_trigger;
-
-        turning = turning*Math.abs(turning); //experimental
+        //turning = turning*Math.abs(turning); //experimental
         if (gamepad1.x){
             turning *= 0.45;
         }
@@ -67,10 +66,6 @@ public class MecanumDrive extends RobotPart{
         double powerRightFront = straal * Math.sin(robotAngle) - turn;
         double powerLeftBack = straal * Math.sin(robotAngle) + turn;
         double powerRightBack = straal * Math.cos(robotAngle) - turn;
-        // double powerLeftBack = straal * Math.cos(robotAngle) + turn;
-        // double powerRightBack = straal * Math.sin(robotAngle) - turn;
-        // double powerLeftFront = straal * Math.sin(robotAngle) + turn;
-        // double powerRightFront = straal * Math.cos(robotAngle) - turn;
 
         //setpower to correct power
         double[] powers = {Math.abs(powerLeftFront),Math.abs(powerRightFront),Math.abs(powerLeftBack),Math.abs(powerRightBack)};
