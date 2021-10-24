@@ -133,7 +133,7 @@ public class TeleOpV3 extends OpMode {
     private String getStatus() {
         String time = runtime.toString();
         String text = "Runtime: "+time;
-        if (list != null && !list.isEmpty()) {
+        if (loopTimes != null && !loopTimes.isEmpty()) {
             double fastesLoop = Collections.max(loopTimes);
             double slowestLoop = Collections.min(loopTimes);
             double averageLoop = getAvaregaLoopTime();
