@@ -31,7 +31,7 @@ public class Location {
 
     public void update(){
         odometry.globalCoordinatePositionUpdate();
-//        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
+        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
     }
 
     public double getRotation(){
