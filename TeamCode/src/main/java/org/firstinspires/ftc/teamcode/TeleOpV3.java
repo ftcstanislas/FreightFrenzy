@@ -28,7 +28,7 @@ public class TeleOpV3 extends OpMode {
     Arm arm = new Arm();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
-    Camera camera = new Camera(); // Dit afmaken later
+    // Camera camera = new Camera(); // Dit afmaken later
     ColorDetector colorSensor = new ColorDetector();
     
     // telemetry

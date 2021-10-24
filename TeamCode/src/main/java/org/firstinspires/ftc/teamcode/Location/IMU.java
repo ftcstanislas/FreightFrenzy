@@ -46,8 +46,7 @@ public class IMU {
         angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
         imu.getPosition();
         // and save the heading
-        curHeading = angles.thirdAngle;
-        return "Orientation: "+curHeading;
-//        telemetry.setValue(curHeading);
+        curHeading = angles.firstAngle;
+        return "Orientation: " + curHeading;
     }
 }
