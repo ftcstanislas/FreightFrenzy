@@ -13,6 +13,7 @@ public class Location {
     private Telemetry.Item telemetry = null;
 
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit){
+        // Odometry
         odometry = new Odometry(
                 hardwareMap.get(DcMotor.class, "leftFront"),
                 hardwareMap.get(DcMotor.class, "rightFront"),
@@ -21,11 +22,15 @@ public class Location {
                 2048 * 9 * Math.PI);
         odometry.setPosition(0,0,0);
 
+        // IMU
         IMU = new IMU();
         IMU.init(hardwareMap);
 
+        // Camera
 //        camera = new Camera();
 //        camera.init(hardwareMap, telemetryInit);
+
+        
         telemetry = telemetryInit;
     }
 
