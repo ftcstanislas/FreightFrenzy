@@ -37,16 +37,12 @@ public class IMU {
         angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         imu.getPosition();
         // and save the heading
-        curHeading = angles.thirdAngle;
+        curHeading = angles.firstAngle;
         return curHeading;
     }
 
     public String getDisplay() {
-        Orientation angles = new Orientation();
-        angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
-        imu.getPosition();
-        // and save the heading
-        curHeading = angles.firstAngle;
+        double curHeading = getRotation();
         return "Orientation: " + curHeading;
     }
 }
