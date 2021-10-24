@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Sensors.Camera;
 import java.util.ArrayList;
 import java.util.Collections;
 
-@TeleOp(name="Final OpMode 3.9", group="Iterative Opmode")
+@TeleOp(name="Final OpMode 3.10", group="Iterative Opmode")
 public class TeleOpV3 extends OpMode {
     
     //get objects
@@ -105,7 +105,7 @@ public class TeleOpV3 extends OpMode {
     public void loop() {
         // telemetry
         long time = System.nanoTime();
-        status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
+        // status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
         lastTime = time;
 
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+
