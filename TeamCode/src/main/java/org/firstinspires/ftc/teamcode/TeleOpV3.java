@@ -136,13 +136,13 @@ public class TeleOpV3 extends OpMode {
         if (loopTimes != null && !loopTimes.isEmpty()) {
             double fastesLoop = Collections.max(loopTimes);
             double slowestLoop = Collections.min(loopTimes);
-            double averageLoop = getAvaregaLoopTime();
+            double averageLoop = getAvarageLoopTime();
             text += ", Performance: "+slowestLoop+"/"+fastesLoop+" ("+averageLoop+")";
         }
         return text;
     }
 
-    private double getAvaregaLoopTime() {
+    private double getAvarageLoopTime() {
         double sum = 0;
         if(!loopTimes.isEmpty()) {
             for (Long mark : loopTimes) {
