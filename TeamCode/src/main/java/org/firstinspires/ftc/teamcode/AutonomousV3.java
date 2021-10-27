@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import java.util.Collection;
@@ -32,25 +34,14 @@ import java.io.File;
 public class AutonomousV3 extends OpMode {
 
     //instructions
+    File routeFolder = new File("org/firstinspires/ftc/teamcode/AutonomousRoutes/route1.txt");
 
     // *****PARAMETER 1*****
-    // 0: wait until finished, 1: with next instustruction
 
     // *****PARAMETER 2*****
-    // 1: driving, 0: fast, 1: slow, 2: checkpoint, 3: turn
-    // 2: shooter 0: set velocity, 1: set mode, 2: shoot
-    // 3: arm 0: set pos, 1: set mode
-    // 4: gripper 0: set pos (0.7,1), 1: set mode
-    // 5: intake 0: power, 1: set mode
-    // 6: ringplacer 0: power, 1: set mode
-    // 7: intakeLock 0: power, 1: set mode
-    // 8: wing 0: set pos, 1: set mode
-    // 9: wait
 
     // *****PARAMETER 3...*****
-    // options
 
-    // final instructions
 
 
     int instruction = 0;
@@ -68,6 +59,7 @@ public class AutonomousV3 extends OpMode {
     Telemetry.Item telemetrySpinner = null;
     Telemetry.Item telemetryLocation = null;
     Telemetry.Item telemetryColorSensor = null;
+    Telemetry.Item telemetryTest = null;
 
     //Output amount of rings
     String finalOutput = "niks";
@@ -105,6 +97,9 @@ public class AutonomousV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
+        telemetryTest = telemetry.addData("Test: ", "X");
+
+        //Initialize routes
 
 
         //Initialize objects
@@ -183,6 +178,8 @@ public class AutonomousV3 extends OpMode {
 
     @Override
     public void loop() {
+        List<String> fileLines = Files.readAllLines(routeFolder.toPath());
+        telemetryTest.setValue(fileLines);
 //        //telemetry update
 //        telemetryStatus.setValue("Following program "+ finalOutput + " for "+runtime.toString());
 //        telemetryLocation.setValue(globalPositionUpdate.getDisplay());
