@@ -4,8 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import java.util.Collection;
@@ -34,7 +36,7 @@ import java.io.File;
 public class AutonomousV3 extends OpMode {
 
     //instructions
-    File routeFolder = new File("org/firstinspires/ftc/teamcode/AutonomousRoutes/route1.txt");
+    File routeFolder = new File("AutonomousRoutes/route1.txt");
 
     // *****PARAMETER 1*****
 
@@ -178,8 +180,12 @@ public class AutonomousV3 extends OpMode {
 
     @Override
     public void loop() {
-        List<String> fileLines = Files.readAllLines(routeFolder.toPath());
-        telemetryTest.setValue(fileLines);
+        try {
+            List<String> fileLines = Files.readAllLines(routeFolder.toPath());
+            telemetryTest.setValue(fileLines);
+        } catch (IOException e) {
+
+        }
 //        //telemetry update
 //        telemetryStatus.setValue("Following program "+ finalOutput + " for "+runtime.toString());
 //        telemetryLocation.setValue(globalPositionUpdate.getDisplay());
