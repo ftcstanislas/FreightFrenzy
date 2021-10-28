@@ -44,60 +44,61 @@ public class Location {
     }
 
     public boolean goToPosition(double targetXPosition, double targetYPosition, double robotPower, double desiredRobotOrientation, double allowableDistanceError){
-        double distanceToXTarget = targetXPosition - globalPositionUpdate.returnXCoordinate();
-        double distanceToYTarget = targetYPosition - globalPositionUpdate.returnYCoordinate();
-        double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
-        double pivotCorrection = desiredRobotOrientation - getOrientation();
-        
-        if (distance > allowableDistanceError || Math.abs(pivotCorrection) > 5){
-            double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget)) - globalPositionUpdate.returnOrientation();
-            double robotMovementXComponent = calculateX(robotMovementAngle, robotPower);
-            double robotMovementYComponent = calculateY(robotMovementAngle, robotPower);
-            
-            // Slow down
-            double slowDownFrom = 10000;
-            double accelerateTo = 3000;
-            double accMinPower = 0.5;
-            double minPower = 0.3;
-            
-            if (distance < slowDownFrom){
-                robotPower = minPower + (robotPower-minPower) * Math.abs(distance)/slowDownFrom;
-            }
-            
-            if (Math.abs(startingDistance - distance) <= accelerateTo) {
-                robotPower = accMinPower + (robotPower-accMinPower) * Math.abs(startingDistance - distance) / accelerateTo;
-            }
-            
-            // Check if stuck
-            if (stuck > 30){
-                telemetry.setValue("Stuck, distance = "+Math.round(distance)+" counts");
-                stuck = 0;
-                drivetrain.setPowerDirection(0, 0, 0, 0);
-                
-                acceleration = false;
-                
-                return true;
-            } else if (Math.abs(distance - previousDistance) < Math.abs(20*robotPower)){
-                stuck += 1;
-            } else {
-                stuck = 0;
-            }
-            previousDistance = distance;
-            
-            pivotCorrection = 100 * pivotCorrection/distance;//Math.min(0.25,Math.max(-0.25,pivotCorrection/45));
-        
-            // telemetry.setValue("going to = ("+Math.round(robotMovementXComponent*10)+";"+Math.round(robotMovementYComponent*10)+") "+Math.round(pivotCorrection)+"° with "+Math.round(robotPower*10)+", distance = "+Math.round(distance)+" counts");
-            drivetrain.setPowerDirection(-robotMovementXComponent, -robotMovementYComponent, pivotCorrection, robotPower);
-
-            return false;
-        } else {
-            telemetry.setValue("Done, distance = "+Math.round(distance)+" counts");
-            drivetrain.setPowerDirection(0, 0, 0, 0);
-            
-            acceleration = false;
-            
-            return true;
-        }
+//        double distanceToXTarget = targetXPosition - globalPositionUpdate.returnXCoordinate();
+//        double distanceToYTarget = targetYPosition - globalPositionUpdate.returnYCoordinate();
+//        double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
+//        double pivotCorrection = desiredRobotOrientation - getOrientation();
+//
+//        if (distance > allowableDistanceError || Math.abs(pivotCorrection) > 5){
+//            double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget)) - globalPositionUpdate.returnOrientation();
+//            double robotMovementXComponent = calculateX(robotMovementAngle, robotPower);
+//            double robotMovementYComponent = calculateY(robotMovementAngle, robotPower);
+//
+//            // Slow down
+//            double slowDownFrom = 10000;
+//            double accelerateTo = 3000;
+//            double accMinPower = 0.5;
+//            double minPower = 0.3;
+//
+//            if (distance < slowDownFrom){
+//                robotPower = minPower + (robotPower-minPower) * Math.abs(distance)/slowDownFrom;
+//            }
+//
+//            if (Math.abs(startingDistance - distance) <= accelerateTo) {
+//                robotPower = accMinPower + (robotPower-accMinPower) * Math.abs(startingDistance - distance) / accelerateTo;
+//            }
+//
+//            // Check if stuck
+//            if (stuck > 30){
+//                telemetry.setValue("Stuck, distance = "+Math.round(distance)+" counts");
+//                stuck = 0;
+//                drivetrain.setPowerDirection(0, 0, 0, 0);
+//
+//                acceleration = false;
+//
+//                return true;
+//            } else if (Math.abs(distance - previousDistance) < Math.abs(20*robotPower)){
+//                stuck += 1;
+//            } else {
+//                stuck = 0;
+//            }
+//            previousDistance = distance;
+//
+//            pivotCorrection = 100 * pivotCorrection/distance;//Math.min(0.25,Math.max(-0.25,pivotCorrection/45));
+//
+//            // telemetry.setValue("going to = ("+Math.round(robotMovementXComponent*10)+";"+Math.round(robotMovementYComponent*10)+") "+Math.round(pivotCorrection)+"° with "+Math.round(robotPower*10)+", distance = "+Math.round(distance)+" counts");
+//            drivetrain.setPowerDirection(-robotMovementXComponent, -robotMovementYComponent, pivotCorrection, robotPower);
+//
+//            return false;
+//        } else {
+//            telemetry.setValue("Done, distance = "+Math.round(distance)+" counts");
+//            drivetrain.setPowerDirection(0, 0, 0, 0);
+//
+//            acceleration = false;
+//
+//            return true;
+//        }
+        return false;
     }
 
     /**
