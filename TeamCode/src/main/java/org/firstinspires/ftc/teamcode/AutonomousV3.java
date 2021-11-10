@@ -35,7 +35,8 @@ import java.io.File;
 public class AutonomousV3 extends OpMode {
 
     //instructions
-    File routeFolder = new File("AutonomousRoutes/route1.txt");
+    String path = String.format("%sroute1.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+    File routeFolder = new File(path);
 
     // *****PARAMETER 1*****
 
@@ -98,7 +99,7 @@ public class AutonomousV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
-        telemetryTest = telemetry.addData("Test: ", "X");
+        telemetryTest = telemetry.addData("Test: ", String path = String.format("%sroute1.txt", Environment.getExternalStorageDirectory().getAbsolutePath()));
 
         //Initialize routes
 
