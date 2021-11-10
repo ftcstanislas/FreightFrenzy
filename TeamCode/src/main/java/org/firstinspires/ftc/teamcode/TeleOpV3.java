@@ -89,6 +89,7 @@ public class TeleOpV3 extends OpMode {
     @Override
     public void init_loop() {
         status.setValue("Init looping");
+        location.update();
     }
 
     

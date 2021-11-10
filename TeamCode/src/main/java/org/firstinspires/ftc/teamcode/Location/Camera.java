@@ -32,6 +32,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -115,12 +116,21 @@ public class Camera{
     //Trackelbles
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
+    //Paramerters
+    VuforiaLocalizer.Parameters parameters = null;
+
+    // Pointer
+    Servo pointer = null;
+
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit) {
         // Telemetry
         telemetry = telemetryInit;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        // Servo pointer
+        pointer = hardwareMap.get(Servo.class, "cameraPointer1");
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -129,7 +139,7 @@ public class Camera{
          * Note: A preview window is required if you want to view the camera stream on the Driver Station Phone.
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -193,19 +203,19 @@ public class Camera{
          * Finally the camera can be translated to its actual mounting position on the robot.
          *      In this example, it is centered on the robot (left-to-right and front-to-back), and 6 inches above ground level.
          */
-
-        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
-        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
-        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
-
-        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
-
-        /**  Let all the trackable listeners know where the camera is.  */
-        for (VuforiaTrackable trackable : allTrackables) {
-            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
-        }
+        setCameraPosition(0,6,0,0);
+//        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
+//        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
+//        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
+//
+//        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
+//                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+//                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+//
+//        /**  Let all the trackable listeners know where the camera is.  */
+//        for (VuforiaTrackable trackable : allTrackables) {
+//            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
+//        }
 
         /*
          * WARNING:
@@ -225,12 +235,26 @@ public class Camera{
         targets.activate();
     }
 
+    public void setCameraPosition(float forward, float left, float height, float heading){
+        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
+                .translation(forward, left, height)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, heading));
+
+        /**  Let all the trackable listeners know where the camera is.  */
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
+        }
+    }
+
     public void update() {
+        // update position camera
+        setCameraPosition(16, 13, 19, 0);
+
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                telemetry.setValue("Visible Target", trackable.getName());
+                telemetry.setValue("Visible Target"+ trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -244,18 +268,20 @@ public class Camera{
         }
 
         // Provide feedback as to where the robot is located (if we know).
+        String text = "";
         if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
-            telemetry.setValue("Pos (inches)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+            text += String.format("Pos (mm) {X, Y, Z} = %.1f, %.1f, %.1f",
                     translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            telemetry.setValue("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            text +=String.format("\nRot (deg) {Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
         } else {
-            telemetry.setValue("Visible Target", "none");
+            text+="Visible Target none";
         }
+        telemetry.setValue(text);
     }
 
     public void stop(){
