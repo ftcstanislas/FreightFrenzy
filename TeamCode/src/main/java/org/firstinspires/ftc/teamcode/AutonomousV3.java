@@ -35,7 +35,7 @@ import java.io.File;
 public class AutonomousV3 extends OpMode {
 
     //instructions
-    String path = String.format("%sroute1.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+    String path = String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/", Environment.getExternalStorageDirectory().getAbsolutePath());
     File routeFolder = new File(path);
 
     // *****PARAMETER 1*****
