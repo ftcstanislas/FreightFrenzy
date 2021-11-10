@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Sensors.Camera;
 import java.util.ArrayList;
 import java.util.Collections;
 
-@TeleOp(name="Final OpMode 3.10.1", group="Iterative Opmode")
+@TeleOp(name="OpMode 3.10", group="Iterative Opmode")
 public class TeleOpV3 extends OpMode {
     
     //get objects
@@ -28,7 +28,6 @@ public class TeleOpV3 extends OpMode {
     Arm arm = new Arm();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
-    // Camera camera = new Camera(); // Dit afmaken later
     ColorDetector colorSensor = new ColorDetector();
     
     // telemetry

@@ -33,7 +33,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
 
-@Autonomous(name="Final Autonomous 3.∞", group="Iterative Opmode")
+@Autonomous(name="Autonomous 3.∞", group="Iterative Opmode")
 public class AutonomousV3 extends OpMode {
 
     //instructions
