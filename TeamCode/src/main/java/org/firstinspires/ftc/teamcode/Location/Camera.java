@@ -84,10 +84,10 @@ public class Camera{
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
-    private static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final float halfField        = 72 * mmPerInch;
-    private static final float halfTile         = 12 * mmPerInch;
-    private static final float oneAndHalfTile   = 36 * mmPerInch;
+    private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float halfField        = 1800;//72 * mmPerInch;
+    private static final float halfTile         = 300;//12 * mmPerInch;
+    private static final float oneAndHalfTile   = 900;//36 * mmPerInch;
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
@@ -190,7 +190,7 @@ public class Camera{
          * Finally the camera can be translated to its actual mounting position on the robot.
          *      In this example, it is centered on the robot (left-to-right and front-to-back), and 6 inches above ground level.
          */
-        setCameraPosition(0,6,0,0);
+        setCameraPosition(0,0,200,0);
 //        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
 //        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
 //        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
@@ -252,7 +252,7 @@ public class Camera{
             text +=String.format("\nRot (deg) {Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
             // update position camera
-            setCameraPosition(16, 13, 19, 0);
+//            setCameraPosition(16, 13, 19, 0);
 
             double startCamera = 1.5 * Math.PI;
             double endCamera = 0.25 * Math.PI;
