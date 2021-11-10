@@ -228,15 +228,19 @@ public class Camera{
 
         //blue storage
         double location[] = {-halfField, oneAndHalfTile};
-
-        
+        VectorF robotLocation = lastLocation.getTranslation();
+        double[] robotLocationXY = {robotLocation.get(0)/ mmPerInch, robotLocation.get(1)/ mmPerInch};
+        double dx = location[0] - robotLocationXY[0];
+        double dy = location[1] = robotLocationXY[1];
+        double angle = Math.atan2(dx,dy);
+        telemetry.setValue(dx+" "+dy+ " "+angle);
 
 
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                telemetry.setValue("Visible Target"+ trackable.getName());
+//                telemetry.setValue("Visible Target"+ trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -263,7 +267,7 @@ public class Camera{
         } else {
             text+="Visible Target none";
         }
-        telemetry.setValue(text);
+//        telemetry.setValue(text);
     }
 
     public void stop(){
