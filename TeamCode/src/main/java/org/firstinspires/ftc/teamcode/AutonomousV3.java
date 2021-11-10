@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.Environment;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
@@ -33,7 +31,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
 
-@Autonomous(name="Autonomous 3.∞", group="Iterative Opmode")
+@Autonomous(name="Final Autonomous 3.∞", group="Iterative Opmode")
 public class AutonomousV3 extends OpMode {
 
     //instructions
@@ -101,7 +99,7 @@ public class AutonomousV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
-        telemetryTest = telemetry.addData("Test: ", String.format("%sroute1.txt", Environment.getExternalStorageDirectory().getAbsolutePath()));
+        telemetryTest = telemetry.addData("Test: ", String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/", Environment.getExternalStorageDirectory().getAbsolutePath()));
 
         //Initialize routes
 
