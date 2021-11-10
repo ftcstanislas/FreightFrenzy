@@ -35,8 +35,21 @@ import java.io.File;
 public class AutonomousV3 extends OpMode {
 
     //instructions
-    String path = String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/", Environment.getExternalStorageDirectory().getAbsolutePath());
-    File routeFolder = new File(path);
+    String path = String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/route1.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+    // File routeFolder = new File(path);
+    String fileData = "";
+    try {
+      File routeFolder = new File(path);
+      Scanner myReader = new Scanner(routeFolder);
+      while (myReader.hasNextLine()) {
+        String data = myReader.nextLine();
+        fileData += data;
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
 
     // *****PARAMETER 1*****
 
@@ -99,7 +112,7 @@ public class AutonomousV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
-        telemetryTest = telemetry.addData("Test: ", String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/", Environment.getExternalStorageDirectory().getAbsolutePath()));
+        telemetryTest = telemetry.addData("Test: ", fileData);
 
         //Initialize routes
 
