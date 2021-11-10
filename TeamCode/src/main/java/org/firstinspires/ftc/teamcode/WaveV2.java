@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="Wave the arm", group="presentation")
-
+@Disabled
 public class WaveV2 extends OpMode{
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
