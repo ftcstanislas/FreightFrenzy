@@ -222,7 +222,15 @@ public class Camera{
         // update position camera
         setCameraPosition(16, 13, 19, 0);
 
-        offsetCamera =
+        double startCamera = 1.5 * Math.PI;
+        double endCamera = 0.25 * Math.PI;
+
+
+        //blue storage
+        double location[] = {-halfField, oneAndHalfTile};
+
+        
+
 
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
