@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.stream.Stream;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -40,18 +41,7 @@ public class AutonomousV3 extends OpMode {
     String path = String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/route1.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
     // File routeFolder = new File(path);
     String fileData = "";
-    try {
-      File routeFolder = new File(path);
-      Scanner myReader = new Scanner(routeFolder);
-      while (myReader.hasNextLine()) {
-        String data = myReader.nextLine();
-        fileData += data;
-      }
-      myReader.close();
-    } catch (FileNotFoundException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }
+
 
     // *****PARAMETER 1*****
 
@@ -114,9 +104,21 @@ public class AutonomousV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
-        telemetryTest = telemetry.addData("Test: ", fileData);
 
         //Initialize routes
+        try {
+            File routeFolder = new File(path);
+            Scanner myReader = new Scanner(routeFolder);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                fileData += data;
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        telemetryTest = telemetry.addData("Test: ", fileData);
 
 
         //Initialize objects
@@ -195,12 +197,12 @@ public class AutonomousV3 extends OpMode {
 
     @Override
     public void loop() {
-        try {
-            List<String> fileLines = Files.readAllLines(routeFolder.toPath());
-            telemetryTest.setValue(fileLines);
-        } catch (IOException e) {
-
-        }
+//        try {
+//            List<String> fileLines = Files.readAllLines(routeFolder.toPath());
+//            telemetryTest.setValue(fileLines);
+//        } catch (IOException e) {
+//
+//        }
 //        //telemetry update
 //        telemetryStatus.setValue("Following program "+ finalOutput + " for "+runtime.toString());
 //        telemetryLocation.setValue(globalPositionUpdate.getDisplay());

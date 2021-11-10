@@ -219,21 +219,7 @@ public class Camera{
     }
 
     public void update() {
-        // update position camera
-        setCameraPosition(16, 13, 19, 0);
 
-        double startCamera = 1.5 * Math.PI;
-        double endCamera = 0.25 * Math.PI;
-
-
-        //blue storage
-        double location[] = {-halfField, oneAndHalfTile};
-        VectorF robotLocation = lastLocation.getTranslation();
-        double[] robotLocationXY = {robotLocation.get(0)/ mmPerInch, robotLocation.get(1)/ mmPerInch};
-        double dx = location[0] - robotLocationXY[0];
-        double dy = location[1] = robotLocationXY[1];
-        double angle = Math.atan2(dx,dy);
-        telemetry.setValue(dx+" "+dy+ " "+angle);
 
 
         // check all the trackable targets to see which one (if any) is visible.
@@ -264,10 +250,29 @@ public class Camera{
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             text +=String.format("\nRot (deg) {Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+
+            // update position camera
+            setCameraPosition(16, 13, 19, 0);
+
+            double startCamera = 1.5 * Math.PI;
+            double endCamera = 0.25 * Math.PI;
+
+
+            //blue storage
+            double location[] = {-halfField, oneAndHalfTile};
+            VectorF robotLocation = lastLocation.getTranslation();
+            double[] robotLocationXY = {robotLocation.get(0)/ mmPerInch, robotLocation.get(1)/ mmPerInch};
+            double dx = location[0] - robotLocationXY[0];
+            double dy = location[1] = robotLocationXY[1];
+            double angle = Math.atan2(dx,dy);
+            text += "\n"+dx+" "+dy+ " "+angle;
+
         } else {
             text+="Visible Target none";
         }
-//        telemetry.setValue(text);
+
+
+        telemetry.setValue(text);
     }
 
     public void stop(){
