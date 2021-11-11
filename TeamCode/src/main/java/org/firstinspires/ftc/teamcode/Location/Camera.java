@@ -44,8 +44,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +100,6 @@ public class Camera{
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
-    protected Telemetry.Item telemetryDucks = null;
 
     //Trackelbles
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -113,10 +110,9 @@ public class Camera{
     // Pointer
     Servo pointer = null;
 
-    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit) {
         // Telemetry
         telemetry = telemetryInit;
-        telemetryDucks = telemetryDucksInit;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -310,10 +306,10 @@ public class Camera{
     }
 
     public void detectDuck() {
-        if (vuforia != null) {
+        if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
-            List<Recognition> updatedRecognitions = vuforia.getUpdatedRecognitions();
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
                 // step through the list of recognitions and display boundary info.
