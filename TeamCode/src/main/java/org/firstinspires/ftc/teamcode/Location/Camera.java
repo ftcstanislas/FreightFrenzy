@@ -320,6 +320,7 @@ public class Camera{
     }
 
     public void detectDuck() {
+        String text = "";
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
@@ -329,16 +330,17 @@ public class Camera{
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
                 for (Recognition recognition : updatedRecognitions) {
-                    telemetryDucks.setValue(String.format("label (%d)", i), recognition.getLabel());
-                    telemetryDucks.setValue(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                        recognition.getLeft(), recognition.getTop());
-                    telemetryDucks.setValue(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                        recognition.getRight(), recognition.getBottom());
+                    text += String.format("label (%d)", i) + recognition.getLabel();
+                    text += String.format("  left,top (%d)", i) + "%.03f , %.03f" + 
+                        recognition.getLeft() + recognition.getTop();
+                    text += String.format("  right,bottom (%d)", i) + "%.03f , %.03f" +
+                        recognition.getRight() + recognition.getBottom();
                     i++;
                 }
             }
             //Remove this
         }
+        telemetryDucks.setValue(text);
     }
 }
 
