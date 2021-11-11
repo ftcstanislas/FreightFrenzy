@@ -85,12 +85,12 @@ public class Camera{
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
-    private static final double mmPerInch        = 25.4f;
-    private static final double mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final double fieldTile = 609.6;
-    private static final double halfField        = 1800;//72 * mmPerInch;
-    private static final double halfTile         = 0.5*fieldTile;//12 * mmPerInch;
-    private static final double oneAndHalfTile   = 900;//36 * mmPerInch;
+    private static final float mmPerInch        = 25.4f;
+    private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float fieldTile = 609.6;
+    private static final float halfField        = 1800;//72 * mmPerInch;
+    private static final float halfTile         = 0.5*fieldTile;//12 * mmPerInch;
+    private static final float oneAndHalfTile   = 900;//36 * mmPerInch;
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
@@ -103,6 +103,7 @@ public class Camera{
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
+    protected Telemetry.Item telemetryDucks = null;
 
     // Trackables
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -122,9 +123,10 @@ public class Camera{
       "Marker"
     };
 
-    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit) {
+    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
+        telemetryDucks = telemetryDucksInit;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
