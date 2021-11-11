@@ -101,14 +101,23 @@ public class Camera{
     // Telemetry
     protected Telemetry.Item telemetry = null;
 
-    //Trackelbles
+    // Trackables
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-    //Paramerters
+    // Paramerters
     VuforiaLocalizer.Parameters parameters = null;
 
     // Pointer
     Servo pointer = null;
+
+    // Game element detection
+    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    private static final String[] LABELS = {
+      "Ball",
+      "Cube",
+      "Duck",
+      "Marker"
+    };
 
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit) {
         // Telemetry
