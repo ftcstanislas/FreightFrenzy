@@ -44,6 +44,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,11 +85,12 @@ public class Camera{
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
-    private static final float mmPerInch        = 25.4f;
-    private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final float halfField        = 1800;//72 * mmPerInch;
-    private static final float halfTile         = 300;//12 * mmPerInch;
-    private static final float oneAndHalfTile   = 900;//36 * mmPerInch;
+    private static final double mmPerInch        = 25.4f;
+    private static final double mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
+    private static final double fieldTile = 609.6;
+    private static final double halfField        = 1800;//72 * mmPerInch;
+    private static final double halfTile         = 0.5*fieldTile;//12 * mmPerInch;
+    private static final double oneAndHalfTile   = 900;//36 * mmPerInch;
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
