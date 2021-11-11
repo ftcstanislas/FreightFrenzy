@@ -87,10 +87,10 @@ public class Camera{
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
     private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final float fieldTile = 609.6;
-    private static final float halfField        = 1800;//72 * mmPerInch;
-    private static final float halfTile         = 0.5*fieldTile;//12 * mmPerInch;
-    private static final float oneAndHalfTile   = 900;//36 * mmPerInch;
+    private static final float fieldTile        = 609.6f;
+    private static final float halfField        = 3 * fieldTile;//72 * mmPerInch;
+    private static final float halfTile         = 0.5f * fieldTile;//12 * mmPerInch;
+    private static final float oneAndHalfTile   = 1.5f * fieldTile;//36 * mmPerInch;
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
@@ -265,7 +265,7 @@ public class Camera{
         }
 
         // Provide feedback as to where the robot is located (if we know).
-        text = "";
+        String text = "";
         if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
@@ -325,18 +325,17 @@ public class Camera{
             // the last time that call was made.
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
-                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                telemetryDucks.setValue("# Object Detected", updatedRecognitions.size());
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
                 for (Recognition recognition : updatedRecognitions) {
-                telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                    telemetryDucks.setValue(String.format("label (%d)", i), recognition.getLabel());
+                    telemetryDucks.setValue(String.format("  left,top (%d)", i), "%.03f , %.03f",
                         recognition.getLeft(), recognition.getTop());
-                telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                    telemetryDucks.setValue(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                         recognition.getRight(), recognition.getBottom());
-                i++;
+                    i++;
                 }
-                telemetry.update();
             }
         }
     }
