@@ -337,6 +337,7 @@ public class Camera{
                     i++;
                 }
             }
+            //Remove this
         }
     }
 }
