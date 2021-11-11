@@ -36,6 +36,7 @@ public class Location {
     public void update(){
 //        odometry.globalCoordinatePositionUpdate();
         camera.update();
+        camera.detectDuck();
 //        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
     }
 
