@@ -58,8 +58,3 @@ public class ColorDetector {
                 sensorInput.get("alpha") < alpha + errorMargin && sensorInput.get("alpha") > alpha - errorMargin;
     }
 }
-
-//        double gamepadAngle = Math.atan(gamepad1.right_stick_y / gamepad1.right_stick_x);
-//        if (gamepad1.right_stick_x < 0) gamepadAngle *= -1;
-//        double turnAngle = location.getRotation() - gamepadAngle;
-//        double turning = turnAngle / 10;
