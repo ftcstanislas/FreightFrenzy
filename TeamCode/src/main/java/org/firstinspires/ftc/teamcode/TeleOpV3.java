@@ -37,6 +37,7 @@ public class TeleOpV3 extends OpMode {
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
     Telemetry.Item telemetryLocation = null;
+    Telemetry.Item telemetryDucks = null;
     Telemetry.Item telemetryColorSensor = null;
 
     // make runtime
@@ -58,6 +59,7 @@ public class TeleOpV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
+        telemetryDucks = telemetry.addData("Ducks", "X");
 
         // position
         // File xFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
@@ -74,7 +76,7 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.reverseLeftEncoder();
         
         //Initialize objects part 2
-        location.init(hardwareMap, telemetryLocation);
+        location.init(hardwareMap, telemetryLocation, telemetryDucks);
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         arm.init(hardwareMap, telemetryArm);

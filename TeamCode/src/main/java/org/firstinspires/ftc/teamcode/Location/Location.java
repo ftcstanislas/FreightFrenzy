@@ -12,7 +12,7 @@ public class Location {
     private Camera camera = null;
     private Telemetry.Item telemetry = null;
 
-    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit){
+    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
         // Odometry
 //        odometry = new Odometry(
 //                hardwareMap.get(DcMotor.class, "leftFront"),
@@ -28,7 +28,7 @@ public class Location {
 
         // Camera
         camera = new Camera();
-        camera.init(hardwareMap, telemetryInit);
+        camera.init(hardwareMap, telemetryInit, telemetryDucks);
         
         telemetry = telemetryInit;
     }

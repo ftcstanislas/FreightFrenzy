@@ -100,6 +100,7 @@ public class Camera{
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
+    protected Telemetry.Item telemetryDucks = null;
 
     //Trackelbles
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -110,9 +111,10 @@ public class Camera{
     // Pointer
     Servo pointer = null;
 
-    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit) {
+    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit,Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
+        telemetryDucks = telemetryDucksInit;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -316,6 +318,5 @@ public class Camera{
             }
         }
     }
-    //Test
 }
 
