@@ -14,15 +14,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-// debug, setBrake, setPower, 
+// debug, setBrake, setPower,
 // Nathalie wasn't here
 
 public class Arm extends RobotPart{
-    
+
     String state = "input";
     ColorSensor colorSensor;
+    protected HashMap<String, Integer> modes = new HashMap<>();
 
-    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
+//    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
 //        // set modes
@@ -50,8 +51,33 @@ public class Arm extends RobotPart{
         motors.put("arm", map.get(DcMotor.class, "arm"));
         motors.get("arm").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporary
         servos.put("fork", map.get(Servo.class, "fork"));
+
+        // not final
+        modes.put("mid", 100);
+        modes.put("mid", 150);
     }
-    
+
+//    @Override
+//    public void setMode(String mode){
+//        if (modes.containsKey(mode)){
+//            if (currentMode != mode){
+//                setPosition(modes.get(mode));
+//                updateTelemetry();
+//            }
+//            currentMode = mode;
+//        } else {
+//            telemetry.setValue("Mode "+mode+" doesn't exit");
+//        }
+//    }
+//
+//    @Override
+//    public void setPosition(int pos) {
+//        for (DcMotor motor : motors.values()){
+//            motor.setTargetPosition(pos);
+//        };
+//        updateTelemetry();
+//    }
+
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
 //        boolean tipping = false;
 //        checkSensorInput();
@@ -98,7 +124,7 @@ public class Arm extends RobotPart{
 //                "blue: " + sensorInput.get("blue") + "\n" +
 //                "argb: " + sensorInput.get("argb") + "\n";
 //    }
-    
+
 //    public void setPowerState(boolean tipping){
 //        double totalMotorCounts = -1100;
 //        double totalServoCounts = 1.6;
