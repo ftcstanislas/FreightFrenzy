@@ -273,6 +273,7 @@ public class Camera{
 
 
         telemetry.setValue(text);
+        
     }
 
     public void stop(){

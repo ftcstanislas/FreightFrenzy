@@ -29,7 +29,6 @@ public class Location {
         // Camera
         camera = new Camera();
         camera.init(hardwareMap, telemetryInit);
-
         
         telemetry = telemetryInit;
     }
@@ -37,7 +36,6 @@ public class Location {
     public void update(){
 //        odometry.globalCoordinatePositionUpdate();
         camera.update();
-
 //        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
     }
 
