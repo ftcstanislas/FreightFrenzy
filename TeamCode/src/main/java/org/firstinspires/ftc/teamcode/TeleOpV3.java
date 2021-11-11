@@ -10,11 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Location.Location;
 import org.firstinspires.ftc.teamcode.RobotParts.Arm;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
-import org.firstinspires.ftc.teamcode.Location.IMU;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
-import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
 import java.util.ArrayList;
 import java.util.Collections;
