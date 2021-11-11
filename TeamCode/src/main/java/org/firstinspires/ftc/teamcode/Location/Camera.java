@@ -85,7 +85,7 @@ public class Camera{
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
-    private static final float mmPerInch        = 25.4f;
+//    private static final float mmPerInch        = 25.4f;
     private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
     private static final float fieldTile        = 609.6f;
     private static final float halfField        = 3 * fieldTile;//72 * mmPerInch;
@@ -286,11 +286,13 @@ public class Camera{
             //blue storage
             double location[] = {-halfField, oneAndHalfTile};
             VectorF robotLocation = lastLocation.getTranslation();
-            double[] robotLocationXY = {robotLocation.get(0)/ mmPerInch, robotLocation.get(1)/ mmPerInch};
+            double[] robotLocationXY = {robotLocation.get(0), robotLocation.get(1)};
             double dx = location[0] - robotLocationXY[0];
-            double dy = location[1] = robotLocationXY[1];
+            double dy = location[1] - robotLocationXY[1];
             double angle = Math.atan2(dx,dy);
-            text += "\n"+dx+" "+dy+ " "+angle;
+//            text += "\n"+dx+" "+dy+ " "+angle;
+            text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
+                    dx, dy, angle);
 
         } else {
             text+="Visible Target none";
@@ -338,7 +340,6 @@ public class Camera{
                     i++;
                 }
             }
-            //Remove this
         }
         telemetryDucks.setValue(text);
     }
