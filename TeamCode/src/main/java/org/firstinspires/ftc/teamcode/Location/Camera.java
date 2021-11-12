@@ -290,12 +290,8 @@ public class Camera{
             double dy = location[1] - robotLocationXY[1];
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
-<<<<<<< Updated upstream
-                    dx, dy, angle/Math.PI*180*10);
-=======
                     dx, dy, angle/Math.PI*180);
             pointer.setPosition(0.5);
->>>>>>> Stashed changes
 
         } else {
             text+="Visible Target none";
