@@ -310,7 +310,7 @@ public class Camera{
             while (pointerPosition >= 1.23){
                 pointerPosition-=2;
             }
-            setCameraPosition(0,0,200, (float) 90);
+            setCameraPosition(0,0,200, (float) angle);
             pointer.setPosition(pointerPosition);
             text += String.format("\nPointer position = %.1f",
                     pointerPosition);
