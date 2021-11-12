@@ -282,7 +282,6 @@ public class Camera{
             double startCamera = 1.5 * Math.PI;
             double endCamera = 0.25 * Math.PI;
 
-
             //blue storage
             double location[] = {-halfField, oneAndHalfTile};
             VectorF robotLocation = lastLocation.getTranslation();
@@ -290,9 +289,13 @@ public class Camera{
             double dx = location[0] - robotLocationXY[0];
             double dy = location[1] - robotLocationXY[1];
             double angle = Math.atan2(dy,dx);
-//            text += "\n"+dx+" "+dy+ " "+angle;
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
+<<<<<<< Updated upstream
                     dx, dy, angle/Math.PI*180*10);
+=======
+                    dx, dy, angle/Math.PI*180);
+            pointer.setPosition(0.5);
+>>>>>>> Stashed changes
 
         } else {
             text+="Visible Target none";
