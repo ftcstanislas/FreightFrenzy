@@ -74,9 +74,9 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.reverseLeftEncoder();
         
         //Initialize objects part 2
-        location.init(hardwareMap, telemetryLocation, telemetryDucks);
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
+        location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
 //        arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
