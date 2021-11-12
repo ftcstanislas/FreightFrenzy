@@ -292,7 +292,7 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
 //            text += "\n"+dx+" "+dy+ " "+angle;
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
-                    dx, dy, angle/Math.PI*180*10);
+                    dx, dy, angle/Math.PI*180);
 
         } else {
             text+="Visible Target none";
