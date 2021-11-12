@@ -46,7 +46,7 @@ public class Location {
         camera.update();
 
         //Duck
-        camera.setZoom(true);
+//        camera.setZoom(true);
         camera.detectDuck();
 //        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
     }

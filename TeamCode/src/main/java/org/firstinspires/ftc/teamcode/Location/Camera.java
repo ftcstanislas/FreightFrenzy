@@ -254,8 +254,6 @@ public class Camera{
 
     public void update() {
 
-
-
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
@@ -285,9 +283,7 @@ public class Camera{
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             text +=String.format("\nRot (deg) {Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
-            // update position camera
-//            setCameraPosition(16, 13, 19, 0);
-
+            // Move servo
             double startCamera = 1.5 * Math.PI;
             double endCamera = 0.25 * Math.PI;
 
@@ -305,6 +301,7 @@ public class Camera{
             setCameraPosition(0,0,200, (float) angle);
             pointer.setPosition(pointerAngle);
             text += "\nPointer"+pointerAngle;
+
         } else {
             text+="Visible Target none";
         }

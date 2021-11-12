@@ -47,7 +47,7 @@ public class Intake extends RobotPart{
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
         switchMode(gamepad1.b, "stop","intaking");
         // speed
-//        setPowers(modes.get(currentMode));
+//        setPowers(modes.get(currentMode)); DIT HOEFT NIET
 //        if (gamepad1.a) {
 //            motors.get("intake").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //            setPower(1);
