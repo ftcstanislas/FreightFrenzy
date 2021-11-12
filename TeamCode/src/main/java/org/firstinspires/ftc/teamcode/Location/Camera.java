@@ -292,7 +292,7 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
 //            text += "\n"+dx+" "+dy+ " "+angle;
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
-                    dx, dy, angle/Math.PI*180);
+                    dx, dy, angle/Math.PI*180*10);
 
         } else {
             text+="Visible Target none";
@@ -328,7 +328,7 @@ public class Camera{
             // the last time that call was made.
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
-                telemetryDucks.setValue("# Object Detected", updatedRecognitions.size());
+                text = "# Object Detected " + updatedRecognitions.size();
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
                 for (Recognition recognition : updatedRecognitions) {
@@ -339,6 +339,8 @@ public class Camera{
                         recognition.getRight() + recognition.getBottom();
                     i++;
                 }
+            } else {
+                text = "No Objects Detected";
             }
         }
         telemetryDucks.setValue(text);
