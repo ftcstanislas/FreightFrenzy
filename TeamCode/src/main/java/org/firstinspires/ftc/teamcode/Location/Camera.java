@@ -208,7 +208,7 @@ public class Camera{
          * Finally the camera can be translated to its actual mounting position on the robot.
          *      In this example, it is centered on the robot (left-to-right and front-to-back), and 6 inches above ground level.
          */
-        setCameraPosition(0,0,200,0);
+        setCameraPosition(0,0,200,90);
 //        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
 //        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
 //        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
@@ -246,7 +246,7 @@ public class Camera{
     public void setCameraPosition(float forward, float left, float height, float heading){
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                 .translation(forward, left, height)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, heading));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, heading, 0));
 
         /**  Let all the trackable listeners know where the camera is.  */
         for (VuforiaTrackable trackable : allTrackables) {
@@ -285,10 +285,6 @@ public class Camera{
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             text +=String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
 
-            // Move servo
-            double startCamera = 1.5 * Math.PI;
-            double endCamera = 0.25 * Math.PI;
-
             //blue storage
             double location[] = {-halfField, oneAndHalfTile};
             double[] robotLocationXY = {translation.get(0), translation.get(1)};
@@ -307,17 +303,17 @@ public class Camera{
 
 //            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
 //            double pointerAngle = 1-angle/180-0.2;
-            double pointerAngle = 1.46-1.46/360*angle-0.04;
-            while (pointerAngle < -0.5){
-                pointerAngle+=2;
+            double pointerPosition = 0.73-1.46/360*angle+0.04;
+            while (pointerPosition < -0.23){
+                pointerPosition+=2;
             }
-            while (pointerAngle >= 1.5){
-                pointerAngle-=2;
+            while (pointerPosition >= 1.23){
+                pointerPosition-=2;
             }
-//            setCameraPosition(0,0,200, (float) angle);
-            pointer.setPosition(pointerAngle);
-            text += String.format("\nd{Pointer} = %.1f",
-                    pointerAngle);
+            setCameraPosition(0,0,200, (float) 90);
+            pointer.setPosition(pointerPosition);
+            text += String.format("\nPointer position = %.1f",
+                    pointerPosition);
 
         } else {
             text+="Visible Target none";
