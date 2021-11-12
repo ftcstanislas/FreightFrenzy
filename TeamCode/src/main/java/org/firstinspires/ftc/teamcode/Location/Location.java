@@ -108,7 +108,7 @@ public class Location {
         double midPointY = midPoint[1];
         double dx = currentX - midPointX;
         double dy = currentY - midPointY;
-        double distance = sqrt(dx**2 + dy**2);
+        double distance = Math.sqrt(dx**2 + dy**2);
         double closestX = midPointX + dx / distance * radius;
         double closestY = midPointY + dy / distance * radius;
         double rotation = Math.toDegrees(Math.atan(dx, dy));
