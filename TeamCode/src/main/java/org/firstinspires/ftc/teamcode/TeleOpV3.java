@@ -82,6 +82,9 @@ public class TeleOpV3 extends OpMode {
 //        spinner.init(hardwareMap, telemetrySpinner);
 //        colorSensor.init(hardwareMap, telemetryColorSensor);
 
+        //Start duck detection
+        location.startDuckDetection();
+
         status.setValue("Initialized");
     }
     
@@ -99,6 +102,9 @@ public class TeleOpV3 extends OpMode {
 //        String test = telemetry.addAction(getStatus);
 //        status.setValue("%s", test);
         lastTime = System.nanoTime();
+
+        //Stop duck detection
+        location.stopDuckDetection();
     }
 
     @Override
