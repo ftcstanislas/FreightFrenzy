@@ -35,7 +35,7 @@ public abstract class RobotPart {
     
     protected void debug(){
         String text = "";
-        if (currentMode != ""){
+        if (!currentMode.equals("")){
             text += "\nCurrent mode: "+currentMode;
         }
         for (Map.Entry<String, DcMotor> entry : motors.entrySet()){
@@ -86,13 +86,13 @@ public abstract class RobotPart {
 
     public void setMode(String mode){
         if (modes.containsKey(mode)){
-            if (currentMode != mode){
+            if (!currentMode.equals(mode)){
                 setPowers(modes.get(mode));
                 updateTelemetry();
             }
             currentMode = mode;
         } else {
-            telemetry.setValue("Mode "+mode+" doesn't exit");
+            telemetry.setValue("Mode "+mode+" doesn't exits");
         }
     }
 
