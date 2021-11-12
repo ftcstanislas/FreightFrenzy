@@ -113,6 +113,20 @@ public class Arm extends RobotPart{
         }
     }
 
+    public boolean moveToPosition(int targetPos, double power) {
+
+        if (inMargin(motors.get("arm").getCurrentPosition(),targetPos,errorMargin)) {
+            return true;
+        }
+        if (motors.get("arm").getTargetPosition() != targetPos) {
+            motors.get("arm").setTargetPosition(targetPos);
+        }
+        if (inMargin(motors.get("arm").getPower(),power,errorMargin)) {
+            motors.get("arm").setPower(power);
+        }
+        return false;
+    }
+
 //    public void checkSensorInput() {
 //        sensorInput.put("red", colorSensor.red());
 //        sensorInput.put("green", colorSensor.blue());
