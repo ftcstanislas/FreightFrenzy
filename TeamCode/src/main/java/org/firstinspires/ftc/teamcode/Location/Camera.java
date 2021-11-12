@@ -286,7 +286,7 @@ public class Camera{
 //            setCameraPosition(16, 13, 19, 0);
 
             double startCamera = 1.5 * Math.PI;
-            double endCamera = 0.25 * Math.PI;
+            double endCamera = 0.5 * Math.PI;
 
             //blue storage
             double location[] = {-halfField, oneAndHalfTile};
@@ -297,8 +297,9 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle/Math.PI*180);
-
-
+            double pointerAngle = 1/(startCamera-endCamera)*(angle-startCamera);
+            pointer.setPosition(pointerAngle);
+            text += pointerAngle;
         } else {
             text+="Visible Target none";
         }
