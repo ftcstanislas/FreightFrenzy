@@ -303,14 +303,14 @@ public class Camera{
 
 //            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
 //            double pointerAngle = 1-angle/180-0.2;
-            double pointerPosition = 0.73-1.46/360*angle+0.04;
-            while (pointerPosition < -0.23){
+            double pointerPosition = 0.69-1.38/360*angle+0.04;//0.69-1.38/360*angle+0.04;
+            while (pointerPosition < -0.19){
                 pointerPosition+=2;
             }
-            while (pointerPosition >= 1.23){
+            while (pointerPosition >= 1.19){
                 pointerPosition-=2;
             }
-            setCameraPosition(0,0,200, (float) 90);
+//            setCameraPosition(0,0,200, (float)(180-angle));
             pointer.setPosition(pointerPosition);
             text += String.format("\nPointer position = %.1f",
                     pointerPosition);

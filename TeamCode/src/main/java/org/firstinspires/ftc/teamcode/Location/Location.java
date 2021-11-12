@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 
 public class Location {
 //    private Odometry odometry = null;
@@ -108,10 +109,10 @@ public class Location {
         double midPointY = midPoint[1];
         double dx = currentX - midPointX;
         double dy = currentY - midPointY;
-        double distance = Math.sqrt(dx**2 + dy**2);
+        double distance = Math.hypot(dx, dy);
         double closestX = midPointX + dx / distance * radius;
         double closestY = midPointY + dy / distance * radius;
-        double rotation = Math.toDegrees(Math.atan(dx, dy));
+        double rotation = Math.toDegrees(Math.atan2(dy, dx));
 
         boolean targetReached = goToPosition(closestX, closestY, rotation, 1); 
 
