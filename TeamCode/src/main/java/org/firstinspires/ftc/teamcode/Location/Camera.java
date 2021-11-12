@@ -306,7 +306,8 @@ public class Camera{
                     dx, dy, angle);
 
 //            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
-            double pointerAngle = 1-angle/180-0.2;
+//            double pointerAngle = 1-angle/180-0.2;
+            double pointerAngle = 1.46-1.46/360*angle-0.04;
             while (pointerAngle < -0.5){
                 pointerAngle+=2;
             }

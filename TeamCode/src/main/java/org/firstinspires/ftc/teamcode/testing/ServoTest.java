@@ -38,13 +38,7 @@ public class ServoTest extends OpMode {
      */
     @Override
     public void start() {
-        double pos = servo.getPosition();
-        if (pos < 0.5) {
-            servo.setPosition(1);
-        } else {
-            servo.setPosition(0);
-        };
-        telemetry.addLine("Servo turned");
+
     }
 
     /*
@@ -52,6 +46,16 @@ public class ServoTest extends OpMode {
      */
     @Override
     public void loop() {
+        double position = 0.5;
+        if (gamepad1.a) {
+            position = 0.5 + gamepad1.left_stick_y / 2;
+        } else if (gamepad1.b){
+            position = 0.04;
+        } else if (gamepad1.x){
+            position = 0.73;
+        }
+        servo.setPosition(position);
+        telemetry.addLine("Servo turned at "+position);
     }
 
     /*
