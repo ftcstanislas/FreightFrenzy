@@ -112,6 +112,10 @@ public abstract class RobotPart {
             isSwitchPressed = false;
         }
     }
+
+    public boolean inMargin(value, threshold, margin) {
+        return value <= threshold + margin && value >= threshold - margin;
+    }
 }
 
 

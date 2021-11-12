@@ -90,6 +90,9 @@ public class AutonomousV3 extends OpMode {
     File positionYFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
     File orientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
 
+    // Instructions PART MODE <things>
+    object[][] route1 = {{"SPINNER", "spin"}, {"INTAKE", "intaking"}};
+
     @Override
     public void init() {
 
@@ -98,6 +101,7 @@ public class AutonomousV3 extends OpMode {
         telemetry.setAutoClear(false);
         telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
+        telemetryInstruction = telemetry.addData("Instruction", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
         telemetryArm = telemetry.addData("Arm", "X");
         telemetryIntake = telemetry.addData("Intake", "X");
@@ -179,16 +183,13 @@ public class AutonomousV3 extends OpMode {
 //        // motors.resetEncoders();
 //        runtime.reset();
 //
-//        // Lift arm a little bit
-//        arm.resetEncoder();
-//        arm.setArmMode(2);
-//
-//        if (finalOutput == "niks") {
-//            instructions = instruction1V2;
-//        } else if (finalOutput == "Single") {
-//            instructions = instruction2V2;
-//        } else if (finalOutput == "Quad") {
-//            instructions = instruction3V2;
+//        //PLEASE UNCOMMENT WHEN READY
+//        if (finalOutput == "left") {
+//            instructions = route1;
+//        } else if (finalOutput == "middle") {
+//            instructions = route2;
+//        } else if (finalOutput == "right") {
+//            instructions = route3;
 //        }
 //
 //        //telemetry update
@@ -208,44 +209,44 @@ public class AutonomousV3 extends OpMode {
 //        telemetryLocation.setValue(globalPositionUpdate.getDisplay());
 //
 //
-//        if (instruction<instructions.length){
-//            //telemetry
-//            String text = instruction+"/"+(instructions.length-1)+"   "+java.util.Arrays.toString(instructions[instruction]);
-//            telemetryInstruction.setValue(text);
-//
-//            //execute instruction
-//            boolean result = executeFunction(instructions[instruction]);
-//
-//            // check if done
-//            if (result == true){
-//                instruction += 1;
-//            } else if (instructions[instruction][0] == 1){
-//                unfinishedInstructions.add(instruction);
-//                instruction += 1;
-//            }
-//        } else {
-//            telemetryInstruction.setValue("Done");
-//        }
-//
-//        //excute unfinished instructions
-//        if (unfinishedInstructions.size()>0){
-//            telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
-//            for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
-//                boolean result = executeFunction(instructions[unfinishedInstructions.get(nummer)]);
-//                if (result==true){
-//                    unfinishedInstructions.remove(unfinishedInstructions.get(nummer));
-//                    nummer--;
-//                }
-//            }
-//        } else {
-//            telemetryUnfinishedInstructions.setValue("Done");
-//        }
+        if (instruction<instructions.length){
+            //telemetry
+            String text = instruction+"/"+(instructions.length-1)+"   "+java.util.Arrays.toString(instructions[instruction]);
+            telemetryInstruction.setValue(text);
+
+            //execute instruction
+            boolean result = executeFunction(instructions[instruction]);
+
+            // check if done
+            if (result == true){
+                instruction += 1;
+            } else if (instructions[instruction][0] == 1){
+                unfinishedInstructions.add(instruction);
+                instruction += 1;
+            }
+        } else {
+            telemetryInstruction.setValue("Done");
+        }
+
+        //excute unfinished instructions
+        if (unfinishedInstructions.size()>0){
+            telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
+            for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
+                boolean result = executeFunction(instructions[unfinishedInstructions.get(nummer)]);
+                if (result==true){
+                    unfinishedInstructions.remove(unfinishedInstructions.get(nummer));
+                    nummer--;
+                }
+            }
+        } else {
+            telemetryUnfinishedInstructions.setValue("Done");
+        }
     }
 
     @Override
     public void stop() {
         //telemetry update
-//        telemetryStatus.setValue("Stopping");
+        telemetryStatus.setValue("Stopping");
 //
 //        globalPositionUpdate.stop();
 //
@@ -259,11 +260,39 @@ public class AutonomousV3 extends OpMode {
 //        //     result = driveTo.goToPositionNew(0, 0, 0.5, 0, 1000);
 //        // 4
 //
-//        //telemetry update
-//        telemetryStatus.setValue("Stopped");
+        //telemetry update
+        telemetryStatus.setValue("Stopped");
     }
 
-    public boolean executeFunction(double[] instruction){
+    public boolean executeFunction(instruction){
+
+        boolean done = true;
+        String part = instruction[0];
+        String mode = instruction[1];
+
+        switch (part) {
+            case "SPINNER":
+                spinner.setMode(mode);
+                break;
+
+            case "INTAKE":
+                intake.setMode(mode);
+                break;
+
+            case "ARM":
+                arm.setMode(mode);
+                break;
+
+            case "DRIVETRAIN":
+                //stuff
+                break;
+
+            default:
+                throw new java.lang.Error("Part " + part + " does not exist");
+        }
+        
+        return done;
+
 //        boolean done = true;
 //        String text = "";
 //
