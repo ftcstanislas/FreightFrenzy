@@ -308,7 +308,7 @@ public class Camera{
         } else {
             text+="Visible Target none";
         }
-        pointer.setPosition(0.5);
+        pointer.setPosition(0.0);
         text += "Pointer"+pointer.getPosition();
 
         telemetry.setValue(text);
