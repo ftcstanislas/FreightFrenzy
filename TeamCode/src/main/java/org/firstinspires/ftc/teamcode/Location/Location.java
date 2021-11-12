@@ -32,10 +32,21 @@ public class Location {
         
         telemetry = telemetryInit;
     }
+    
+    public void startDuckDetection() {
+        camera.startDuckDetection();
+    }
+
+    public void stopDuckDetection() {
+        camera.stopDuckDetection();
+    }
 
     public void update(){
 //        odometry.globalCoordinatePositionUpdate();
         camera.update();
+
+        //Duck
+        camera.setZoom(true);
         camera.detectDuck();
 //        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
     }

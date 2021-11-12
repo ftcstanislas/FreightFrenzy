@@ -123,6 +123,8 @@ public class Camera{
       "Marker"
     };
 
+    private boolean checkDuck = false;
+
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
@@ -286,7 +288,7 @@ public class Camera{
 //            setCameraPosition(16, 13, 19, 0);
 
             double startCamera = 1.5 * Math.PI;
-            double endCamera = 0.5 * Math.PI;
+            double endCamera = 0.25 * Math.PI;
 
             //blue storage
             double location[] = {-halfField, oneAndHalfTile};
@@ -297,13 +299,12 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle/Math.PI*180);
-            double pointerAngle = 1/(startCamera-endCamera)*(angle-startCamera);
-            pointer.setPosition(pointerAngle);
-            text += pointerAngle;
+
+
         } else {
             text+="Visible Target none";
         }
-        pointer.setPosition(0.0);
+        pointer.setPosition(0.5);
         text += "Pointer"+pointer.getPosition();
 
         telemetry.setValue(text);
@@ -312,6 +313,7 @@ public class Camera{
     public void stop(){
         // Disable Tracking when we are done;
         targets.deactivate();
+        stopDuckDetect();
     }
 
     /***
@@ -328,39 +330,41 @@ public class Camera{
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
     }
 
-    public void setZoom(boolean visible) {
+    public void startDuckDetection() {
+        checkDuck = true;
+        tfod.setZoom(2.5, 16.0/9.0);
         if (tfod != null) {
-            if (visible) {
-                tfod.setZoom(2.5, 16.0/9.0);
-            } else {
-                tfod.setZoom(1.0, 16.0/9.0);
+            while (checkDuck) {
+                detectDuck();
             }
         }
     }
 
+    public void stopDuckDetection() {
+        checkDuck = false;
+    }
+
     public void detectDuck() {
         String text = "";
-        if (tfod != null) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                text = "# Object Detected " + updatedRecognitions.size();
-                // step through the list of recognitions and display boundary info.
-                int i = 0;
-                for (Recognition recognition : updatedRecognitions) {
-                    text += String.format("label (%d)", i) + recognition.getLabel();
-                    text += String.format("  left,top (%d)", i) + 
-                        // "%.03f , %.03f" + 
-                        recognition.getLeft() + recognition.getTop();
-                    text += String.format("  right,bottom (%d)", i) + 
-                        // "%.03f , %.03f" +
-                        recognition.getRight() + recognition.getBottom();
-                    i++;
-                }
-            } else {
-                text = "No Objects Detected";
+        // getUpdatedRecognitions() will return null if no new information is available since
+        // the last time that call was made.
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+            text = "# Object Detected " + updatedRecognitions.size();
+            // step through the list of recognitions and display boundary info.
+            int i = 0;
+            for (Recognition recognition : updatedRecognitions) {
+                text += String.format("label (%d)", i) + recognition.getLabel();
+                text += String.format("  left,top (%d)", i) + 
+                    // "%.03f , %.03f" + 
+                    recognition.getLeft() + recognition.getTop();
+                text += String.format("  right,bottom (%d)", i) + 
+                    // "%.03f , %.03f" +
+                    recognition.getRight() + recognition.getBottom();
+                i++;
             }
+        } else {
+            text = "No Objects Detected";
         }
         telemetryDucks.setValue(text);
     }
