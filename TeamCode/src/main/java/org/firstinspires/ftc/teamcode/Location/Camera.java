@@ -225,26 +225,28 @@ public class Camera{
         targets.activate();
 
         //Duck
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+        if (false) {
+            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+            tfodParameters.minResultConfidence = 0.8f;
+            tfodParameters.isModelTensorFlow2 = true;
+            tfodParameters.inputSize = 320;
+            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
 
-        if (tfod != null) {
-            tfod.activate();
+            if (tfod != null) {
+                tfod.activate();
 
 //            setZoom(false); JELMER
+            }
         }
     }
 
     public void setCameraPosition(float forward, float left, float height, float heading){
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                 .translation(forward, left, height)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, RADIANS, 90, 90, heading));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, heading));
 
         /**  Let all the trackable listeners know where the camera is.  */
         for (VuforiaTrackable trackable : allTrackables) {
@@ -276,12 +278,12 @@ public class Camera{
         if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
-            text += String.format("Pos (mm) {X, Y, Z} = %.1f, %.1f, %.1f",
-                    translation.get(0) ,translation.get(1) ,translation.get(2));
+            text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
+                    translation.get(0) ,translation.get(1));
 
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            text +=String.format("\nRot (deg) {Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            text +=String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
 
             // Move servo
             double startCamera = 1.5 * Math.PI;
@@ -289,18 +291,32 @@ public class Camera{
 
             //blue storage
             double location[] = {-halfField, oneAndHalfTile};
-            VectorF robotLocation = lastLocation.getTranslation();
-            double[] robotLocationXY = {robotLocation.get(0), robotLocation.get(1)};
+            double[] robotLocationXY = {translation.get(0), translation.get(1)};
+            double robotOrientation = rotation.thirdAngle;
             double dx = location[0] - robotLocationXY[0];
             double dy = location[1] - robotLocationXY[1];
-            double angle = Math.atan2(dy,dx);
+            double angle = Math.atan2(dy,dx)/Math.PI*180 - robotOrientation + 90;
+            while (angle < 0){
+                angle+=360;
+            }
+            while (angle >= 360){
+                angle-=360;
+            }
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
-                    dx, dy, angle/Math.PI*180);
+                    dx, dy, angle);
 
-            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
-            setCameraPosition(0,0,200, (float) angle);
+//            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
+            double pointerAngle = 1-angle/180-0.2;
+            while (pointerAngle < -0.5){
+                pointerAngle+=2;
+            }
+            while (pointerAngle >= 1.5){
+                pointerAngle-=2;
+            }
+//            setCameraPosition(0,0,200, (float) angle);
             pointer.setPosition(pointerAngle);
-            text += "\nPointer"+pointerAngle;
+            text += String.format("\nd{Pointer} = %.1f",
+                    pointerAngle);
 
         } else {
             text+="Visible Target none";
@@ -312,7 +328,7 @@ public class Camera{
     public void stop(){
         // Disable Tracking when we are done;
         targets.deactivate();
-        stopDuckDetection();
+//        stopDuckDetection();
     }
 
     /***

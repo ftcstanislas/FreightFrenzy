@@ -22,7 +22,7 @@ public class ServoTest extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-        servo = hardwareMap.get(Servo.class, "servo");
+        servo = hardwareMap.get(Servo.class, "cameraPointer1");
     }
 
     /*
@@ -40,9 +40,9 @@ public class ServoTest extends OpMode {
     public void start() {
         double pos = servo.getPosition();
         if (pos < 0.5) {
-            servo.setPosition(pos+0.5);
+            servo.setPosition(1);
         } else {
-            servo.setPosition(pos-0.5);
+            servo.setPosition(0);
         };
         telemetry.addLine("Servo turned");
     }
