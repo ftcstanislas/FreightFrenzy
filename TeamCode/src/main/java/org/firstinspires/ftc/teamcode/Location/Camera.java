@@ -304,7 +304,7 @@ public class Camera{
 //            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
 //            double pointerAngle = 1-angle/180-0.2;
             final double TOTAL_COUNTS_PER_ROUND = 1.38;
-            final double OFFSET = 0.04;
+            final double OFFSET = 0.02;
             double pointerPosition = 0.5*TOTAL_COUNTS_PER_ROUND-TOTAL_COUNTS_PER_ROUND/360*angle+OFFSET;//0.69-1.38/360*angle+0.04;
             while (pointerPosition < -0.19){
                 pointerPosition+=2;
