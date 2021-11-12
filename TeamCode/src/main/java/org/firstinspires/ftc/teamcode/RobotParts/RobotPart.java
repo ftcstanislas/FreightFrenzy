@@ -53,7 +53,7 @@ public abstract class RobotPart {
             Servo servo = entry.getValue();
             text += "\n" + entry.getKey() + " | servo " + servo.getPosition();
         };
-        text += additionalTelemetry;
+//        text += additionalTelemetry;
         telemetry.setValue(text);
     }
     
