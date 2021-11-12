@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
@@ -243,7 +244,7 @@ public class Camera{
     public void setCameraPosition(float forward, float left, float height, float heading){
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                 .translation(forward, left, height)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, heading));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, RADIANS, 90, 90, heading));
 
         /**  Let all the trackable listeners know where the camera is.  */
         for (VuforiaTrackable trackable : allTrackables) {
@@ -299,6 +300,7 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle/Math.PI*180);
+<<<<<<< Updated upstream
 
 
         } else {
@@ -306,6 +308,15 @@ public class Camera{
         }
         pointer.setPosition(0.5);
         text += "Pointer"+pointer.getPosition();
+=======
+            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
+            setCameraPosition(0,0,200, (float) angle);
+            pointer.setPosition(pointerAngle);
+            text += "\nPointer"+pointerAngle;
+        } else {
+            text+="Visible Target none";
+        }
+>>>>>>> Stashed changes
 
         telemetry.setValue(text);
     }
