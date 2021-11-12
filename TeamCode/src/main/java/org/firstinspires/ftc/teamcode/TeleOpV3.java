@@ -23,10 +23,10 @@ public class TeleOpV3 extends OpMode {
     //get objects
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    Arm arm = new Arm();
+//    Arm arm = new Arm();
     Intake intake = new Intake();
-    Spinner spinner = new Spinner();
-    ColorDetector colorSensor = new ColorDetector();
+//    Spinner spinner = new Spinner();
+//    ColorDetector colorSensor = new ColorDetector();
     
     // telemetry
     Telemetry.Item status = null;
@@ -77,7 +77,7 @@ public class TeleOpV3 extends OpMode {
         location.init(hardwareMap, telemetryLocation, telemetryDucks);
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        arm.init(hardwareMap, telemetryArm);
+//        arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
 //        spinner.init(hardwareMap, telemetrySpinner);
 //        colorSensor.init(hardwareMap, telemetryColorSensor);
@@ -112,9 +112,9 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
         drivetrain.checkController(gamepad1, gamepad2);
-        arm.checkController(gamepad1, gamepad2);
+//        arm.checkController(gamepad1, gamepad2);
         intake.checkController(gamepad1, gamepad2);
-        spinner.checkController(gamepad1, gamepad2);
+//        spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         location.update();
 

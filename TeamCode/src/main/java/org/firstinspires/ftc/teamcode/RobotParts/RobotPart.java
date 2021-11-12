@@ -88,9 +88,9 @@ public abstract class RobotPart {
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
                 setPowers(modes.get(mode));
+                currentMode = mode;
                 updateTelemetry();
             }
-            currentMode = mode;
         } else {
             telemetry.setValue("Mode "+mode+" doesn't exits");
         }
