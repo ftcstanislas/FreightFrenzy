@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
@@ -122,6 +123,8 @@ public class Camera{
       "Duck",
       "Marker"
     };
+
+    private boolean checkDuck = false;
 
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
@@ -234,20 +237,14 @@ public class Camera{
         if (tfod != null) {
             tfod.activate();
 
-            // The TensorFlow software will scale the input images from the camera to a lower resolution.
-            // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-            // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-            // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-            // should be set to the value of the images used to create the TensorFlow Object Detection model
-            // (typically 16/9).
-            tfod.setZoom(2.5, 16.0/9.0);
+            setZoom(false);
         }
     }
 
     public void setCameraPosition(float forward, float left, float height, float heading){
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                 .translation(forward, left, height)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, heading));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, RADIANS, 90, 90, heading));
 
         /**  Let all the trackable listeners know where the camera is.  */
         for (VuforiaTrackable trackable : allTrackables) {
@@ -303,6 +300,7 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle/Math.PI*180);
+<<<<<<< Updated upstream
 
 
         } else {
@@ -310,6 +308,15 @@ public class Camera{
         }
         pointer.setPosition(0.5);
         text += "Pointer"+pointer.getPosition();
+=======
+            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
+            setCameraPosition(0,0,200, (float) angle);
+            pointer.setPosition(pointerAngle);
+            text += "\nPointer"+pointerAngle;
+        } else {
+            text+="Visible Target none";
+        }
+>>>>>>> Stashed changes
 
         telemetry.setValue(text);
     }
@@ -317,6 +324,7 @@ public class Camera{
     public void stop(){
         // Disable Tracking when we are done;
         targets.deactivate();
+        stopDuckDetect();
     }
 
     /***
@@ -333,29 +341,41 @@ public class Camera{
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
     }
 
+    public void startDuckDetection() {
+        checkDuck = true;
+        tfod.setZoom(2.5, 16.0/9.0);
+        if (tfod != null) {
+            while (checkDuck) {
+                detectDuck();
+            }
+        }
+    }
+
+    public void stopDuckDetection() {
+        checkDuck = false;
+    }
+
     public void detectDuck() {
         String text = "";
-        if (tfod != null) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                text = "# Object Detected " + updatedRecognitions.size();
-                // step through the list of recognitions and display boundary info.
-                int i = 0;
-                for (Recognition recognition : updatedRecognitions) {
-                    text += String.format("label (%d)", i) + recognition.getLabel();
-                    text += String.format("  left,top (%d)", i) + 
-                        // "%.03f , %.03f" + 
-                        recognition.getLeft() + recognition.getTop();
-                    text += String.format("  right,bottom (%d)", i) + 
-                        // "%.03f , %.03f" +
-                        recognition.getRight() + recognition.getBottom();
-                    i++;
-                }
-            } else {
-                text = "No Objects Detected";
+        // getUpdatedRecognitions() will return null if no new information is available since
+        // the last time that call was made.
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+            text = "# Object Detected " + updatedRecognitions.size();
+            // step through the list of recognitions and display boundary info.
+            int i = 0;
+            for (Recognition recognition : updatedRecognitions) {
+                text += String.format("label (%d)", i) + recognition.getLabel();
+                text += String.format("  left,top (%d)", i) + 
+                    // "%.03f , %.03f" + 
+                    recognition.getLeft() + recognition.getTop();
+                text += String.format("  right,bottom (%d)", i) + 
+                    // "%.03f , %.03f" +
+                    recognition.getRight() + recognition.getBottom();
+                i++;
             }
+        } else {
+            text = "No Objects Detected";
         }
         telemetryDucks.setValue(text);
     }
