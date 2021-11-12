@@ -290,8 +290,12 @@ public class Camera{
             double dy = location[1] - robotLocationXY[1];
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
+<<<<<<< Updated upstream
+                    dx, dy, angle/Math.PI*180*10);
+=======
                     dx, dy, angle/Math.PI*180);
             pointer.setPosition(0.5);
+>>>>>>> Stashed changes
 
         } else {
             text+="Visible Target none";
@@ -332,9 +336,11 @@ public class Camera{
                 int i = 0;
                 for (Recognition recognition : updatedRecognitions) {
                     text += String.format("label (%d)", i) + recognition.getLabel();
-                    text += String.format("  left,top (%d)", i) + "%.03f , %.03f" + 
+                    text += String.format("  left,top (%d)", i) + 
+                        // "%.03f , %.03f" + 
                         recognition.getLeft() + recognition.getTop();
-                    text += String.format("  right,bottom (%d)", i) + "%.03f , %.03f" +
+                    text += String.format("  right,bottom (%d)", i) + 
+                        // "%.03f , %.03f" +
                         recognition.getRight() + recognition.getBottom();
                     i++;
                 }
