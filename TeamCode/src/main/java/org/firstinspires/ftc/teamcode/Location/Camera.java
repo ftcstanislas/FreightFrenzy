@@ -237,7 +237,7 @@ public class Camera{
         if (tfod != null) {
             tfod.activate();
 
-            setZoom(false);
+//            setZoom(false); JELMER
         }
     }
 
@@ -300,15 +300,7 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle/Math.PI*180);
-<<<<<<< Updated upstream
 
-
-        } else {
-            text+="Visible Target none";
-        }
-        pointer.setPosition(0.5);
-        text += "Pointer"+pointer.getPosition();
-=======
             double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
             setCameraPosition(0,0,200, (float) angle);
             pointer.setPosition(pointerAngle);
@@ -316,7 +308,6 @@ public class Camera{
         } else {
             text+="Visible Target none";
         }
->>>>>>> Stashed changes
 
         telemetry.setValue(text);
     }
@@ -324,7 +315,7 @@ public class Camera{
     public void stop(){
         // Disable Tracking when we are done;
         targets.deactivate();
-        stopDuckDetect();
+        stopDuckDetection();
     }
 
     /***
