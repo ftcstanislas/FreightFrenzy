@@ -303,13 +303,13 @@ public class Camera{
             double angle = Math.atan2(dy,dx);
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle/Math.PI*180);
-            pointer.setPosition(0.5);
-            text += "Pointer"+pointer.getPosition();
+
 
         } else {
             text+="Visible Target none";
         }
-
+        pointer.setPosition(0.5);
+        text += "Pointer"+pointer.getPosition();
 
         telemetry.setValue(text);
     }
