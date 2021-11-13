@@ -24,8 +24,13 @@ public class Spinner extends RobotPart{
         setBrake(true);
 
         // set modes
-        modes.put("stop", new double[] {0.0});
-        modes.put("spin", new double[] {1.0});
+        modes.put("stop", new HashMap<String, Double>() {{
+            put("spinner", 0.0);
+        }});
+
+        modes.put("spin", new HashMap<String, Double>() {{
+            put("spinner", 1.0);
+        }});
         
         // setup telemetry
         telemetry = telemetryInit;
@@ -34,7 +39,7 @@ public class Spinner extends RobotPart{
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.b, "stop","spin");
+        switchMode(gamepad1.a, "stop","spin");
     }
     
     public void updateTelemetry(){

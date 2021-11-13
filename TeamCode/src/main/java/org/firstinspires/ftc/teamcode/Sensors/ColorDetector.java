@@ -14,6 +14,8 @@ public class ColorDetector {
 
     private ColorSensor colorSensor = null;
     private double errorMargin = 100;
+    public String object = "EMPTY";
+
     public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
     protected Telemetry.Item telemetry = null;
 
@@ -28,16 +30,31 @@ public class ColorDetector {
         sensorInput.put("blue", colorSensor.blue());
         sensorInput.put("argb", colorSensor.argb());
         sensorInput.put("alpha", colorSensor.alpha());
+//        Not final values!
+        if (inputMatch(100,100,100,100,100)) {
+            object = "BLOCK";
+        } else if (inputMatch(5,5,5,5,5)) {
+            object = "BALL";
+        } else if (inputMatch(69,420,69,420,69420)) {
+            object = "CUSTOM";
+        } else {
+            object = "EMPTY";
+        }
         telemetry.setValue("\n" +
+                "----- Object: " + object + " -----" + "\n" +
                 "red: " + sensorInput.get("red") + "\n" +
                 "green: " + sensorInput.get("green") + "\n" +
                 "blue: " + sensorInput.get("blue") + "\n" +
-                "argb: " + sensorInput.get("argb") + "\n"
+                "argb: " + sensorInput.get("argb") + "\n" +
+                "alpha: " + sensorInput.get("alpha")
         );
     }
-}
 
-//        double gamepadAngle = Math.atan(gamepad1.right_stick_y / gamepad1.right_stick_x);
-//        if (gamepad1.right_stick_x < 0) gamepadAngle *= -1;
-//        double turnAngle = location.getRotation() - gamepadAngle;
-//        double turning = turnAngle / 10;
+    public boolean inputMatch(double red, double green, double blue, double argb,double alpha) {
+        return sensorInput.get("red") < red + errorMargin && sensorInput.get("red") > red - errorMargin &&
+                sensorInput.get("green") < green + errorMargin && sensorInput.get("green") > green - errorMargin &&
+                sensorInput.get("blue") < blue + errorMargin && sensorInput.get("blue") > blue - errorMargin &&
+                sensorInput.get("argb") < argb + errorMargin && sensorInput.get("argb") > argb - errorMargin &&
+                sensorInput.get("alpha") < alpha + errorMargin && sensorInput.get("alpha") > alpha - errorMargin;
+    }
+}

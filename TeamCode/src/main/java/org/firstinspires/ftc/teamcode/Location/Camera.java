@@ -32,6 +32,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -43,11 +44,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
@@ -77,33 +81,22 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 
 public class Camera{
-
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY =
             "AYijR7b/////AAABmQXodEBY4E1gjxKsoSygzWsm4RFjj/z+nzPa0q3oo3vJNz51j477KysEdl4h1YfezCokKxkUeK3ARNjE1tH80M5gZbubu2bkdF6Ja8gINhJTAY/ZJrFkPGiiLfausXsCWAygHW7ufeu3FLIDp1DN2NHj4rzDP4vRv5z/0T0deRLucpRcv36hqUkJ1N6Duumo0se+BCmdAh7ycUW2wteJ3T1e/LxuO5sI6qtwnJW64fe2n6cehk5su76c9t45AcBfod6f0txGezdzpqY5NoHjz0G/gLvah0vAYW+/0x3yaWy8thEd64OVMVb2q37TsJ1UDjl5qupztdG7nXkRGYF5oaR8CGkm2lqPyugJuRFNMRcM";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
-    private static final float mmPerInch        = 25.4f;
-    private static final float mmTargetHeight   = 6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final float halfField        = 72 * mmPerInch;
-    private static final float halfTile         = 12 * mmPerInch;
-    private static final float oneAndHalfTile   = 36 * mmPerInch;
+//    private static final float mmPerInch        = 25.4f;
+    private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float fieldTile        = 609.6f;
+    private static final float halfField        = 3 * fieldTile;//72 * mmPerInch;
+    private static final float halfTile         = 0.5f * fieldTile;//12 * mmPerInch;
+    private static final float oneAndHalfTile   = 1.5f * fieldTile;//36 * mmPerInch;
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
     private VuforiaLocalizer vuforia    = null;
+    private TFObjectDetector tfod       = null;
     private VuforiaTrackables targets   = null ;
     private WebcamName webcamName       = null;
 
@@ -111,16 +104,38 @@ public class Camera{
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
+    protected Telemetry.Item telemetryDucks = null;
 
-    //Trackelbles
+    // Trackables
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit) {
+    // Paramerters
+    VuforiaLocalizer.Parameters parameters = null;
+
+    // Pointer
+    Servo pointer = null;
+
+    // Game element detection
+    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
+    private static final String[] LABELS = {
+      "Ball",
+      "Cube",
+      "Duck",
+      "Marker"
+    };
+
+    private boolean checkDuck = false;
+
+    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
+        telemetryDucks = telemetryDucksInit;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        // Servo pointer
+        pointer = hardwareMap.get(Servo.class, "cameraPointer1");
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -129,7 +144,7 @@ public class Camera{
          * Note: A preview window is required if you want to view the camera stream on the Driver Station Phone.
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -193,44 +208,59 @@ public class Camera{
          * Finally the camera can be translated to its actual mounting position on the robot.
          *      In this example, it is centered on the robot (left-to-right and front-to-back), and 6 inches above ground level.
          */
+        setCameraPosition(0,0,200,90);
+//        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
+//        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
+//        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
+//
+//        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
+//                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
+//                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+//
+//        /**  Let all the trackable listeners know where the camera is.  */
+//        for (VuforiaTrackable trackable : allTrackables) {
+//            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
+//        }
 
-        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
-        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
-        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
+        targets.activate();
 
+        //Duck
+        if (false) {
+            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+            tfodParameters.minResultConfidence = 0.8f;
+            tfodParameters.isModelTensorFlow2 = true;
+            tfodParameters.inputSize = 320;
+            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+
+            if (tfod != null) {
+                tfod.activate();
+
+//            setZoom(false); JELMER
+            }
+        }
+    }
+
+    public void setCameraPosition(float forward, float left, float height, float heading){
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
-                .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+                .translation(forward, left, height)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, heading, 0));
 
         /**  Let all the trackable listeners know where the camera is.  */
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
         }
-
-        /*
-         * WARNING:
-         * In this sample, we do not wait for PLAY to be pressed.  Target Tracking is started immediately when INIT is pressed.
-         * This sequence is used to enable the new remote DS Camera Preview feature to be used with this sample.
-         * CONSEQUENTLY do not put any driving commands in this loop.
-         * To restore the normal opmode structure, just un-comment the following line:
-         */
-
-        /* Note: To use the remote camera preview:
-         * AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
-         * Tap the preview window to receive a fresh image.
-         * It is not permitted to transition to RUN while the camera preview window is active.
-         * Either press STOP to exit the OpMode, or use the "options menu" again, and select "Camera Stream" to close the preview window.
-         */
-
-        targets.activate();
     }
 
     public void update() {
+
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                telemetry.setValue("Visible Target", trackable.getName());
+//                telemetry.setValue("Visible Target"+ trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -244,23 +274,60 @@ public class Camera{
         }
 
         // Provide feedback as to where the robot is located (if we know).
+        String text = "";
         if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
-            telemetry.setValue("Pos (inches)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+            text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
+                    translation.get(0) ,translation.get(1));
 
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            telemetry.setValue("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            text +=String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
+
+            //blue storage
+            double location[] = {-halfField, oneAndHalfTile};
+            double[] robotLocationXY = {translation.get(0), translation.get(1)};
+            double robotOrientation = rotation.thirdAngle;
+            double dx = location[0] - robotLocationXY[0];
+            double dy = location[1] - robotLocationXY[1];
+            double angle = Math.atan2(dy,dx)/Math.PI*180 - robotOrientation + 90;
+            while (angle < 0){
+                angle+=360;
+            }
+            while (angle >= 360){
+                angle-=360;
+            }
+            text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
+                    dx, dy, angle);
+
+//            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
+//            double pointerAngle = 1-angle/180-0.2;
+            final double TOTAL_COUNTS_PER_ROUND = 1.38;
+            final double OFFSET = 0.02;
+            double pointerPosition = 0.5*TOTAL_COUNTS_PER_ROUND-TOTAL_COUNTS_PER_ROUND/360*angle+OFFSET;//0.69-1.38/360*angle+0.04;
+            while (pointerPosition < -0.19){
+                pointerPosition+=2;
+            }
+            while (pointerPosition >= 1.19){
+                pointerPosition-=2;
+            }
+//            setCameraPosition(0,0,200, (float)(180-angle));
+            pointer.setPosition(pointerPosition);
+            text += String.format("\nPointer position = %.1f",
+                    pointerPosition);
+
         } else {
-            telemetry.setValue("Visible Target", "none");
+            text+="Visible Target none";
         }
+
+        telemetry.setValue(text);
     }
 
     public void stop(){
         // Disable Tracking when we are done;
         targets.deactivate();
+//        stopDuckDetection();
     }
 
     /***
@@ -270,11 +337,50 @@ public class Camera{
      * @param dx, dy, dz  Target offsets in x,y,z axes
      * @param rx, ry, rz  Target rotations in x,y,z axes
      */
-    void    identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
+    void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
         VuforiaTrackable aTarget = targets.get(targetIndex);
         aTarget.setName(targetName);
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
+    }
+
+    public void startDuckDetection() {
+        checkDuck = true;
+        tfod.setZoom(2.5, 16.0/9.0);
+        if (tfod != null) {
+            while (checkDuck) {
+                detectDuck();
+            }
+        }
+    }
+
+    public void stopDuckDetection() {
+        checkDuck = false;
+    }
+
+    public void detectDuck() {
+        String text = "";
+        // getUpdatedRecognitions() will return null if no new information is available since
+        // the last time that call was made.
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+            text = "# Object Detected " + updatedRecognitions.size();
+            // step through the list of recognitions and display boundary info.
+            int i = 0;
+            for (Recognition recognition : updatedRecognitions) {
+                text += String.format("label (%d)", i) + recognition.getLabel();
+                text += String.format("  left,top (%d)", i) + 
+                    // "%.03f , %.03f" + 
+                    recognition.getLeft() + recognition.getTop();
+                text += String.format("  right,bottom (%d)", i) + 
+                    // "%.03f , %.03f" +
+                    recognition.getRight() + recognition.getBottom();
+                i++;
+            }
+        } else {
+            text = "No Objects Detected";
+        }
+        telemetryDucks.setValue(text);
     }
 }
 

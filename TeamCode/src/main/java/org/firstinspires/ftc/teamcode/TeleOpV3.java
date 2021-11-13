@@ -10,24 +10,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Location.Location;
 import org.firstinspires.ftc.teamcode.RobotParts.Arm;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
-import org.firstinspires.ftc.teamcode.Location.IMU;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
-import org.firstinspires.ftc.teamcode.Sensors.Camera;
 
-@TeleOp(name="Final OpMode 3.6", group="Iterative Opmode")
+import java.util.ArrayList;
+import java.util.Collections;
 
+@TeleOp(name="OpMode 3.10", group="Iterative Opmode")
 public class TeleOpV3 extends OpMode {
     
     //get objects
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    Arm arm = new Arm();
+//    Arm arm = new Arm();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
-    Camera camera = new Camera(); // Dit afmaken later
-    ColorDetector colorSensor = new ColorDetector();
+//    ColorDetector colorSensor = new ColorDetector();
     
     // telemetry
     Telemetry.Item status = null;
@@ -36,6 +35,7 @@ public class TeleOpV3 extends OpMode {
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
     Telemetry.Item telemetryLocation = null;
+    Telemetry.Item telemetryDucks = null;
     Telemetry.Item telemetryColorSensor = null;
 
     // make runtime
@@ -49,6 +49,7 @@ public class TeleOpV3 extends OpMode {
         
         //add telemetry
         telemetry.setAutoClear(false);
+        telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
         telemetryArm = telemetry.addData("Arm", "X");
@@ -56,6 +57,7 @@ public class TeleOpV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
+        telemetryDucks = telemetry.addData("Ducks", "X");
 
         // position
         // File xFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
@@ -72,9 +74,9 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.reverseLeftEncoder();
         
         //Initialize objects part 2
-        location.init(hardwareMap, telemetryLocation);
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
+        location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
 //        arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -86,14 +88,17 @@ public class TeleOpV3 extends OpMode {
     @Override
     public void init_loop() {
         status.setValue("Init looping");
+        location.update();
     }
 
     
     @Override
     public void start() {
         status.setValue("Starting");
+        runtime.reset();
+//        String test = telemetry.addAction(getStatus);
+//        status.setValue("%s", test);
         lastTime = System.nanoTime();
-        status.setValue("Started");
     }
 
     @Override
@@ -113,11 +118,14 @@ public class TeleOpV3 extends OpMode {
 //        colorSensor.update();
         location.update();
 
+//        if (gamepad1.a) {
+//            location.switchServo();
+//        }
+
     }
 
     @Override
     public void stop() {
         status.setValue("Stopping");
     }
-
 }

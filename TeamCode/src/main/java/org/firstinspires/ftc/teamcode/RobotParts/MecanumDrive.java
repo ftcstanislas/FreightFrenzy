@@ -34,13 +34,12 @@ public class MecanumDrive extends RobotPart{
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
         // xy
-        double x = gamepad1.left_stick_x; 
-        double y = -gamepad1.left_stick_y;
+        double x = -gamepad1.left_stick_x;
+        double y = gamepad1.left_stick_y;
 
         // turning
         double turning = gamepad1.left_trigger - gamepad1.right_trigger;
-
-        turning = turning*Math.abs(turning); //experimental
+        //turning = turning*Math.abs(turning); //experimental
         if (gamepad1.x){
             turning *= 0.45;
         }
@@ -59,7 +58,8 @@ public class MecanumDrive extends RobotPart{
     
     public void setPowerDirection(double x, double y, double turn, double power){
         double straal = Math.hypot(x, y);
-        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
+//        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
+        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4;
         
         //calculate power wheels
         double powerLeftFront = straal * Math.cos(robotAngle) + turn;

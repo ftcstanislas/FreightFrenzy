@@ -25,17 +25,17 @@ public abstract class RobotPart {
     protected Telemetry.Item telemetry = null;
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
-    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
+//    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
+    protected HashMap<String, HashMap<String, Double>> modes = new HashMap<String, HashMap<String, Double>>();
     protected String currentMode = "";
     protected String additionalTelemetry = "";
-    
     abstract void updateTelemetry();
     
     abstract void checkController(Gamepad gamepad1, Gamepad gamepad2);
     
     protected void debug(){
         String text = "";
-        if (currentMode != ""){
+        if (!currentMode.equals("")){
             text += "\nCurrent mode: "+currentMode;
         }
         for (Map.Entry<String, DcMotor> entry : motors.entrySet()){
@@ -53,7 +53,7 @@ public abstract class RobotPart {
             Servo servo = entry.getValue();
             text += "\n" + entry.getKey() + " | servo " + servo.getPosition();
         };
-        text += additionalTelemetry;
+//        text += additionalTelemetry;
         telemetry.setValue(text);
     }
     
@@ -64,12 +64,12 @@ public abstract class RobotPart {
         updateTelemetry();
     }
 
-    protected void setPowers(double[] powers){
-        int index = 0;
-        for (DcMotor motor : motors.values()){
-            motor.setPower(powers[index]);
-            index+=1;
-        };
+    protected void setPowers(HashMap<String, Double> powers) {
+        for (Map.Entry<String, Double> entry : powers.entrySet()) {
+            String motorName = entry.getKey();
+            Double power = entry.getValue();
+            motors.get(motorName).setPower(power);
+        }
     }
     
     public void setBrake(boolean check){
@@ -86,14 +86,18 @@ public abstract class RobotPart {
 
     public void setMode(String mode){
         if (modes.containsKey(mode)){
-            if (currentMode != mode){
+            if (!currentMode.equals(mode)){
                 setPowers(modes.get(mode));
+                currentMode = mode;
                 updateTelemetry();
             }
-            currentMode = mode;
         } else {
-            telemetry.setValue("Mode "+mode+" doesn't exit");
+            telemetry.setValue("Mode "+mode+" doesn't exits");
         }
+    }
+
+    public void setPosition() {
+
     }
 
     public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
@@ -107,6 +111,10 @@ public abstract class RobotPart {
         } else if (!trigger){
             isSwitchPressed = false;
         }
+    }
+
+    public boolean inMargin(value, threshold, margin) {
+        return value <= threshold + margin && value >= threshold - margin;
     }
 }
 

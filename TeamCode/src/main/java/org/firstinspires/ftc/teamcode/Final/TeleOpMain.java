@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 
 @TeleOp(name="Final OpMode 2.0", group="Iterative Opmode")
-
+@Disabled
 public class TeleOpMain extends OpMode {
     
     //get objects

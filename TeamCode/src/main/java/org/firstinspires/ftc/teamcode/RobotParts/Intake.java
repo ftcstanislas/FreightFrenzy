@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.Map;
 import java.util.HashMap;
+import static java.util.Map.Entry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -27,18 +28,26 @@ public class Intake extends RobotPart{
         setBrake(true);
 
         // set modes
-        modes.put("stop", new double[] {0.0});
-        modes.put("intaking", new double[] {1.0});
+        modes.put("stop", new HashMap<String, Double>() {{
+            put("intake", 0.0);
+        }});
+
+        modes.put("intaking", new HashMap<String, Double>() {{
+            put("intake", 1.0);
+        }});
+//        modes.put("stop", new double[] {0.0});
+//        modes.put("intaking", new double[] {1.0});
         
         // setup
         telemetry = telemetryInit;
 
         setMode("stop");
     }
-    
+
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.a, "stop","intaking");
+        switchMode(gamepad1.b, "stop","intaking");
         // speed
+//        setPowers(modes.get(currentMode)); DIT HOEFT NIET
 //        if (gamepad1.a) {
 //            motors.get("intake").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //            setPower(1);
