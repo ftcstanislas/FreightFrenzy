@@ -66,14 +66,8 @@ public class TeleOpV3 extends OpMode {
         // double x = Double.parseDouble(ReadWriteFile.readFile(xFile).trim());
         // double y = Double.parseDouble(ReadWriteFile.readFile(yFile).trim());
         // double o = Double.parseDouble(ReadWriteFile.readFile(OrientationFile).trim());
-        // globalPositionUpdate.setPosition(x,y,o);
-        // positionThread = new Thread(globalPositionUpdate);
-        // positionThread.start();
-        // globalPositionUpdate.reverseNormalEncoder();
-        // globalPositionUpdate.reverseRightEncoder();
-        // globalPositionUpdate.reverseLeftEncoder();
         
-        //Initialize objects part 2
+        //Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
@@ -87,7 +81,7 @@ public class TeleOpV3 extends OpMode {
     
     @Override
     public void init_loop() {
-        status.setValue("Init looping");
+        telemetryStatus.setValue("Init looping for " + runtime.toString());
         location.update();
     }
 

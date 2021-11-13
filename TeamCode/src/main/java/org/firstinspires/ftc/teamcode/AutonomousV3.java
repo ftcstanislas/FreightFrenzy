@@ -29,18 +29,31 @@ import java.util.List;
 import org.firstinspires.ftc.teamcode.Odometry_Sample.OdometryGlobalCoordinatePosition;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-
+import org.firstinspires.ftc.teamcode.Location.Location;
+import org.firstinspires.ftc.teamcode.RobotParts.Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Intake;
+import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
+import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
+import org.firstinspires.ftc.teamcode.Routes;
+import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import java.io.File;
 
 @Autonomous(name="Final Autonomous 3.∞", group="Iterative Opmode")
 public class AutonomousV3 extends OpMode {
 
+    // Robot parts
+    Location location = new Location();
+    MecanumDrive drivetrain = new MecanumDrive();
+    // Arm arm = new Arm();
+    Intake intake = new Intake();
+    Spinner spinner = new Spinner();
+    // ColorDetector colorSensor = new ColorDetector();
+
     //instructions
     Routes routes = new Routes();
 
     int instruction = 0;
-    List<Integer> unfinishedInstructions = new ArrayList<Integer>();
-
+    List<Object[][]> unfinishedInstructions = new ArrayList<Object[][]>();
 
     // make telemetry
     Telemetry.Item status = null;
@@ -52,8 +65,9 @@ public class AutonomousV3 extends OpMode {
     Telemetry.Item telemetryColorSensor = null;
     Telemetry.Item telemetryTest = null;
 
-    //Output amount of rings
-    String finalOutput = "niks";
+    // Wich program to follow
+    String program = ["blue", "onbekend"];
+    Object[][] instructions = {};
 
     // sleeping
     double wakeUpTime = 0;
@@ -69,13 +83,10 @@ public class AutonomousV3 extends OpMode {
     // final double COUNTS_PER_INCH = 307.699557;
     // Thread positionThread;
 
-    //File for position
+    // File for position
     // File positionXFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
     // File positionYFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
     // File orientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
-
-    // Instructions PART MODE <things>
-    // object[][] route1 = {{"SPINNER", "spin"}, {"INTAKE", "intaking"}};
 
     @Override
     public void init() {
@@ -94,111 +105,68 @@ public class AutonomousV3 extends OpMode {
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
         telemetryTest = telemetry.addData("Test", "X");
 
+        // Initialize objects
+        drivetrain.init(hardwareMap, telemetryDrivetrain, location);
+        drivetrain.setBrake(true);
+        location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
+        // arm.init(hardwareMap, telemetryArm);
+        intake.init(hardwareMap, telemetryIntake);
+        spinner.init(hardwareMap, telemetrySpinner);
+        // colorSensor.init(hardwareMap, telemetryColorSensor);
 
-        //Initialize objects
-//        motors.init(hardwareMap);
-//        motors.resetEncoders();
-//
-//        globalPositionUpdate = new OdometryGlobalCoordinatePosition(motors.leftBackDrive, motors.rightBackDrive, motors.rightFrontDrive, COUNTS_PER_INCH, 20);
-//        positionThread = new Thread(globalPositionUpdate);
-//        positionThread.start();
-//
-//
-//        drivetrain.init(motors, telemetryDrivetrain, runtime);
-//        drivetrain.setBrake(true);
-//        driveTo.init(motors, drivetrain, telemetryInformation, globalPositionUpdate);
-//        arm.init(motors);
-//        arm.setStartPos(800);
-//        camera.init(hardwareMap);
-//        intake.init(motors);
-//        ringPlacer.init(motors);
-//        shooter.init(motors, ringPlacer, intake, telemetryTesten, globalPositionUpdate);
-//        intakeLock.init(motors);
-//        wings.init(motors);
-//        wings.setMode(0);
-//
-//        arm.setGripperPos(1);
-//
-//
-//        // position
-//        // globalPositionUpdate.reverseNormalEncoder();
-//        // globalPositionUpdate.reverseRightEncoder();
-//        // globalPositionUpdate.reverseLeftEncoder();
-//
-//        //telemetry update
-//        telemetryStatus.setValue("Initialized");
+        status.setValue("Initialized");
     }
 
     @Override
     public void init_loop() {
-        //telemetry update
-//        telemetryStatus.setValue("Init looping for "+runtime.toString());
-//
-//        // get camera
-//        String output = camera.getRings();
-//        if (output != "niks" && finalOutput != "Quad"){
-//            finalOutput = output;
-//        };
-//
-//        telemetryInformation.setValue(finalOutput);
-
+        //Telemetry update
+        telemetryStatus.setValue("Init looping for " + runtime.toString());
+        
     }
 
     @Override
     public void start() {
-        //telemetry update
-//        telemetryStatus.setValue("Starting");
-//
-//        // reset
-//        // motors.resetEncoders();
-//        runtime.reset();
-//
-//        //PLEASE UNCOMMENT WHEN READY
-//        if (finalOutput == "left") {
-//            instructions = route1;
-//        } else if (finalOutput == "middle") {
-//            instructions = route2;
-//        } else if (finalOutput == "right") {
-//            instructions = route3;
-//        }
-//
-//        //telemetry update
-//        telemetryStatus.setValue("Started");
+        // Telemetry update
+        telemetryStatus.setValue("Starting");
+        
+        // Reset
+        runtime.reset();
+
+        // Correct instruction
+        instructions = Routes.getRoute(program[0], program[1]);
+
+        //Telemetry update
+        telemetryStatus.setValue("Started");
     }
 
     @Override
     public void loop() {
-//        try {
-//            List<String> fileLines = Files.readAllLines(routeFolder.toPath());
-//            telemetryTest.setValue(fileLines);
-//        } catch (IOException e) {
-//
-//        }
-//        //telemetry update
-//        telemetryStatus.setValue("Following program "+ finalOutput + " for "+runtime.toString());
-//        telemetryLocation.setValue(globalPositionUpdate.getDisplay());
-//
-//
+        // Telemetry update
+        telemetryStatus.setValue("Following program " + program[0] + " from " + program[1] + " for " + runtime.toString());
+
+        // location
+        location.update();
+
         if (instruction<instructions.length){
-            //telemetry
-            String text = instruction+"/"+(instructions.length-1)+"   "+java.util.Arrays.toString(instructions[instruction]);
+            // Telemetry
+            String text = instruction + "/" + (instructions.length-1) + "   " + java.util.Arrays.toString(instructions[instruction]);
             telemetryInstruction.setValue(text);
 
-            //execute instruction
+            // Execute instruction
             boolean result = executeFunction(instructions[instruction]);
 
-            // check if done
+            // Check if done
             if (result == true){
                 instruction += 1;
-            } else if (instructions[instruction][0] == 1){
+            } else if (instructions[instruction][0] == false){
                 unfinishedInstructions.add(instruction);
                 instruction += 1;
             }
         } else {
-            telemetryInstruction.setValue("Done");
+            telemetryInstruction.setValue("Done with instructions");
         }
 
-        //excute unfinished instructions
+        // Excute unfinished instructions
         if (unfinishedInstructions.size()>0){
             telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
             for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
@@ -209,7 +177,7 @@ public class AutonomousV3 extends OpMode {
                 }
             }
         } else {
-            telemetryUnfinishedInstructions.setValue("Done");
+            telemetryUnfinishedInstructions.setValue("Done with unfinished instructions");
         }
     }
 
@@ -217,19 +185,12 @@ public class AutonomousV3 extends OpMode {
     public void stop() {
         //telemetry update
         telemetryStatus.setValue("Stopping");
-//
-//        globalPositionUpdate.stop();
-//
+        
+        location.stop();
 //        ReadWriteFile.writeFile(positionXFile, String.valueOf(globalPositionUpdate.returnXCoordinate()));
 //        ReadWriteFile.writeFile(positionYFile, String.valueOf(globalPositionUpdate.returnYCoordinate()));
 //        ReadWriteFile.writeFile(orientationFile, String.valueOf(globalPositionUpdate.returnOrientation()));
-//
-//        // for testing only (drive back to start position)
-//        // int result = 0;
-//        // while (result == 0){
-//        //     result = driveTo.goToPositionNew(0, 0, 0.5, 0, 1000);
-//        // 4
-//
+
         //telemetry update
         telemetryStatus.setValue("Stopped");
     }
@@ -237,125 +198,57 @@ public class AutonomousV3 extends OpMode {
     public boolean executeFunction(instruction){
 
         boolean done = true;
-        String part = instruction[0];
-        String mode = instruction[1];
+        String part = instruction[1];
+        String function = instruction[2];
 
         switch (part) {
             case "SPINNER":
-                spinner.setMode(mode);
+                if (function == "mode") {
+                    /*done =*/ spinner.setMode(mode);
+                }
                 break;
 
             case "INTAKE":
-                intake.setMode(mode);
+                if (function == "mode") {
+                    /*done =*/ intake.setMode(mode);
+                }
                 break;
 
             case "ARM":
-                arm.setMode(mode);
+                if (function == "mode") {
+                    /*done =*/ spinner.setMode(mode);
+                }
                 break;
+
+            case "WAIT":
+                //Calculate wait time
+                if (wakeUpTime == 0){
+                    wakeUpTime = (double) runtime.time() + (double) instruction[2];
+                }
+
+                //Check if time passed
+                if (wakeUpTime < runtime.time()){
+                    wakeUpTime = 0;
+                    // done = true;
+                } else {
+                    // done = false;
+                }
 
             case "DRIVETRAIN":
-                //stuff
+                switch (function) {
+                    case "toPosition":
+                        //done = location.goToPosition(instruction[3], instruction[4], instruction[5], instruction[6]);  // x, y, rotation, speed
+                        break;
+                    case "toCircle":
+                        //done = location.goToCircle(instruction[3], instruction[4], instruction[5]); // x, y, radius
                 break;
 
-            default:
+            default: // if no match is found
                 throw new java.lang.Error("Part " + part + " does not exist");
+
         }
         
         return done;
-
-//        boolean done = true;
-//        String text = "";
-//
-//        double actionType = instruction[1];
-//
-//        //execute instuction
-//        if (actionType == 10){
-//            done = driveTo.goToPositionNew3(instruction[2], instruction[3], 1, instruction[4], 500);
-//        } else if (actionType == 11){
-//            done = driveTo.goToPositionNew3(instruction[2], instruction[3], 0.3, instruction[4], 500);
-//        } else if (actionType == 12){
-//            done = driveTo.goToCheckpoint(instruction[2], instruction[3], 1, instruction[4], 4000);
-//        } else if (actionType == 13){
-//            done = driveTo.goToOrientation(instruction[2], 1, 2);
-//        } else if (actionType == 20){
-//            done = shooter.setPower(instruction[2]);
-//            text = shooter.getDisplay();
-//        } else if (actionType == 21) {
-//            done = shooter.setModeHighGoal((int) instruction[2]);
-//            text = shooter.getDisplay();
-//        } else if (actionType == 22){
-//            if (timeOut == 0) {
-//                timeOut = runtime.time() + 6;
-//            }
-//            done = shooter.shoot(false, true);
-//            text = shooter.getDisplay();
-//            if (done) {
-//                timeOut = 0;
-//            } else if (timeOut < runtime.time()) {
-//                timeOut = 0;
-//                ringPlacer.setMode(0);
-//                intake.setMode(0);
-//                shooter.setModeHighGoal(0);
-//                text += "\nDone, took to long";
-//                done = true;
-//            }
-//        } else if (actionType == 30){
-//            done = arm.setArmPos((int) instruction[2]);
-//            text = arm.getDisplay();
-//        } else if (actionType == 31){
-//            done = arm.setArmMode((int) instruction[2]);
-//            text = arm.getDisplay();
-//        } else if (actionType == 40){
-//            done = arm.setGripperPos((int) instruction[2]);
-//            text = arm.getDisplay();
-//        } else if (actionType == 41){
-//            done = arm.setGripperMode((int) instruction[2]);
-//            text = arm.getDisplay();
-//        } else if (actionType == 50){
-//            done = intake.setPower(instruction[2]);
-//            text = shooter.getDisplay();
-//        } else if (actionType == 51){
-//            done = intake.setMode((int) instruction[2]);
-//            text = shooter.getDisplay();
-//        } else if (actionType == 60){
-//            done = ringPlacer.setPower(instruction[2]);
-//            text = shooter.getDisplay();
-//        } else if (actionType == 61){
-//            done = ringPlacer.setMode((int) instruction[2]);
-//            text = shooter.getDisplay();
-//        } else if (actionType == 70){
-//            done = intakeLock.setPos(instruction[2]);
-//            text = intakeLock.getDisplay();
-//        } else if (actionType == 71) {
-//            done = intakeLock.setMode((int) instruction[2]);
-//            text = intakeLock.getDisplay();
-//        } else if (actionType == 80){
-//            wings.setPos(instruction[2]);
-//        } else if (actionType == 81){
-//            wings.setMode((int) instruction[2]);
-//        } else if (actionType == 90){
-//            // calculate stop time
-//            if (wakeUpTime == 0){
-//                wakeUpTime = (double) runtime.time() + (double) instruction[2];
-//            }
-//
-//            // check if time passed
-//            if (wakeUpTime < runtime.time()){
-//                wakeUpTime = 0;
-//                done = true;
-//            } else {
-//                done = false;
-//            }
-//        } else {
-//            // throw new java.lang.Error("Invalid action tupe " + actionType);
-//        }
-//
-//        if (text != ""){
-//            telemetryInformation.setValue(text);
-//        }
-//
-//        return done;
-        return false; //VERWIJDEREN
     }
 
 }

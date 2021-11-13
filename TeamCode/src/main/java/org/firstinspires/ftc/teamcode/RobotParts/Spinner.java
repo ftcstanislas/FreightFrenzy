@@ -28,8 +28,12 @@ public class Spinner extends RobotPart{
             put("spinner", 0.0);
         }});
 
-        modes.put("spin", new HashMap<String, Double>() {{
+        modes.put("spinLeft", new HashMap<String, Double>() {{
             put("spinner", 1.0);
+        }});
+
+        modes.put("spinRight", new HashMap<String, Double>() {{
+            put("spinner", -1.0);
         }});
         
         // setup telemetry

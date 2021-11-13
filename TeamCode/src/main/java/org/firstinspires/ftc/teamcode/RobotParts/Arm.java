@@ -21,28 +21,10 @@ public class Arm extends RobotPart{
 
     String state = "input";
     ColorSensor colorSensor;
-    protected HashMap<String, Integer> modes = new HashMap<>();
 
 //    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
-//        // set modes
-////        modes.put("lvl1", 1.5 * Math.PI);
-////        modes.put("lvl2", 1.3 * Math.PI);
-////        modes.put("lvl3", 0.9 * Math.PI);
-////        modes.put("input", 0 * Math.PI);
-//
-//        // get motors
-//        motors.put("lifter", map.get(DcMotor.class, "lifter"));
-//        motors.get("lifter").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        motors.get("lifter").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motors.get("lifter").setDirection(DcMotor.Direction.FORWARD);
-//        setBrake(true);
-//
-//
-//        // get servos
-//        servos.put("fork", map.get(Servo.class, "fork"));
-//
 //        // get sensors
 //        colorSensor = map.get(ColorSensor.class, "color_sensor");
 //
@@ -53,8 +35,17 @@ public class Arm extends RobotPart{
         servos.put("fork", map.get(Servo.class, "fork"));
 
         // not final
-        modes.put("mid", 100);
-        modes.put("mid", 150);
+        modes.put("low", new HashMap<String, Double>() {{
+            put("arm", 50);
+        }});
+
+        modes.put("mid", new HashMap<String, Double>() {{
+            put("arm", 100);
+        }});
+
+        modes.put("high", new HashMap<String, Double>() {{
+            put("arm", 150);
+        }});
     }
 
 //    @Override
@@ -111,20 +102,6 @@ public class Arm extends RobotPart{
         } else {
             servos.get("fork").setPosition(1);
         }
-    }
-
-    public boolean moveToPosition(int targetPos, double power) {
-
-        if (inMargin(motors.get("arm").getCurrentPosition(),targetPos,errorMargin)) {
-            return true;
-        }
-        if (motors.get("arm").getTargetPosition() != targetPos) {
-            motors.get("arm").setTargetPosition(targetPos);
-        }
-        if (inMargin(motors.get("arm").getPower(),power,errorMargin)) {
-            motors.get("arm").setPower(power);
-        }
-        return false;
     }
 
 //    public void checkSensorInput() {

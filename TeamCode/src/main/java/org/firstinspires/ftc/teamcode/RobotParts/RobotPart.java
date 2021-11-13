@@ -64,13 +64,6 @@ public abstract class RobotPart {
         updateTelemetry();
     }
 
-    protected void setPowers(HashMap<String, Double> powers) {
-        for (Map.Entry<String, Double> entry : powers.entrySet()) {
-            String motorName = entry.getKey();
-            Double power = entry.getValue();
-            motors.get(motorName).setPower(power);
-        }
-    }
     
     public void setBrake(boolean check){
         DcMotor.ZeroPowerBehavior option;
@@ -87,17 +80,22 @@ public abstract class RobotPart {
     public void setMode(String mode){
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
-                setPowers(modes.get(mode));
+                for (Map.Entry<String, Double> entry : mode.entrySet()) {
+                    Double value = entry.getValue();
+                    DcMotor motor = motors.get(entry.getKey());
+                    DcMotor.RunMode mode = motor.getMode();
+                    if (mode == DcMotor.RunMode.RUN_WITHOUT_ENCODER){
+                        motor.setPower(value);
+                    } else if (mode == DcMotor.RunMode.RUN_TO_POSITION || mode == DcMotor.RunMode.RUN_USING_ENCODER){
+                        motor.setTargetPosition((int) value);
+                    }
+                }
                 currentMode = mode;
                 updateTelemetry();
             }
         } else {
             telemetry.setValue("Mode "+mode+" doesn't exits");
         }
-    }
-
-    public void setPosition() {
-
     }
 
     public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
