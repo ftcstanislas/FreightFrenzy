@@ -97,7 +97,7 @@ public class Camera{
     private OpenGLMatrix lastLocation   = null;
     private VuforiaLocalizer vuforia    = null;
     private TFObjectDetector tfod       = null;
-    private VuforiaTrackables targets   = null ;
+    private VuforiaTrackables targets   = null;g
     private WebcamName webcamName       = null;
 
     private boolean targetVisible       = false;
@@ -301,11 +301,13 @@ public class Camera{
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle);
 
-//            double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
-//            double pointerAngle = 1-angle/180-0.2;
+
             final double TOTAL_COUNTS_PER_ROUND = 1.38;
             final double OFFSET = 0.02;
-            double pointerPosition = 0.5*TOTAL_COUNTS_PER_ROUND-TOTAL_COUNTS_PER_ROUND/360*angle+OFFSET;//0.69-1.38/360*angle+0.04;
+
+            // double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
+            // double pointerAngle = 1-angle/180-0.2;
+            double pointerPosition = 0.5 * TOTAL_COUNTS_PER_ROUND-TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
             while (pointerPosition < -0.19){
                 pointerPosition+=2;
             }
@@ -318,12 +320,28 @@ public class Camera{
                     pointerPosition);
 
         } else {
-            text+="Visible Target none";
+            text +="Visible Target none";
         }
 
         telemetry.setValue(text);
     }
 
+    // Set angle of servo (angle in degrees)
+    public void setServoAngle(double angle) {
+        final double TOTAL_COUNTS_PER_ROUND = 1.38;
+        final double OFFSET = 0.02;
+
+        double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*angle + OFFSET;
+        while (pointerPosition < -0.19){
+            pointerPosition+=2;
+        }
+        while (pointerPosition >= 1.19){
+            pointerPosition-=2;
+        }
+        pointer.setPosition(pointerPosition);
+    }
+
+    // Called when stopping script
     public void stop(){
         // Disable Tracking when we are done;
         targets.deactivate();
