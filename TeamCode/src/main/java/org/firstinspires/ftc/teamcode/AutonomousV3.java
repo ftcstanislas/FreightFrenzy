@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,7 +27,6 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.ArrayList;
 import java.util.List;
 import org.firstinspires.ftc.teamcode.Odometry_Sample.OdometryGlobalCoordinatePosition;
-import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
@@ -38,24 +36,10 @@ import java.io.File;
 public class AutonomousV3 extends OpMode {
 
     //instructions
-    String path = String.format("%s/FtcRobotController/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/route1.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
-    // File routeFolder = new File(path);
-    String fileData = "";
-
-
-    // *****PARAMETER 1*****
-
-    // *****PARAMETER 2*****
-
-    // *****PARAMETER 3...*****
-
-
+    Routes routes = new Routes();
 
     int instruction = 0;
     List<Integer> unfinishedInstructions = new ArrayList<Integer>();
-
-
-    //get objects
 
 
     // make telemetry
@@ -81,17 +65,17 @@ public class AutonomousV3 extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
 
     //position
-    OdometryGlobalCoordinatePosition globalPositionUpdate;
-    final double COUNTS_PER_INCH = 307.699557;
-    Thread positionThread;
+    // OdometryGlobalCoordinatePosition globalPositionUpdate;
+    // final double COUNTS_PER_INCH = 307.699557;
+    // Thread positionThread;
 
     //File for position
-    File positionXFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
-    File positionYFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
-    File orientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
+    // File positionXFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
+    // File positionYFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
+    // File orientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
 
     // Instructions PART MODE <things>
-    object[][] route1 = {{"SPINNER", "spin"}, {"INTAKE", "intaking"}};
+    // object[][] route1 = {{"SPINNER", "spin"}, {"INTAKE", "intaking"}};
 
     @Override
     public void init() {
@@ -108,21 +92,7 @@ public class AutonomousV3 extends OpMode {
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
-
-        //Initialize routes
-        try {
-            File routeFolder = new File(path);
-            Scanner myReader = new Scanner(routeFolder);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                fileData += data;
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        telemetryTest = telemetry.addData("Test: ", fileData);
+        telemetryTest = telemetry.addData("Test", "X");
 
 
         //Initialize objects
