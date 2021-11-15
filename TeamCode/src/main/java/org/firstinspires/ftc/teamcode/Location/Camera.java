@@ -97,7 +97,7 @@ public class Camera{
     private OpenGLMatrix lastLocation   = null;
     private VuforiaLocalizer vuforia    = null;
     private TFObjectDetector tfod       = null;
-    private VuforiaTrackables targets   = null;g
+    private VuforiaTrackables targets   = null;
     private WebcamName webcamName       = null;
 
     private boolean targetVisible       = false;
@@ -286,7 +286,7 @@ public class Camera{
             text +=String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
 
             //blue storage
-            double location[] = {-halfField, oneAndHalfTile};
+            double[] location = {-halfField, oneAndHalfTile};
             double[] robotLocationXY = {translation.get(0), translation.get(1)};
             double robotOrientation = rotation.thirdAngle;
             double dx = location[0] - robotLocationXY[0];

@@ -1,3 +1,5 @@
+package org.firstinspires.ftc.teamcode;
+
 import java.util.ArrayList;
 
 public class Routes {
@@ -29,14 +31,15 @@ public class Routes {
     public Object[][] switchedRoute = switchRoute(route1);
     
     public static Object[][] getRoute(String team, String startPosition){
-        
+        Object[][] verwijder = {{"Boe"}};
+        return verwijder;
     }
 
     public static Object[][] switchRoute(Object[][] route){
         Object[][] newRoute = {};
         for (Object[] instruction : route) {
-            String object = instruction[1];
-            String functie = instruction[2];
+            String object = (String) instruction[1];
+            String functie = (String) instruction[2];
             
             switch (object) {
                 case "WAIT":
@@ -60,10 +63,10 @@ public class Routes {
 
                 case "DRIVETRAIN": 
                     if (functie == "toPosition" || functie == "toCircle") {
-                        instruction[3] *= -1; //x
+                        instruction[3] = (double) instruction[3] * -1; //x
                     }
                     if (functie == "toPosition") {
-                        instruction[5] *= -1; //rotation
+                        instruction[5] = (double) instruction[5] * -1; //rotation
                     }
                     break;
                 
@@ -71,7 +74,8 @@ public class Routes {
                     throw new java.lang.Error("Part " + object + " does not exist");
             }
             
-            newRoute.add(instruction);
+            newRoute[newRoute.length] = instruction;
         }
+        return newRoute;
     }
 }

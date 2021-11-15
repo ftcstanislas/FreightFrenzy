@@ -3,17 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.ReadWriteFile;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
-import java.util.Scanner;
-import java.util.stream.Stream;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.concurrent.TimeUnit;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
 import java.lang.reflect.Array;
@@ -28,15 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.firstinspires.ftc.teamcode.Odometry_Sample.OdometryGlobalCoordinatePosition;
 
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Location.Location;
-import org.firstinspires.ftc.teamcode.RobotParts.Arm;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
-import org.firstinspires.ftc.teamcode.Routes;
-import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
-import java.io.File;
+
 
 @Autonomous(name="Final Autonomous 3.∞", group="Iterative Opmode")
 public class AutonomousV3 extends OpMode {
@@ -53,21 +39,24 @@ public class AutonomousV3 extends OpMode {
     Routes routes = new Routes();
 
     int instruction = 0;
-    List<Object[][]> unfinishedInstructions = new ArrayList<Object[][]>();
+    List<Object[]> unfinishedInstructions = new ArrayList<Object[]>();
 
     // make telemetry
     Telemetry.Item status = null;
+    Telemetry.Item telemetryInstruction = null;
+    Telemetry.Item telemetryUnfinishedInstructions = null;
     Telemetry.Item telemetryDrivetrain = null;
     Telemetry.Item telemetryArm = null;
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
     Telemetry.Item telemetryLocation = null;
     Telemetry.Item telemetryColorSensor = null;
+    Telemetry.Item telemetryDucks = null;
     Telemetry.Item telemetryTest = null;
 
     // Wich program to follow
-    String program = ["blue", "onbekend"];
-    Object[][] instructions = {};
+    String[] program = {"blue", "onbekend"};
+    Object[][] instructions = {{true, "er", "moeten", "parameters", "zijn"}};
 
     // sleeping
     double wakeUpTime = 0;
@@ -97,12 +86,14 @@ public class AutonomousV3 extends OpMode {
         telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
         telemetryInstruction = telemetry.addData("Instruction", "X");
+        telemetryUnfinishedInstructions = telemetry.addData("Unfinished Instructions", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
         telemetryArm = telemetry.addData("Arm", "X");
         telemetryIntake = telemetry.addData("Intake", "X");
         telemetrySpinner = telemetry.addData("Spinner", "X");
         telemetryLocation = telemetry.addData("Location", "X");
         telemetryColorSensor = telemetry.addData("Color Sensor", "X");
+        telemetryDucks = telemetry.addData("Ducks", "X");
         telemetryTest = telemetry.addData("Test", "X");
 
         // Initialize objects
@@ -120,14 +111,14 @@ public class AutonomousV3 extends OpMode {
     @Override
     public void init_loop() {
         //Telemetry update
-        telemetryStatus.setValue("Init looping for " + runtime.toString());
+        status.setValue("Init looping for " + runtime.toString());
         
     }
 
     @Override
     public void start() {
         // Telemetry update
-        telemetryStatus.setValue("Starting");
+        status.setValue("Starting");
         
         // Reset
         runtime.reset();
@@ -136,13 +127,13 @@ public class AutonomousV3 extends OpMode {
         instructions = Routes.getRoute(program[0], program[1]);
 
         //Telemetry update
-        telemetryStatus.setValue("Started");
+        status.setValue("Started");
     }
 
     @Override
     public void loop() {
         // Telemetry update
-        telemetryStatus.setValue("Following program " + program[0] + " from " + program[1] + " for " + runtime.toString());
+        status.setValue("Following program " + program[0] + " from " + program[1] + " for " + runtime.toString());
 
         // location
         location.update();
@@ -158,8 +149,8 @@ public class AutonomousV3 extends OpMode {
             // Check if done
             if (result == true){
                 instruction += 1;
-            } else if (instructions[instruction][0] == false){
-                unfinishedInstructions.add(instruction);
+            } else if (instructions[instruction][0].equals(false)){
+                unfinishedInstructions.add(instructions[instruction]);
                 instruction += 1;
             }
         } else {
@@ -170,7 +161,7 @@ public class AutonomousV3 extends OpMode {
         if (unfinishedInstructions.size()>0){
             telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
             for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
-                boolean result = executeFunction(instructions[unfinishedInstructions.get(nummer)]);
+                boolean result = executeFunction(instructions[unfinishedInstructions.indexOf(nummer)]);
                 if (result==true){
                     unfinishedInstructions.remove(unfinishedInstructions.get(nummer));
                     nummer--;
@@ -184,7 +175,7 @@ public class AutonomousV3 extends OpMode {
     @Override
     public void stop() {
         //telemetry update
-        telemetryStatus.setValue("Stopping");
+        status.setValue("Stopping");
         
         location.stop();
 //        ReadWriteFile.writeFile(positionXFile, String.valueOf(globalPositionUpdate.returnXCoordinate()));
@@ -192,42 +183,46 @@ public class AutonomousV3 extends OpMode {
 //        ReadWriteFile.writeFile(orientationFile, String.valueOf(globalPositionUpdate.returnOrientation()));
 
         //telemetry update
-        telemetryStatus.setValue("Stopped");
+        status.setValue("Stopped");
     }
 
-    public boolean executeFunction(instruction){
+    public boolean executeFunction(Object[] instruction){
 
         boolean done = true;
-        String part = instruction[1];
-        String function = instruction[2];
+        String part = (String) instruction[1]; //Cast to string (error fix)
+        String function = (String) instruction[2];
 
         switch (part) {
             case "SPINNER":
                 if (function == "mode") {
-                    /*done =*/ spinner.setMode(mode);
+                    /*done =*/
+                    spinner.setMode((String) instruction[3]);
                 }
                 break;
 
             case "INTAKE":
                 if (function == "mode") {
-                    /*done =*/ intake.setMode(mode);
+                    /*done =*/
+                    intake.setMode((String) instruction[3]);
                 }
                 break;
 
             case "ARM":
                 if (function == "mode") {
-                    /*done =*/ spinner.setMode(mode);
+                    /*done =*/
+                    spinner.setMode((String) instruction[3]);
                 }
+                ;
                 break;
 
             case "WAIT":
                 //Calculate wait time
-                if (wakeUpTime == 0){
+                if (wakeUpTime == 0) {
                     wakeUpTime = (double) runtime.time() + (double) instruction[2];
                 }
 
                 //Check if time passed
-                if (wakeUpTime < runtime.time()){
+                if (wakeUpTime < runtime.time()) {
                     wakeUpTime = 0;
                     // done = true;
                 } else {
@@ -241,14 +236,12 @@ public class AutonomousV3 extends OpMode {
                         break;
                     case "toCircle":
                         //done = location.goToCircle(instruction[3], instruction[4], instruction[5]); // x, y, radius
-                break;
+                        break;
 
-            default: // if no match is found
-                throw new java.lang.Error("Part " + part + " does not exist");
-
+                    default: // if no match is found
+                        throw new java.lang.Error("Part " + part + " does not exist");
+                }
         }
-        
         return done;
     }
-
 }

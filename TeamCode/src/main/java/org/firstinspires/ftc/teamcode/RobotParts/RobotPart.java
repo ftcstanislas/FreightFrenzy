@@ -1,20 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -80,14 +72,14 @@ public abstract class RobotPart {
     public void setMode(String mode){
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
-                for (Map.Entry<String, Double> entry : mode.entrySet()) {
+                for (Map.Entry<String, Double> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
                     Double value = entry.getValue();
                     DcMotor motor = motors.get(entry.getKey());
-                    DcMotor.RunMode mode = motor.getMode();
-                    if (mode == DcMotor.RunMode.RUN_WITHOUT_ENCODER){
+                    DcMotor.RunMode modeString = motor.getMode();
+                    if (modeString == DcMotor.RunMode.RUN_WITHOUT_ENCODER){
                         motor.setPower(value);
-                    } else if (mode == DcMotor.RunMode.RUN_TO_POSITION || mode == DcMotor.RunMode.RUN_USING_ENCODER){
-                        motor.setTargetPosition((int) value);
+                    } else if (modeString == DcMotor.RunMode.RUN_TO_POSITION || modeString == DcMotor.RunMode.RUN_USING_ENCODER){
+                        motor.setTargetPosition((int) Math.round(value));
                     }
                 }
                 currentMode = mode;
@@ -111,7 +103,7 @@ public abstract class RobotPart {
         }
     }
 
-    public boolean inMargin(value, threshold, margin) {
+    public boolean inMargin(double value, double threshold, double margin) {
         return value <= threshold + margin && value >= threshold - margin;
     }
 }
