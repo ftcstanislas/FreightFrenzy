@@ -302,22 +302,24 @@ public class Camera{
                     dx, dy, angle);
 
 
-            final double TOTAL_COUNTS_PER_ROUND = 1.38;
-            final double OFFSET = 0.02;
+            final double TOTAL_COUNTS_PER_ROUND = 1.27;
+            final double OFFSET = 0.045;
 
             // double pointerAngle = 1/(startCamera-endCamera)*(startCamera-angle);
             // double pointerAngle = 1-angle/180-0.2;
-            double pointerPosition = 0.5 * TOTAL_COUNTS_PER_ROUND-TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
-            while (pointerPosition < -0.19){
-                pointerPosition+=2;
-            }
-            while (pointerPosition >= 1.19){
-                pointerPosition-=2;
-            }
+//            double pointerPosition = 0.5 * TOTAL_COUNTS_PER_ROUND-TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
+            double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180 - angle) + OFFSET;
+
+//            while (pointerPosition < -0.19){
+//                pointerPosition+=2;
+//            }
+//            while (pointerPosition >= 1.19){
+//                pointerPosition-=2;
+//            }
 //            setCameraPosition(0,0,200, (float)(180-angle));
             pointer.setPosition(pointerPosition);
-            text += String.format("\nPointer position = %.1f",
-                    pointerPosition);
+//            text += String.format("\nPointer position = %.1f", pointerPosition);
+            text += "\nPointer position = " + pointerPosition;
 
         } else {
             text +="Visible Target none";
@@ -328,8 +330,8 @@ public class Camera{
 
     // Set angle of servo (angle in degrees)
     public void setServoAngle(double angle) {
-        final double TOTAL_COUNTS_PER_ROUND = 1.38;
-        final double OFFSET = 0.02;
+        final double TOTAL_COUNTS_PER_ROUND = 1.27;
+        final double OFFSET = 0.045;
 
         double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*angle + OFFSET;
         while (pointerPosition < -0.19){

@@ -57,21 +57,20 @@ public class ServoTest extends OpMode {
         // servo.setPosition(position);
         // telemetry.addLine("Servo turned at "+position);
 
-        if (gamepad1.a){
+        if (gamepad1.x){
             setServoAngle(0); //Naar zijkant door offset te veranderen
-        } else if (gamepad1.b){
+        } else if (gamepad1.a){
             setServoAngle(90); // Naar voorkant door total counts per round te veranderen
-        } else if (gamepad1.x){
+        } else if (gamepad1.b){
             setServoAngle(180); // Testen of die goed staat, zo niet is er iets raars
         }
         telemetry.addLine("Servo "+servo.getPosition());
     }
 
     public void setServoAngle(double angle) {
-        final double TOTAL_COUNTS_PER_ROUND = 1.38;
-        final double OFFSET = 0.02;
-        
-        double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*angle + OFFSET;
+        final double TOTAL_COUNTS_PER_ROUND = 1.27;
+        final double OFFSET = 0.045;
+        double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180-angle) + OFFSET;
         // while (pointerPosition < -0.19){
         //     pointerPosition+=2;
         // }

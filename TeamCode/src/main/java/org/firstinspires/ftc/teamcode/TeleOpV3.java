@@ -72,8 +72,8 @@ public class TeleOpV3 extends OpMode {
         drivetrain.setBrake(true);
         location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
 //        arm.init(hardwareMap, telemetryArm);
-        intake.init(hardwareMap, telemetryIntake);
-        spinner.init(hardwareMap, telemetrySpinner);
+//        intake.init(hardwareMap, telemetryIntake);
+//        spinner.init(hardwareMap, telemetrySpinner);
 //        colorSensor.init(hardwareMap, telemetryColorSensor);
 
         status.setValue("Initialized");
@@ -81,7 +81,7 @@ public class TeleOpV3 extends OpMode {
     
     @Override
     public void init_loop() {
-        telemetryStatus.setValue("Init looping for " + runtime.toString());
+        status.setValue("Init looping for " + runtime.toString());
         location.update();
     }
 
@@ -107,8 +107,8 @@ public class TeleOpV3 extends OpMode {
         
         drivetrain.checkController(gamepad1, gamepad2);
 //        arm.checkController(gamepad1, gamepad2);
-        intake.checkController(gamepad1, gamepad2);
-        spinner.checkController(gamepad1, gamepad2);
+//        intake.checkController(gamepad1, gamepad2);
+//        spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         location.update();
 
