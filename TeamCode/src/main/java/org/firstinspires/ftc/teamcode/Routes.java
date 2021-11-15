@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Routes {
     
     /*
+    stiins telefoon was hier
     -----------------------------------------------------------------------------------------------
     WAIT UNTIL FINISHED   OBJECT                FUNCTIE             ARGUMENTEN (achter elkaar)
     -----------------------------------------------------------------------------------------------
