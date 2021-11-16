@@ -73,12 +73,15 @@ public abstract class RobotPart {
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
                 for (Map.Entry<String, Double> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
-                    Double value = entry.getValue();
+                    Object[] values = entry.getValue();
+                    String powerType = values[0];
+                    Double value = (double) values[1];
                     DcMotor motor = motors.get(entry.getKey());
-                    DcMotor.RunMode modeString = motor.getMode();
-                    if (modeString == DcMotor.RunMode.RUN_WITHOUT_ENCODER){
+                    if (powerType == "power") {
                         motor.setPower(value);
-                    } else if (modeString == DcMotor.RunMode.RUN_TO_POSITION || modeString == DcMotor.RunMode.RUN_USING_ENCODER){
+                    } else if (powerType == "velocity") {
+
+                    } else if (powerType == "position") {
                         motor.setTargetPosition((int) Math.round(value));
                     }
                 }

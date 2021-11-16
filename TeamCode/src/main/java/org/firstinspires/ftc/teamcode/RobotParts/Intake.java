@@ -28,12 +28,12 @@ public class Intake extends RobotPart{
         setBrake(true);
 
         // set modes
-        modes.put("stop", new HashMap<String, Double>() {{
-            put("intake", 0.0);
+        modes.put("stop", new HashMap<String, Object[]>() {{
+            put("intake", new Object[]{"power", 0.0});
         }});
 
-        modes.put("intaking", new HashMap<String, Double>() {{
-            put("intake", 1.0);
+        modes.put("intaking", new HashMap<String, Object[]>() {{
+            put("intake", new Object[]{"power", 1.0});
         }});
 //        modes.put("stop", new double[] {0.0});
 //        modes.put("intaking", new double[] {1.0});
