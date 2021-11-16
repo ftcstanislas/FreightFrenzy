@@ -18,7 +18,7 @@ public abstract class RobotPart {
     protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
 //    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
-    protected HashMap<String, HashMap<String, Double>> modes = new HashMap<String, HashMap<String, Double>>();
+    protected HashMap<String, HashMap<String, Object[]>> modes = new HashMap<String, HashMap<String, Object[]>>();
     protected String currentMode = "";
     protected String additionalTelemetry = "";
     abstract void updateTelemetry();
