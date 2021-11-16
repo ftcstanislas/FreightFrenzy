@@ -69,7 +69,7 @@ public abstract class RobotPart {
         };
     }
 
-    public void setMode(String mode){
+    public boolean setMode(String mode){
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
                 for (Map.Entry<String, Object[]> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
@@ -82,7 +82,10 @@ public abstract class RobotPart {
                     } else if (powerType == "velocity") {
 
                     } else if (powerType == "position") {
-                        motor.setTargetPosition((int) Math.round(value));
+                        if (inMargin(motor.getTargetPosition(), (int) Math.round(value), 100)) {
+                            motor.setTargetPosition((int) Math.round(value));
+                        }
+                        return inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
                     }
                 }
                 currentMode = mode;
@@ -91,6 +94,7 @@ public abstract class RobotPart {
         } else {
             telemetry.setValue("Mode "+mode+" doesn't exits");
         }
+        return true;
     }
 
     public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
