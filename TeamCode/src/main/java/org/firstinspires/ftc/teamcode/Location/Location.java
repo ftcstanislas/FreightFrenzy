@@ -10,12 +10,14 @@ import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 public class Location {
 //    private Odometry odometry = null;
     private IMU IMU = null;
-    private Camera camera = null;
+    private Camera camera1 = null;
     private Telemetry.Item telemetry = null;
     private MecanumDrive drivetrain = null;
 
     //Location
-
+    double x = 0;
+    double y = 0;
+    double heading = 0;
 
     public void init(HardwareMap hardwareMap, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
         // Odometry
@@ -35,23 +37,29 @@ public class Location {
         IMU.init(hardwareMap);
 
         // Camera
-        camera = new Camera();
-        camera.init(hardwareMap, telemetryInit, telemetryDucks);
+        camera1 = new Camera();
+        camera1.init(hardwareMap, telemetryInit, telemetryDucks);
         
         telemetry = telemetryInit;
     }
     
     public void startDuckDetection() {
-        camera.startDuckDetection();
+        camera1.startDuckDetection();
     }
 
     public void stopDuckDetection() {
-        camera.stopDuckDetection();
+        camera1.stopDuckDetection();
     }
 
     public void update(){
 //        odometry.globalCoordinatePositionUpdate();
-        camera.update();
+        heading = IMU.getOrientation();
+        camera1.update();
+
+        double[] locationCamera1 = camera1.getPosition();
+
+        telemetry.setValue(String.format("Pos (mm) {X, Y, heading} = %.1f, %.1f %.1f",
+                locationCamera1[0],locationCamera1[1], heading));
 
         //Duck
 //        camera.setZoom(true);
@@ -60,21 +68,22 @@ public class Location {
     }
 
     public void stop(){
-        camera.stop();
+        camera1.stop();
     }
 
     public double getXCoordinate() {
-        return 0;
+        return x;
     }
 
     public double getYCoordinate() {
-        return 0;
+        return y;
     }
 
     public double getOrientation(){
-        return IMU.getOrientation();
+        return heading;
     }
 
+//    FUTURE
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
         //Constants
         double allowableDistanceError = 10; // mm?

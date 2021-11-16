@@ -34,12 +34,11 @@ public class Camera{
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
-//    private static final float mmPerInch        = 25.4f;
-    private static final float mmTargetHeight   = 152.4f;//6 * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float mmTargetHeight   = 152.4f;// the height of the center of the target image above the floor
     private static final float fieldTile        = 609.6f;
-    private static final float halfField        = 3 * fieldTile;//72 * mmPerInch;
-    private static final float halfTile         = 0.5f * fieldTile;//12 * mmPerInch;
-    private static final float oneAndHalfTile   = 1.5f * fieldTile;//36 * mmPerInch;
+    private static final float halfField        = 3 * fieldTile;
+    private static final float halfTile         = 0.5f * fieldTile;
+    private static final float oneAndHalfTile   = 1.5f * fieldTile;
 
     // Class Members
     private OpenGLMatrix lastLocation   = null;
@@ -161,7 +160,6 @@ public class Camera{
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-//                telemetry.setValue("Visible Target"+ trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -178,7 +176,7 @@ public class Camera{
         String text = "";
 
         VectorF translation = null;
-        Orientation rotation= null;
+        Orientation rotation = null;
         if (lastLocation != null) {
             // express position (translation) of robot in inches.
             translation = lastLocation.getTranslation();
@@ -229,11 +227,11 @@ public class Camera{
 
             double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180 - angle) + OFFSET;
 
-//            while (pointerPosition < -0.19){
-//                pointerPosition+=2;
+//            while (pointerPosition < -(TOTAL_COUNTS_PER_ROUND-1)/2){
+//                pointerPosition+=TOTAL_COUNTS_PER_ROUND;
 //            }
-//            while (pointerPosition >= 1.19){
-//                pointerPosition-=2;
+//            while (pointerPosition >= 1+(TOTAL_COUNTS_PER_ROUND-1)/2){
+//                pointerPosition-=TOTAL_COUNTS_PER_ROUND;
 //            }
             pointer.setPosition(pointerPosition);
             setCameraPosition(0, 0, 200, (float)(angle));
@@ -281,6 +279,17 @@ public class Camera{
         aTarget.setName(targetName);
         aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
+    }
+
+    public double[] getPosition() {
+        double[] position;
+        if (lastLocation != null) {
+            VectorF translation = lastLocation.getTranslation();
+            position = new double[]{translation.get(0), translation.get(1)};
+        }  else {
+            position = new double[]{0, 0};
+        }
+        return position;
     }
 
     public void startDuckDetection() {

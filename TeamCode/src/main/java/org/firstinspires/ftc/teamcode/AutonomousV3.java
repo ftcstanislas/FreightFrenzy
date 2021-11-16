@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 
 
-@Autonomous(name="Final Autonomous 3.∞", group="Iterative Opmode")
+@Autonomous(name="Final Autonomous 3.11", group="Iterative Opmode")
 public class AutonomousV3 extends OpMode {
 
     // Robot parts
