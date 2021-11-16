@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -80,7 +81,7 @@ public abstract class RobotPart {
                     if (powerType == "power") {
                         motor.setPower(value);
                     } else if (powerType == "velocity") {
-
+//                        motor.setV
                     } else if (powerType == "position") {
                         if (inMargin(motor.getTargetPosition(), (int) Math.round(value), 100)) {
                             motor.setTargetPosition((int) Math.round(value));
