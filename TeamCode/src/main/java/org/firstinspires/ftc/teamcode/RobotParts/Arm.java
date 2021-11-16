@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 import java.util.Arrays;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -21,6 +23,7 @@ public class Arm extends RobotPart{
 
     String state = "input";
     ColorSensor colorSensor;
+    double position = 0; //temp
 
 //    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
@@ -30,25 +33,28 @@ public class Arm extends RobotPart{
 //
 //        // setup
         telemetry = telemetryInit;
-        motors.put("arm", map.get(DcMotor.class, "arm"));
-        motors.get("arm").setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //temporary
+        motors.put("arm", map.get(DcMotorEx.class, "arm"));
+        motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("arm").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setBrake(true);
         servos.put("fork", map.get(Servo.class, "fork"));
 
         // not final
+        modes.put("base", new HashMap<String, Object[]>() {{
+            put("arm", new Object[]{"position", 0.0});
+        }});
+
         modes.put("low", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 50});
+            put("arm", new Object[]{"position", 400.0});
         }});
 
         modes.put("mid", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 100});
+            put("arm", new Object[]{"position", 900.0});
         }});
 
         modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 150});
-        }});
-
-        modes.put("base", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 0});
+            put("arm", new Object[]{"position", 1650.0});
         }});
     }
 
@@ -76,15 +82,16 @@ public class Arm extends RobotPart{
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
 //        boolean tipping = false;
 //        checkSensorInput();
-//        if (gamepad1.dpad_up) {
-//            state = "lvl2";
-//        } else if (gamepad1.dpad_right) {
-//            state = "lvl3";
-//        } else if (gamepad1.dpad_down) {
-//            state = "input";
-//        } else if (gamepad1.dpad_left) {
-//            state = "lvl1";
-//        }
+        if (gamepad1.dpad_up) {
+            state = "mid";
+        } else if (gamepad1.dpad_right) {
+            state = "high";
+        } else if (gamepad1.dpad_down) {
+            state = "base";
+        } else if (gamepad1.dpad_left) {
+            state = "low";
+        }
+        setMode(state);
 //
 //        if (gamepad1.x) {
 //            tipping = true;
@@ -92,12 +99,16 @@ public class Arm extends RobotPart{
 //
 //        // set power
 //        setPowerState(tipping);
-        double powers = gamepad1.right_stick_y;
-        setPower(powers);
+//        position += gamepad1.right_stick_y;
+//        motors.get("arm").setTargetPosition((int) position);
+//        motors.get("arm").setPower(0.3);
+//        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         if (gamepad1.a) {
             switchServo();
         }
+        updateTelemetry();
     }
 
     public void switchServo() {
@@ -156,7 +167,8 @@ public class Arm extends RobotPart{
 //    }
 
     public void updateTelemetry(){
-        debug();
+        telemetry.setValue(motors.get("arm").getCurrentPosition());
+//        debug();
     }
 }
 

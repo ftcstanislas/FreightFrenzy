@@ -207,7 +207,7 @@ public class Camera{
             // max speed of servo
             double difference = newAngle - angle;
             difference = (difference + 180) % 360 - 180;
-            difference = Math.max(Math.min(difference, 0.05), -0.05);
+            difference = Math.max(Math.min(difference, 0.1), -0.1);
             angle += difference;
 
             while (angle < 0){
@@ -247,8 +247,8 @@ public class Camera{
 
     // Set angle of servo (angle in degrees)
     public void setServoAngle(double angle) {
-        final double TOTAL_COUNTS_PER_ROUND = 1.27;
-        final double OFFSET = 0.045;
+        final double TOTAL_COUNTS_PER_ROUND = 1.30;
+        final double OFFSET = -0.02;
 
         double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*angle + OFFSET;
         while (pointerPosition < -0.19){

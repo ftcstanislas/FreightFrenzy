@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -20,7 +22,7 @@ public class Spinner extends RobotPart{
     
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // get motors
-        motors.put("spinner", map.get(DcMotor.class, "spinner"));
+        motors.put("spinner", map.get(DcMotorEx.class, "spinner"));
         setBrake(true);
 
         // set modes
@@ -43,7 +45,7 @@ public class Spinner extends RobotPart{
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.a, "stop","spin");
+        switchMode(gamepad1.a, "stop","spinLeft");
     }
     
     public void updateTelemetry(){

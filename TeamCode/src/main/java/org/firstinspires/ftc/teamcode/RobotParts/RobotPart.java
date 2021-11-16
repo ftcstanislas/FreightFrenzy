@@ -16,7 +16,7 @@ public abstract class RobotPart {
     private boolean isSwitchPressed = false;
     
     protected Telemetry.Item telemetry = null;
-    protected Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
+    protected Map<String, DcMotorEx> motors = new HashMap<String, DcMotorEx>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
 //    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
     protected HashMap<String, HashMap<String, Object[]>> modes = new HashMap<String, HashMap<String, Object[]>>();
@@ -31,8 +31,8 @@ public abstract class RobotPart {
         if (!currentMode.equals("")){
             text += "\nCurrent mode: "+currentMode;
         }
-        for (Map.Entry<String, DcMotor> entry : motors.entrySet()){
-            DcMotor motor = entry.getValue();
+        for (Map.Entry<String, DcMotorEx> entry : motors.entrySet()){
+            DcMotorEx motor = entry.getValue();
             DcMotor.RunMode mode = motor.getMode();
             if (mode == DcMotor.RunMode.RUN_TO_POSITION || mode == DcMotor.RunMode.RUN_USING_ENCODER){
                 text += "\n" + entry.getKey() + " | encoder " + motor.getCurrentPosition() + "/" + motor.getTargetPosition() + " with " + motor.getPower();
@@ -65,7 +65,7 @@ public abstract class RobotPart {
         } else {
             option = DcMotor.ZeroPowerBehavior.FLOAT;
         };
-        for (DcMotor motor : motors.values()){
+        for (DcMotorEx motor : motors.values()){
             motor.setZeroPowerBehavior(option);
         };
     }
@@ -77,15 +77,18 @@ public abstract class RobotPart {
                     Object[] values = entry.getValue();
                     String powerType = (String) values[0];
                     Double value = (double) values[1];
-                    DcMotor motor = motors.get(entry.getKey());
+                    DcMotorEx motor = motors.get(entry.getKey());
                     if (powerType == "power") {
                         motor.setPower(value);
                     } else if (powerType == "velocity") {
-//                        motor.setV
+                        motor.setVelocity(value);
                     } else if (powerType == "position") {
-                        if (inMargin(motor.getTargetPosition(), (int) Math.round(value), 100)) {
-                            motor.setTargetPosition((int) Math.round(value));
-                        }
+//                        if (inMargin(motor.getTargetPosition(), (int) Math.round(value), 100)) {
+//                            motor.setTargetPosition((int) Math.round(value));
+//                        }
+                        motor.setTargetPosition((int) Math.round(value));
+                        motor.setVelocity(80);
+                        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         return inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
                     }
                 }

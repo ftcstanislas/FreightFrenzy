@@ -68,8 +68,8 @@ public class ServoTest extends OpMode {
     }
 
     public void setServoAngle(double angle) {
-        final double TOTAL_COUNTS_PER_ROUND = 1.27;
-        final double OFFSET = 0.045;
+        final double TOTAL_COUNTS_PER_ROUND = 1.30;
+        final double OFFSET = -0.02;
         double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180-angle) + OFFSET;
         // while (pointerPosition < -0.19){
         //     pointerPosition+=2;

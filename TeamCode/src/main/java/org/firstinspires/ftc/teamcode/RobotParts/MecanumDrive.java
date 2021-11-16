@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 
 import java.util.Arrays;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,13 +17,13 @@ public class MecanumDrive extends RobotPart{
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit){
         // get motors
-        motors.put("leftFront", map.get(DcMotor.class, "leftFront"));
+        motors.put("leftFront", map.get(DcMotorEx.class, "leftFront"));
         motors.get("leftFront").setDirection(DcMotor.Direction.FORWARD);
-        motors.put("rightFront", map.get(DcMotor.class, "rightFront"));
+        motors.put("rightFront", map.get(DcMotorEx.class, "rightFront"));
         motors.get("rightFront").setDirection(DcMotor.Direction.REVERSE);
-        motors.put("leftBack", map.get(DcMotor.class, "leftBack"));
+        motors.put("leftBack", map.get(DcMotorEx.class, "leftBack"));
         motors.get("leftBack").setDirection(DcMotor.Direction.FORWARD);
-        motors.put("rightBack", map.get(DcMotor.class, "rightBack"));
+        motors.put("rightBack", map.get(DcMotorEx.class, "rightBack"));
         motors.get("rightBack").setDirection(DcMotor.Direction.REVERSE);
         
         // telemetry setup

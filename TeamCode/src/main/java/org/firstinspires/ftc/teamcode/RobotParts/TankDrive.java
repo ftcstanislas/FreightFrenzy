@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
 import java.util.Arrays;
+
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -27,9 +29,9 @@ public class TankDrive extends RobotPart{
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, ElapsedTime timeInit){
         // get motors
-        motors.put("left", map.get(DcMotor.class, "leftDrive"));
+        motors.put("left", map.get(DcMotorEx.class, "leftDrive"));
         motors.get("left").setDirection(DcMotor.Direction.FORWARD);
-        motors.put("right", map.get(DcMotor.class, "rightDrive"));
+        motors.put("right", map.get(DcMotorEx.class, "rightDrive"));
         motors.get("right").setDirection(DcMotor.Direction.REVERSE);
         // motors.put("intake_right", map.get(DcMotor.class, "intake_right"));
         // motors.get("intake_right").setDirection(DcMotor.Direction.FORWARD);

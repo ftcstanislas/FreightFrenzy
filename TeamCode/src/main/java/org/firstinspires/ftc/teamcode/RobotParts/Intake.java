@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 import java.util.Arrays;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,7 +23,7 @@ public class Intake extends RobotPart{
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // get motors
-        motors.put("intake", map.get(DcMotor.class, "intake"));
+        motors.put("intake", map.get(DcMotorEx.class, "intake"));
         motors.get("intake").setDirection(DcMotor.Direction.FORWARD);
         setBrake(true);
 
