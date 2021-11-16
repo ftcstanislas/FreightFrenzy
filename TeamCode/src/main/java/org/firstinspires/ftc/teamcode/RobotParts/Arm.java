@@ -35,16 +35,16 @@ public class Arm extends RobotPart{
         servos.put("fork", map.get(Servo.class, "fork"));
 
         // not final
-        modes.put("low", new HashMap<String, Double>() {{
-            put("arm", (double) 50);
+        modes.put("low", new HashMap<String, Object[]>() {{
+            put("arm", new Object[]{"position", 50});
         }});
 
-        modes.put("mid", new HashMap<String, Double>() {{
-            put("arm", (double) 100);
+        modes.put("mid", new HashMap<String, Object[]>() {{
+            put("arm", new Object[]{"position", 100});
         }});
 
-        modes.put("high", new HashMap<String, Double>() {{
-            put("arm", (double) 150);
+        modes.put("high", new HashMap<String, Object[]>() {{
+            put("arm", new Object[]{"position", 150});
         }});
     }
 

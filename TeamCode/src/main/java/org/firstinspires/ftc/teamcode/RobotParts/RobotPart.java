@@ -72,9 +72,9 @@ public abstract class RobotPart {
     public void setMode(String mode){
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
-                for (Map.Entry<String, Double> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
+                for (Map.Entry<String, Object[]> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
                     Object[] values = entry.getValue();
-                    String powerType = values[0];
+                    String powerType = (String) values[0];
                     Double value = (double) values[1];
                     DcMotor motor = motors.get(entry.getKey());
                     if (powerType == "power") {

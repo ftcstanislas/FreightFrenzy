@@ -24,16 +24,16 @@ public class Spinner extends RobotPart{
         setBrake(true);
 
         // set modes
-        modes.put("stop", new HashMap<String, Double>() {{
-            put("spinner", 0.0);
+        modes.put("stop", new HashMap<String, Object[]>() {{
+            put("spinner", new Object[]{"power", 0.0});
         }});
 
-        modes.put("spinLeft", new HashMap<String, Double>() {{
-            put("spinner", 1.0);
+        modes.put("spinLeft", new HashMap<String, Object[]>() {{
+            put("spinner", new Object[]{"power", 1.0});
         }});
 
-        modes.put("spinRight", new HashMap<String, Double>() {{
-            put("spinner", -1.0);
+        modes.put("spinRight", new HashMap<String, Object[]>() {{
+            put("spinner", new Object[]{"power", -1.0});
         }});
         
         // setup telemetry
