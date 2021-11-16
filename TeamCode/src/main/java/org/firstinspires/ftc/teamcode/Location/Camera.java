@@ -114,6 +114,7 @@ public class Camera{
 
     // Pointer
     Servo pointer = null;
+    private double angle = 0;
 
     // Game element detection
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
@@ -208,7 +209,7 @@ public class Camera{
          * Finally the camera can be translated to its actual mounting position on the robot.
          *      In this example, it is centered on the robot (left-to-right and front-to-back), and 6 inches above ground level.
          */
-        setCameraPosition(0,0,200,90);
+        setCameraPosition(0,0,200,90);//90
 //        final float CAMERA_FORWARD_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the forward distance from the center of the robot to the camera lens
 //        final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * mmPerInch;   // eg: Camera is 6 Inches above ground
 //        final float CAMERA_LEFT_DISPLACEMENT = 0.0f * mmPerInch;   // eg: Enter the left distance from the center of the robot to the camera lens
@@ -291,7 +292,8 @@ public class Camera{
             double robotOrientation = rotation.thirdAngle;
             double dx = location[0] - robotLocationXY[0];
             double dy = location[1] - robotLocationXY[1];
-            double angle = Math.atan2(dy,dx)/Math.PI*180 - robotOrientation + 90;
+//            double angle = Math.atan2(dy,dx)/Math.PI*180 - robotOrientation + 90;
+            angle = 180 - robotOrientation + -Math.atan2(dx,dy)/Math.PI*180;
             while (angle < 0){
                 angle+=360;
             }
@@ -300,6 +302,8 @@ public class Camera{
             }
             text += String.format("\nd{X, Y, heading} = %.1f, %.1f, %.1f",
                     dx, dy, angle);
+            text += String.format("\nangle = %.1f - %.1f + %.1f",
+                    180.0,  robotOrientation, -Math.atan2(dx,dy)/Math.PI*180);
 
 
             final double TOTAL_COUNTS_PER_ROUND = 1.27;
@@ -316,13 +320,13 @@ public class Camera{
 //            while (pointerPosition >= 1.19){
 //                pointerPosition-=2;
 //            }
-//            setCameraPosition(0,0,200, (float)(180-angle));
+            setCameraPosition(0,0,200, (float)(angle));
             pointer.setPosition(pointerPosition);
 //            text += String.format("\nPointer position = %.1f", pointerPosition);
             text += "\nPointer position = " + pointerPosition;
 
         } else {
-            text +="Visible Target none";
+            text +="Visible Target none, heading "+angle;
         }
 
         telemetry.setValue(text);
