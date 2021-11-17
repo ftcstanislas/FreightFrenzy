@@ -83,12 +83,11 @@ public abstract class RobotPart {
                     } else if (powerType == "velocity") {
                         motor.setVelocity(value);
                     } else if (powerType == "position") {
-//                        if (inMargin(motor.getTargetPosition(), (int) Math.round(value), 100)) {
-//                            motor.setTargetPosition((int) Math.round(value));
-//                        }
-                        motor.setTargetPosition((int) Math.round(value));
-                        motor.setVelocity(160);
-                        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        if (motor.getTargetPosition() != value) {
+                            motor.setTargetPosition((int) Math.round(value));
+                            motor.setVelocity(160);
+                            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        }
                         return inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
                     }
                 }
@@ -113,6 +112,7 @@ public abstract class RobotPart {
             isSwitchPressed = false;
         }
     }
+
 
     public boolean inMargin(double value, double threshold, double margin) {
         return value <= threshold + margin && value >= threshold - margin;

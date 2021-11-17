@@ -12,7 +12,7 @@ public class Routes {
     false / true          WAIT                  wait                seconds
     false / true          INTAKE                mode                stop / intaking
     false / true          SPINNER               mode                stop / spinLeft / spinRight
-    false / true          ARM                   mode                low / mid / high
+    false / true          ARM                   mode                base / low / mid / high
     false / true          DRIVETRAIN            toPosition          x, y, rotation, speed
     false / true          DRIVETRAIN            toCircle            x, y, radius
 
@@ -21,11 +21,10 @@ public class Routes {
 
 
     public Object[][] route1 = {
-        {true, "INTAKE", "mode", "intaking"},
-        {true, "WAIT", "wait", 2},
-        {true, "SPINNER", "mode", "spinLeft"},
-        {true, "DRIVETRAIN", "toPosition", 23, 10, 40, 1},
-        {true, "DRIVETRAIN", "toPosition", 23, 10, 20}
+            {true, "ARM", "mode", "high"},
+            {true, "ARM", "mode", "low"},
+            {true, "SPINNER", "mode", "spinLeft"},
+
     };
 
     public Object[][] switchedRoute = switchRoute(route1);
