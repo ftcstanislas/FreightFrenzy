@@ -139,7 +139,7 @@ public class Arm extends RobotPart{
         DcMotorEx armMotor = motors.get("arm");
         //Set arm position to -100 (previous encoder 0 position - 100);
         if (goUp == false) {
-            if (armMotor.getTargetPosition() !== -100) {
+            if (armMotor.getTargetPosition() != -100) {
                 armMotor.setTargetPosition(-100);
                 armMotor.setVelocity(80);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -149,7 +149,7 @@ public class Arm extends RobotPart{
             }
         } else {
             //Go up slowly
-            if (armMotor.getMode() !== DcMotor.RunMode.RUN_USING_ENCODER) {
+            if (armMotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 armMotor.setPower(0.1);
             }

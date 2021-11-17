@@ -197,7 +197,7 @@ public class Camera{
     public void updateServoPosition(double x, double y, double heading){
         // Blue storage
         double[][] locations = {{-halfField, oneAndHalfTile},{-halfField, -oneAndHalfTile},{halfTile, halfField},{halfTile, -halfField}};
-        double bestScore = 0;
+        double bestScore = Double.MAX_VALUE;
         double bestAngle = 90;
         for (double[] location : locations) {
             double robotOrientation = heading;
@@ -223,13 +223,15 @@ public class Camera{
             while (newPointerAngle >= 360) {
                 newPointerAngle -= 360;
             }
-            double score = -Math.hypot(dx, dy);
+            double score = Math.hypot(dx, dy);
 
             if (score < bestScore){
                 bestScore = score;
                 bestAngle = newPointerAngle;
             }
         }
+        pointerAngle = bestAngle;
+        telemetryDucks.setValue(bestScore+" "+bestAngle);
         setServoAngle(bestAngle);
     }
 
@@ -238,7 +240,7 @@ public class Camera{
         final double TOTAL_COUNTS_PER_ROUND = 1.27;
         final double OFFSET = 0.045;
 
-        double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180 - pointerAngle) + OFFSET;
+        double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180 - angle) + OFFSET;
 //        while (pointerPosition < -0.19){
 //            pointerPosition+=2;
 //        }
