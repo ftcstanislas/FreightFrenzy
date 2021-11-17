@@ -23,6 +23,7 @@ public class Arm extends RobotPart{
 
     String state = "input";
     ColorSensor colorSensor;
+
     double position = 0; //temp
 
 //    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
@@ -56,6 +57,7 @@ public class Arm extends RobotPart{
         modes.put("high", new HashMap<String, Object[]>() {{
             put("arm", new Object[]{"position", 1650.0});
         }});
+
     }
 
 //    @Override
@@ -91,6 +93,7 @@ public class Arm extends RobotPart{
         } else if (gamepad1.dpad_left) {
             state = "low";
         }
+
         setMode(state);
 //
 //        if (gamepad1.x) {
