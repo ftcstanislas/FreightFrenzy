@@ -59,6 +59,8 @@ public class Camera{
     // Pointer
     Servo pointer = null;
     private double pointerAngle = 90;
+    double TOTAL_COUNTS_PER_ROUND = 0;
+    double OFFSET = 0;
 
     // Game element detection
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
@@ -71,7 +73,7 @@ public class Camera{
 
     private boolean checkDuck = false;
 
-    public void init(HardwareMap hardwareMap, String name, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(HardwareMap hardwareMap, String name, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
         telemetryDucks = telemetryDucksInit;
@@ -81,6 +83,8 @@ public class Camera{
 
         // Servo pointer
         pointer = hardwareMap.get(Servo.class, "cameraPointer1");
+        TOTAL_COUNTS_PER_ROUND = TOTAL_COUNTS_PER_ROUND_INIT;
+        OFFSET = OFFSET_INIT;
 
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -116,7 +120,7 @@ public class Camera{
         identifyTarget(2, "Red Storage", -halfField, -oneAndHalfTile, mmTargetHeight, 90, 0, 90);
         identifyTarget(3, "Red Alliance Wall", halfTile, -halfField, mmTargetHeight, 90, 0, 180);
 
-        setCameraPosition(0,0,200,90);//90
+//        setCameraPosition(0,0,200,90);//90
 
 
         targets.activate();
@@ -186,7 +190,6 @@ public class Camera{
         }
 
         if (targetVisible) {
-//            updateServoPosition(translation.get(0), translation.get(1), rotation.thirdAngle);
         } else {
             text +="\nVisible Target none\nCamera heading "+ pointerAngle;
         }
@@ -196,14 +199,27 @@ public class Camera{
 
     public void updateServoPosition(double x, double y, double heading){
         // Blue storage
-        double[][] locations = {{-halfField, oneAndHalfTile},{-halfField, -oneAndHalfTile},{halfTile, halfField},{halfTile, -halfField}};
+        double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, 90},{halfTile, -halfField, -90}};
         double bestScore = Double.MAX_VALUE;
         double bestAngle = 90;
         for (double[] location : locations) {
+//        double[] location =  {halfTile, halfField, 90};
             double robotOrientation = heading;
             double dx = location[0] - x;
             double dy = location[1] - y;
-            double newAngle = 180 - robotOrientation + -Math.atan2(dx, dy) / Math.PI * 180;
+            double relativeHeading = 0;
+            double newAngle = 0;
+            if (location[2] == 180){
+                relativeHeading = -Math.atan2(dx, dy) / Math.PI * 180;
+                newAngle = 180 - robotOrientation + relativeHeading;
+            } else if (location[2] == 90) {
+                relativeHeading = Math.atan2(dy, dx) / Math.PI * 180;
+                newAngle = 90 - robotOrientation + relativeHeading;
+            } else if (location[2] == -90) {
+                relativeHeading = -Math.atan2(dy, dx) / Math.PI * 180;
+                newAngle = 270 - robotOrientation + relativeHeading;
+            }
+//            double newAngle = 180 - robotOrientation + relativeHeading ; // 270 was 180
             while (newAngle < 0) {
                 newAngle += 360;
             }
@@ -214,13 +230,13 @@ public class Camera{
             // max speed of servo
             double difference = newAngle - pointerAngle;
             difference = (difference + 180) % 360 - 180;
-            difference = Math.max(Math.min(difference, 0.1), -0.1);
+            difference = Math.max(Math.min(difference, 0.2), -0.2);
             double newPointerAngle = pointerAngle + difference;
 
-            while (newPointerAngle < 0) {
+            while (newPointerAngle < -180) {
                 newPointerAngle += 360;
             }
-            while (newPointerAngle >= 360) {
+            while (newPointerAngle >= 180) {
                 newPointerAngle -= 360;
             }
             double score = Math.hypot(dx, dy);
@@ -232,15 +248,20 @@ public class Camera{
         }
         pointerAngle = bestAngle;
         telemetryDucks.setValue(bestScore+" "+bestAngle);
-        setServoAngle(bestAngle);
+        setPointerAngle(bestAngle);
+
+//        pointerAngle = newPointerAngle;
+//        setPointerAngle(newPointerAngle);
+
+//        telemetryDucks.setValue(String.format("relativeHeading %.1f newAngle %.1f",
+//                relativeHeading, newAngle));
     }
 
     // Set angle of servo (angle in degrees)
-    public void setServoAngle(double angle) {
-        final double TOTAL_COUNTS_PER_ROUND = 1.27;
-        final double OFFSET = 0.045;
+    public void setPointerAngle(double angle) {
 
-        double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180 - angle) + OFFSET;
+
+        double pointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
 //        while (pointerPosition < -0.19){
 //            pointerPosition+=2;
 //        }
@@ -248,7 +269,7 @@ public class Camera{
 //            pointerPosition-=2;
 //        }
         pointer.setPosition(pointerPosition);
-        setCameraPosition(0, 0, 200, (float)(pointerAngle));
+        setCameraPosition(0, 0, 230, (float)(pointerAngle));
     }
 
     // Called when stopping script
@@ -279,7 +300,7 @@ public class Camera{
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             position = new double[]{translation.get(0), translation.get(1), rotation.thirdAngle};
         }  else {
-            position = new double[]{0, 0, 0};
+            position = new double[]{0, 0, 90};
         }
         return position;
     }

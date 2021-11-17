@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 
+import java.util.ArrayList;
+
 public class Location {
 //    private Odometry odometry = null;
     private IMU IMU = null;
@@ -15,6 +17,10 @@ public class Location {
     private MecanumDrive drivetrain = null;
 
     //Location
+    final int HISTORY_LENGTH = 2;
+    ArrayList<Double> historyX = new ArrayList<Double>();
+    ArrayList<Double> historyY = new ArrayList<Double>();
+    ArrayList<Double> historyHeading = new ArrayList<Double>();
     double x = 0;
     double y = 0;
     double heading = 0;
@@ -38,7 +44,8 @@ public class Location {
 
         // Camera
         camera1 = new Camera();
-        camera1.init(hardwareMap, "Webcam 1", telemetryInit, telemetryDucks);
+        camera1.init(hardwareMap, "Webcam 1", 1.27, 0.045, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+        camera1.updateServoPosition(x, y, heading);
         
         telemetry = telemetryInit;
     }
@@ -53,17 +60,44 @@ public class Location {
 
     public void update(){
 //        odometry.globalCoordinatePositionUpdate();
-        heading = IMU.getOrientation();
+//        heading = IMU.getOrientation();
         camera1.update();
 
+        // Calculate new position of robot
+        double[] positionCamera1 = {17,17};
         double[] locationCamera1 = camera1.getPosition();
+        double robotX = positionCamera1[0] * Math.cos(locationCamera1[2]) + positionCamera1[1] * - Math.sin(locationCamera1[2]);
+        double robotY = positionCamera1[0] * Math.sin(locationCamera1[2]) + positionCamera1[1] * Math.cos(locationCamera1[2]);
 
+        historyX.add(locationCamera1[0]);
+        historyY.add(locationCamera1[1]);
+        historyHeading.add(locationCamera1[2]);
+
+        while (historyX.size() > HISTORY_LENGTH){
+            historyX.remove(0);
+        }
+        while (historyY.size() > HISTORY_LENGTH){
+            historyY.remove(0);
+        }
+        while (historyHeading.size() > HISTORY_LENGTH){
+            historyHeading.remove(0);
+        }
         double[] location = locationCamera1;
 
+        // Update position
+        x = location[0];
+        y = location[1];
+        heading = location[2];
+
+        // Update servo
         camera1.updateServoPosition(location[0], location[1], location[2]);
 
-        telemetry.setValue(String.format("Pos (mm) {X, Y, heading} = %.1f, %.1f %.1f",
-                location[0], location[1], location[2]));
+        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
+                x, y, heading, robotX, robotY));
+//        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f",
+//                x, y, heading));
+
+
 
         //Duck
 //        camera.setZoom(true);

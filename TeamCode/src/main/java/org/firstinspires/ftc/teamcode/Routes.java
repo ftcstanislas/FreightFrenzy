@@ -20,18 +20,17 @@ public class Routes {
     */
 
 
-    public Object[][] route1 = {
+    public static Object[][] routeRight = {
             {true, "ARM", "mode", "high"},
-            {true, "ARM", "mode", "low"},
+            {true, "ARM", "mode", "base"},
             {true, "SPINNER", "mode", "spinLeft"},
 
     };
 
-    public Object[][] switchedRoute = switchRoute(route1);
+    public static Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public static Object[][] getRoute(String team, String startPosition){
-        Object[][] verwijder = {{"Boe"}};
-        return verwijder;
+        return routeRight;
     }
 
     public static Object[][] switchRoute(Object[][] route){

@@ -1,30 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
-import java.lang.reflect.Array;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 import java.util.ArrayList;
 import java.util.List;
-import org.firstinspires.ftc.teamcode.Odometry_Sample.OdometryGlobalCoordinatePosition;
-
 import org.firstinspires.ftc.teamcode.Location.Location;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 
 
-@Autonomous(name="Final Autonomous 3.11", group="Iterative Opmode")
+@Autonomous(name="Final Autonomous 3.11", group="main")
 public class AutonomousV3 extends OpMode {
 
     // Robot parts
@@ -36,7 +24,7 @@ public class AutonomousV3 extends OpMode {
     // ColorDetector colorSensor = new ColorDetector();
 
     //instructions
-    Routes routes = new Routes();
+//    Routes routes = new Routes();
 
     int instruction = 0;
     List<Object[]> unfinishedInstructions = new ArrayList<Object[]>();
@@ -56,7 +44,7 @@ public class AutonomousV3 extends OpMode {
 
     // Wich program to follow
     String[] program = {"blue", "onbekend"};
-    Object[][] instructions = {{true, "er", "moeten", "parameters", "zijn"}};
+    Object[][] instructions = new Object[][]{{}};
 
     // sleeping
     double wakeUpTime = 0;
