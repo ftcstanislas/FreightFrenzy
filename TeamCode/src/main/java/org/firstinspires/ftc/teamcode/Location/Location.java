@@ -38,7 +38,7 @@ public class Location {
 
         // Camera
         camera1 = new Camera();
-        camera1.init(hardwareMap, telemetryInit, telemetryDucks);
+        camera1.init(hardwareMap, "Webcam 1", telemetryInit, telemetryDucks);
         
         telemetry = telemetryInit;
     }
@@ -58,8 +58,12 @@ public class Location {
 
         double[] locationCamera1 = camera1.getPosition();
 
+        double[] location = locationCamera1;
+
+        camera1.updateServoPosition(location[0], location[1], location[2]);
+
         telemetry.setValue(String.format("Pos (mm) {X, Y, heading} = %.1f, %.1f %.1f",
-                locationCamera1[0],locationCamera1[1], heading));
+                location[0], location[1], location[2]));
 
         //Duck
 //        camera.setZoom(true);

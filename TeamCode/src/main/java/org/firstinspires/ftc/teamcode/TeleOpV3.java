@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import java.util.ArrayList;
 import java.util.Collections;
 
-@TeleOp(name="OpMode 3.10", group="Iterative Opmode")
+@TeleOp(name="OpMode Iterative 3.10", group="main")
 public class TeleOpV3 extends OpMode {
     
     //get objects
@@ -81,7 +81,11 @@ public class TeleOpV3 extends OpMode {
     
     @Override
     public void init_loop() {
-        status.setValue("Init looping for " + runtime.toString());
+        long time = System.nanoTime();
+//        status.setValue("Init looping for " + runtime.toString());
+        status.setValue(String.format("Init looping for %.1fs in %.1fms",
+                runtime.seconds(),  (double) (time - lastTime)/1000000));
+        lastTime = time;
         location.update();
     }
 
@@ -98,9 +102,10 @@ public class TeleOpV3 extends OpMode {
 
     @Override
     public void loop() {
-        // telemetry
+        // Telemetry
         long time = System.nanoTime();
-        status.setValue("Looping for " + runtime.toString() + " in "+(time - lastTime)/1000000+"ms");
+        status.setValue(String.format("Looping for %.1fs in %.1fms",
+                runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
 
         // status.setValue("\nX:"+globalPositionUpdate.returnXCoordinate()+"\nY:"+

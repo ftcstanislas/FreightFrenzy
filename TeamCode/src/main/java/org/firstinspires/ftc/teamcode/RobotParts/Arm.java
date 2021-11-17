@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Arm extends RobotPart{
 
     String state = "input";
+    boolean isPressed = false;
     ColorSensor colorSensor;
     double position = 0; //temp
 
@@ -105,18 +106,28 @@ public class Arm extends RobotPart{
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        if (gamepad1.a) {
-            switchServo();
-        }
+//        if (gamepad1.x) {
+            switchServo(gamepad1.x);
+//        }
         updateTelemetry();
     }
 
-    public void switchServo() {
-        if (servos.get("fork").getPosition() > 0) {
-            servos.get("fork").setPosition(0);
-        } else {
-            servos.get("fork").setPosition(1);
+    public void switchServo(boolean trigger) {
+        if (trigger && !isPressed){
+            isPressed = true;
+            if (0 != servos.get("fork").getPosition()){
+                servos.get("fork").setPosition(0);
+            } else {
+                servos.get("fork").setPosition(0.75);
+            }
+        } else if (!trigger){
+            isPressed = false;
         }
+//        if (servos.get("fork").getPosition() > 0.45) {
+//            servos.get("fork").setPosition(0);
+//        } else {
+//            servos.get("fork").setPosition(0.75);
+//        }
     }
 
 //    public void checkSensorInput() {

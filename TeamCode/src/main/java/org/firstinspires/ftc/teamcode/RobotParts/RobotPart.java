@@ -87,7 +87,7 @@ public abstract class RobotPart {
 //                            motor.setTargetPosition((int) Math.round(value));
 //                        }
                         motor.setTargetPosition((int) Math.round(value));
-                        motor.setVelocity(80);
+                        motor.setVelocity(160);
                         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         return inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
                     }
