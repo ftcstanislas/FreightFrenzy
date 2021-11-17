@@ -26,6 +26,7 @@ public class Arm extends RobotPart{
 
     double position = 0; //temp
     double stuck = 0;
+    boolean goUp = false;
 
 //    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
@@ -137,12 +138,16 @@ public class Arm extends RobotPart{
     public boolean calibrate() {
         DcMotorEx armMotor = motors.get("arm");
         //Set arm position to -100 (previous encoder 0 position - 100);
-        if (armMotor.getTargetPosition() !== -100) {
-            armMotor.setTargetPosition(-100);
-            armMotor.setVelocity(80);
-            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        if (inMargin(armMotor.getCurrentPosition(), armMotor.getTargetPosition(), 50)) {
+        if (goUp == false) {
+            if (armMotor.getTargetPosition() !== -100) {
+                armMotor.setTargetPosition(-100);
+                armMotor.setVelocity(80);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            if (inMargin(armMotor.getCurrentPosition(), armMotor.getTargetPosition(), 50)) {
+            goUp = true;
+            }
+        } else {
             //Go up slowly
             if (armMotor.getMode() !== DcMotor.RunMode.RUN_USING_ENCODER) {
                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -154,6 +159,7 @@ public class Arm extends RobotPart{
             }
             if (stuck >= 30) {
                 stuck = 0;
+                goUp = false;
                 armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 return true;
