@@ -22,18 +22,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Arm extends RobotPart{
 
     String state = "input";
-    boolean isPressed = false;
     ColorSensor colorSensor;
 
     double position = 0; //temp
+    double stuck = 0;
 
 //    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
-//        // get sensors
-//        colorSensor = map.get(ColorSensor.class, "color_sensor");
-//
-//        // setup
+        // setup
         telemetry = telemetryInit;
         motors.put("arm", map.get(DcMotorEx.class, "arm"));
         motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
@@ -60,27 +57,6 @@ public class Arm extends RobotPart{
         }});
 
     }
-
-//    @Override
-//    public void setMode(String mode){
-//        if (modes.containsKey(mode)){
-//            if (currentMode != mode){
-//                setPosition(modes.get(mode));
-//                updateTelemetry();
-//            }
-//            currentMode = mode;
-//        } else {
-//            telemetry.setValue("Mode "+mode+" doesn't exit");
-//        }
-//    }
-//
-//    @Override
-//    public void setPosition(int pos) {
-//        for (DcMotor motor : motors.values()){
-//            motor.setTargetPosition(pos);
-//        };
-//        updateTelemetry();
-//    }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
 //        boolean tipping = false;
@@ -109,41 +85,19 @@ public class Arm extends RobotPart{
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-//        if (gamepad1.x) {
-            switchServo(gamepad1.x);
-//        }
+        if (gamepad1.a) {
+            switchServo();
+        }
         updateTelemetry();
     }
 
-    public void switchServo(boolean trigger) {
-        if (trigger && !isPressed){
-            isPressed = true;
-            if (0 != servos.get("fork").getPosition()){
-                servos.get("fork").setPosition(0);
-            } else {
-                servos.get("fork").setPosition(0.75);
-            }
-        } else if (!trigger){
-            isPressed = false;
+    public void switchServo() {
+        if (servos.get("fork").getPosition() > 0) {
+            servos.get("fork").setPosition(0);
+        } else {
+            servos.get("fork").setPosition(1);
         }
-//        if (servos.get("fork").getPosition() > 0.45) {
-//            servos.get("fork").setPosition(0);
-//        } else {
-//            servos.get("fork").setPosition(0.75);
-//        }
     }
-
-//    public void checkSensorInput() {
-//        sensorInput.put("red", colorSensor.red());
-//        sensorInput.put("green", colorSensor.blue());
-//        sensorInput.put("blue", colorSensor.blue());
-//        sensorInput.put("argb", colorSensor.argb());
-//        additionalTelemetry = "\n" + "Color Sensor Input:" +
-//                "red: " + sensorInput.get("red") + "\n" +
-//                "green: " + sensorInput.get("green") + "\n" +
-//                "blue: " + sensorInput.get("blue") + "\n" +
-//                "argb: " + sensorInput.get("argb") + "\n";
-//    }
 
 //    public void setPowerState(boolean tipping){
 //        double totalMotorCounts = -1100;
@@ -179,6 +133,34 @@ public class Arm extends RobotPart{
 //
 //        updateTelemetry();
 //    }
+
+    public boolean calibrate() {
+        DcMotorEx armMotor = motors.get("arm");
+        //Set arm position to -100 (previous encoder 0 position - 100);
+        if (armMotor.getTargetPosition() !== -100) {
+            armMotor.setTargetPosition(-100);
+            armMotor.setVelocity(80);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        if (inMargin(armMotor.getCurrentPosition(), armMotor.getTargetPosition(), 50)) {
+            //Go up slowly
+            if (armMotor.getMode() !== DcMotor.RunMode.RUN_USING_ENCODER) {
+                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                armMotor.setPower(0.1);
+            }
+            //Check stuck
+            if (armMotor.getVelocity() <= 10) {
+                stuck += 1;
+            }
+            if (stuck >= 30) {
+                stuck = 0;
+                armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void updateTelemetry(){
         telemetry.setValue(motors.get("arm").getCurrentPosition());
