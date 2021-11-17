@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Location;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.checkerframework.checker.units.qual.A;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -195,32 +196,41 @@ public class Camera{
 
     public void updateServoPosition(double x, double y, double heading){
         // Blue storage
-        double[] location = {-halfField, oneAndHalfTile};
-        double robotOrientation = heading;
-        double dx = location[0] - x;
-        double dy = location[1] - y;
-        double newAngle = 180 - robotOrientation + -Math.atan2(dx,dy)/Math.PI*180;
-        while (newAngle < 0){
-            newAngle += 360;
-        }
-        while (newAngle >= 360){
-            newAngle -= 360;
-        }
+        double[][] locations = {{-halfField, oneAndHalfTile},{-halfField, -oneAndHalfTile},{halfTile, halfField},{halfTile, -halfField}};
+        double bestScore = 0;
+        double bestAngle = 90;
+        for (double[] location : locations) {
+            double robotOrientation = heading;
+            double dx = location[0] - x;
+            double dy = location[1] - y;
+            double newAngle = 180 - robotOrientation + -Math.atan2(dx, dy) / Math.PI * 180;
+            while (newAngle < 0) {
+                newAngle += 360;
+            }
+            while (newAngle >= 360) {
+                newAngle -= 360;
+            }
 
-        // max speed of servo
-        double difference = newAngle - pointerAngle;
-        difference = (difference + 180) % 360 - 180;
-        difference = Math.max(Math.min(difference, 0.1), -0.1);
-        pointerAngle += difference;
+            // max speed of servo
+            double difference = newAngle - pointerAngle;
+            difference = (difference + 180) % 360 - 180;
+            difference = Math.max(Math.min(difference, 0.1), -0.1);
+            double newPointerAngle = pointerAngle + difference;
 
-        while (pointerAngle < 0){
-            pointerAngle += 360;
-        }
-        while (pointerAngle >= 360){
-            pointerAngle -= 360;
-        }
+            while (newPointerAngle < 0) {
+                newPointerAngle += 360;
+            }
+            while (newPointerAngle >= 360) {
+                newPointerAngle -= 360;
+            }
+            double score = -Math.hypot(dx, dy);
 
-        setServoAngle(pointerAngle);
+            if (score < bestScore){
+                bestScore = score;
+                bestAngle = newPointerAngle;
+            }
+        }
+        setServoAngle(bestAngle);
     }
 
     // Set angle of servo (angle in degrees)
