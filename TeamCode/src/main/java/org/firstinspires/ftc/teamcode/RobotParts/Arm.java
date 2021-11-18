@@ -62,13 +62,13 @@ public class Arm extends RobotPart{
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
 //        boolean tipping = false;
 //        checkSensorInput();
-        if (gamepad1.dpad_up) {
+        if (gamepad2.dpad_up) {
             state = "mid";
-        } else if (gamepad1.dpad_right) {
+        } else if (gamepad2.dpad_right) {
             state = "high";
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             state = "base";
-        } else if (gamepad1.dpad_left) {
+        } else if (gamepad2.dpad_left) {
             state = "low";
         }
         if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
@@ -85,7 +85,7 @@ public class Arm extends RobotPart{
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        telemetry.setValue(motors.get("arm").getCurrentPosition());
 
-        if (gamepad1.x) {
+        if (gamepad2.x) {
             switchServo();
         }
         updateTelemetry();

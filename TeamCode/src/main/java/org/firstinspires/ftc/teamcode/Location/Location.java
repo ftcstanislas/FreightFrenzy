@@ -15,7 +15,7 @@ public class Location {
     private MecanumDrive drivetrain = null;
 
     //Location
-    final int HISTORY_LENGTH = 5;
+    final int HISTORY_LENGTH = 20;
     ArrayList<Double> historyX = new ArrayList<Double>();
     ArrayList<Double> historyY = new ArrayList<Double>();
     ArrayList<Double> historyHeading = new ArrayList<Double>();
@@ -93,6 +93,7 @@ public class Location {
 
         telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
                 x, y, heading, robotX, robotY));
+//        telemetry.setValue(historyX.toString());
 //        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f",
 //                x, y, heading));
 

@@ -13,11 +13,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public abstract class RobotPart {
-    private boolean isSwitchPressed = false;
+//    private boolean isSwitchPressed = false;
     
     protected Telemetry.Item telemetry = null;
     protected Map<String, DcMotorEx> motors = new HashMap<String, DcMotorEx>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
+    private Map<String, Boolean> switchPressed = new HashMap<String, Boolean>();
 //    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
     protected HashMap<String, HashMap<String, Object[]>> modes = new HashMap<String, HashMap<String, Object[]>>();
     protected String currentMode = "";
@@ -102,6 +103,11 @@ public abstract class RobotPart {
     }
 
     public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
+        String name = defaultMode + " " + alternativeMode;
+        if (!switchPressed.containsKey(name)){
+            switchPressed.put(name, false);
+        }
+        boolean isSwitchPressed = switchPressed.get(name);
         if (trigger && !isSwitchPressed){
             isSwitchPressed = true;
             if (currentMode != defaultMode){
@@ -109,9 +115,10 @@ public abstract class RobotPart {
             } else {
                 setMode(alternativeMode);
             }
-        } else if (!trigger){
+        } else if (!trigger && isSwitchPressed){
             isSwitchPressed = false;
         }
+        switchPressed.put(name, isSwitchPressed);
     }
 
 

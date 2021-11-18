@@ -45,7 +45,7 @@ public class Spinner extends RobotPart{
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.a, "stop","spinLeft");
+        switchMode(gamepad2.b, "stop","spinLeft");
     }
     
     public void updateTelemetry(){

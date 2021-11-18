@@ -36,6 +36,10 @@ public class Intake extends RobotPart{
             put("intake", new Object[]{"power", 1.0});
         }});
 
+        modes.put("outtaking", new HashMap<String, Object[]>() {{
+            put("intake", new Object[]{"power", -1.0});
+        }});
+
         // setup
         telemetry = telemetryInit;
 
@@ -43,7 +47,8 @@ public class Intake extends RobotPart{
     }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.b, "stop","intaking");
+        switchMode(gamepad2.a, "stop","intaking");
+        switchMode(gamepad2.y, "stop","outtaking");
     }
     
     public void updateTelemetry() {
