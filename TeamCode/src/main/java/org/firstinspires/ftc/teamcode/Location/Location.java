@@ -15,7 +15,7 @@ public class Location {
     private MecanumDrive drivetrain = null;
 
     //Location
-    final int HISTORY_LENGTH = 2;
+    final int HISTORY_LENGTH = 5;
     ArrayList<Double> historyX = new ArrayList<Double>();
     ArrayList<Double> historyY = new ArrayList<Double>();
     ArrayList<Double> historyHeading = new ArrayList<Double>();
@@ -82,15 +82,14 @@ public class Location {
         while (historyHeading.size() > HISTORY_LENGTH){
             historyHeading.remove(0);
         }
-        double[] location = locationCamera1;
 
         // Update position
-        x = location[0];
-        y = location[1];
-        heading = location[2];
+        x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
+        y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
+        heading = historyHeading.stream().mapToDouble(a -> a).average().getAsDouble();
 
         // Update servo
-        camera1.setPointerPosition(location[0], location[1], location[2]);
+        camera1.setPointerPosition(x, y, heading);
 
         telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
                 x, y, heading, robotX, robotY));
