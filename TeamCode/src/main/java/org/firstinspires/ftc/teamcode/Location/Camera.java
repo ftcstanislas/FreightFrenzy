@@ -277,15 +277,15 @@ public class Camera{
     // Set angle of servo (angle in degrees)
     public void setPointerAngle(double angle) {
         double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
-//        while (pointerPosition < -0.19){
-//            pointerPosition+=2;
+//        while (targetPointerPosition < -0.19){
+//            targetPointerPosition+=2;
 //        }
-//        while (pointerPosition >= 1.19){
-//            pointerPosition-=2;
+//        while (targetPointerPosition >= 1.19){
+//            targetPointerPosition-=2;
 //        }
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
-        setCameraPosition(0,0, 230, (float) targetPointerPosition);
+        setCameraPosition(0,0, 230, (float) angle);
     }
 
     // Called when stopping script
