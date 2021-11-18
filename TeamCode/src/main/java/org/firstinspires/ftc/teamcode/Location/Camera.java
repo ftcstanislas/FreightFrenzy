@@ -160,8 +160,15 @@ public class Camera{
 
     public void update() { // -TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180=  angle
         updateServoPosition();
-        setCameraPosition(0, 0, 230, (float)(-TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180));
 
+        if (pointerPosition == pointer.getPosition()) {
+            setCameraPosition(0, 0, 230, (float) (-TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180));
+            updateCamera();
+        }
+
+    }
+
+    public void updateCamera(){
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
