@@ -158,9 +158,9 @@ public class Camera{
         }
     }
 
-    public void update() {
+    public void update() { // -TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180=  angle
         updateServoPosition();
-//        setCameraPosition(0, 0, 230, (float)(pointerPosition));
+        setCameraPosition(0, 0, 230, (float)(-TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180));
 
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
@@ -285,7 +285,7 @@ public class Camera{
 //        }
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
-        setCameraPosition(0,0, 230, (float) angle);
+//        setCameraPosition(0,0, 230, (float) angle); OLD (WORKS)
     }
 
     // Called when stopping script
