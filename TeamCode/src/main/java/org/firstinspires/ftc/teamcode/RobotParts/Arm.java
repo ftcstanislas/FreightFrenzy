@@ -89,7 +89,7 @@ public class Arm extends RobotPart{
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        if (gamepad1.a) {
+        if (gamepad1.x) {
             switchServo();
         }
         updateTelemetry();
