@@ -160,7 +160,7 @@ public class Camera{
 
     public void update() {
         updateServoPosition();
-        setCameraPosition(0, 0, 230, (float)(pointerPosition));
+//        setCameraPosition(0, 0, 230, (float)(pointerPosition));
 
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
@@ -252,11 +252,8 @@ public class Camera{
             }
         }
         pointerAngle = bestAngle;
-//        telemetryDucks.setValue(bestScore+" "+bestAngle);
         setPointerAngle(bestAngle);
 
-//        pointerAngle = newPointerAngle;
-//        setPointerAngle(newPointerAngle);
 
 //        telemetryDucks.setValue(String.format("relativeHeading %.1f newAngle %.1f",
 //                relativeHeading, newAngle));
@@ -272,17 +269,13 @@ public class Camera{
             pointerPosition += Math.max(-POINTER_SPEED * timePassed, movement);
         }
 
-
         telemetryDucks.setValue(pointerPosition+" = "+pointer.getPosition());
 
         pointerLastUpdate = currentTime;
-//        pointerPosition;
     }
 
     // Set angle of servo (angle in degrees)
     public void setPointerAngle(double angle) {
-
-
         double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
 //        while (pointerPosition < -0.19){
 //            pointerPosition+=2;
@@ -292,6 +285,7 @@ public class Camera{
 //        }
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
+        setCameraPosition(0,0, 230, (float) targetPointerPosition);
     }
 
     // Called when stopping script
