@@ -162,7 +162,7 @@ public class Camera{
         updateServoPosition();
 
         if (pointerPosition == pointer.getPosition()) {
-            setCameraPosition(0, 0, 230, (float) (-TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180));
+//            setCameraPosition(0, 0, 230, (float) (-TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180));
             updateCamera();
         }
 
@@ -187,23 +187,15 @@ public class Camera{
 
         // Provide feedback as to where the robot is located (if we know).
         String text = "";
-
-        VectorF translation = null;
-        Orientation rotation = null;
         if (lastLocation != null) {
             // express position (translation) of robot in inches.
-            translation = lastLocation.getTranslation();
+            VectorF translation = lastLocation.getTranslation();
             text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
                     translation.get(0), translation.get(1));
 
             // express the rotation of the robot in degrees.
-            rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             text += String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
-        }
-
-        if (targetVisible) {
-        } else {
-            text +="\nVisible Target none\nCamera heading "+ pointerAngle;
         }
 
         telemetry.setValue(text);
@@ -219,7 +211,7 @@ public class Camera{
             double robotOrientation = heading;
             double dx = location[0] - x;
             double dy = location[1] - y;
-            double relativeHeading = 0;
+            double relativeHeading;
             double newAngle = 0;
             if (location[2] == 180){
                 relativeHeading = -Math.atan2(dx, dy) / Math.PI * 180;
@@ -292,7 +284,7 @@ public class Camera{
 //        }
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
-//        setCameraPosition(0,0, 230, (float) angle); OLD (WORKS)
+        setCameraPosition(0,0, 230, (float) angle); //OLD (WORKS)
     }
 
     // Called when stopping script
