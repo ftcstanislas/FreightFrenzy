@@ -58,6 +58,9 @@ public class Camera{
 
     // Pointer
     Servo pointer = null;
+    double pointerPosition = 0;
+    double pointerLastUpdate = System.currentTimeMillis();;
+    double POINTER_SPEED = 1.14;
     private double pointerAngle = 90;
     double TOTAL_COUNTS_PER_ROUND = 0;
     double OFFSET = 0;
@@ -156,6 +159,8 @@ public class Camera{
     }
 
     public void update() {
+        updateServoPosition();
+        setCameraPosition(0, 0, 230, (float)(pointerPosition));
 
         // check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
@@ -197,7 +202,7 @@ public class Camera{
         telemetry.setValue(text);
     }
 
-    public void updateServoPosition(double x, double y, double heading){
+    public void setPointerPosition(double x, double y, double heading){
         // Blue storage
         double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, 90},{halfTile, -halfField, -90}};
         double bestScore = Double.MAX_VALUE;
@@ -247,7 +252,7 @@ public class Camera{
             }
         }
         pointerAngle = bestAngle;
-        telemetryDucks.setValue(bestScore+" "+bestAngle);
+//        telemetryDucks.setValue(bestScore+" "+bestAngle);
         setPointerAngle(bestAngle);
 
 //        pointerAngle = newPointerAngle;
@@ -257,19 +262,36 @@ public class Camera{
 //                relativeHeading, newAngle));
     }
 
+    public void updateServoPosition(){
+        double currentTime = System.currentTimeMillis();
+        double timePassed = (currentTime - pointerLastUpdate)/1000;
+        double movement = pointer.getPosition() - pointerPosition;
+        if (movement > 0){
+            pointerPosition += Math.min(POINTER_SPEED * timePassed, movement);
+        } else if (movement < 0){
+            pointerPosition += Math.max(-POINTER_SPEED * timePassed, movement);
+        }
+
+
+        telemetryDucks.setValue(pointerPosition+" = "+pointer.getPosition());
+
+        pointerLastUpdate = currentTime;
+//        pointerPosition;
+    }
+
     // Set angle of servo (angle in degrees)
     public void setPointerAngle(double angle) {
 
 
-        double pointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
+        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
 //        while (pointerPosition < -0.19){
 //            pointerPosition+=2;
 //        }
 //        while (pointerPosition >= 1.19){
 //            pointerPosition-=2;
 //        }
-        pointer.setPosition(pointerPosition);
-        setCameraPosition(0, 0, 230, (float)(pointerAngle));
+        updateServoPosition();
+        pointer.setPosition(targetPointerPosition);
     }
 
     // Called when stopping script

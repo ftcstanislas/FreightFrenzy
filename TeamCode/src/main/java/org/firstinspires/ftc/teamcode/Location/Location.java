@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Location;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
@@ -45,7 +43,8 @@ public class Location {
         // Camera
         camera1 = new Camera();
         camera1.init(hardwareMap, "Webcam 1", 1.27, 0.045, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-        camera1.updateServoPosition(x, y, heading);
+        camera1.setPointerPosition(x, y, heading);
+
         
         telemetry = telemetryInit;
     }
@@ -91,7 +90,7 @@ public class Location {
         heading = location[2];
 
         // Update servo
-        camera1.updateServoPosition(location[0], location[1], location[2]);
+        camera1.setPointerPosition(location[0], location[1], location[2]);
 
         telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
                 x, y, heading, robotX, robotY));

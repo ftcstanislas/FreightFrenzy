@@ -76,18 +76,14 @@ public class Arm extends RobotPart{
         }
 
         setMode(state);
-//
-//        if (gamepad1.x) {
-//            tipping = true;
-//        }
-//
+
+
 //        // set power
-//        setPowerState(tipping);
-//        position += gamepad1.right_stick_y;
+//        position += gamepad1.right_stick_y*2;
 //        motors.get("arm").setTargetPosition((int) position);
 //        motors.get("arm").setPower(0.3);
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+//        telemetry.setValue(motors.get("arm").getCurrentPosition());
 
         if (gamepad1.x) {
             switchServo();

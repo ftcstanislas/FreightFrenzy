@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.sun.tools.javac.util.ArrayUtils;
+
 import java.util.ArrayList;
 
 public class Routes {
@@ -20,23 +22,26 @@ public class Routes {
     */
 
 
-    public static Object[][] routeRight = {
+    public Object[][] routeRight = {
             {true, "SPINNER", "mode", "spinRight"},
-            {true, "WAIT", "wait", 3},
+            {true, "WAIT", "wait", 1.0},
             {true, "SPINNER", "mode", "stop"},
-//            {true, "ARM", "mode", "base"},
-//            {true, "ARM", "mode", "high"},
+            {true, "INTAKE", "mode", "intaking"},
+            {true, "WAIT", "wait", 1.0},
+            {true, "INTAKE", "mode", "stop"},
+            {true, "ARM", "mode", "high"},
+            {true, "ARM", "mode", "base"},
     };
 
-    public static Object[][] switchedRouteRight = switchRoute(routeRight);
+    // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
-    public static Object[][] getRoute(String team, String startPosition){
+    public Object[][] getRoute(String team, String startPosition){
         return routeRight;
     }
 
-    public static Object[][] switchRoute(Object[][] route){
-        Object[][] newRoute = {};
-        for (Object[] instruction : route) {
+    public Object[][] switchRoute(Object[][] route){
+        Object[][] newRoute = route.clone();
+        for (Object[] instruction : newRoute) {
             String object = (String) instruction[1];
             String functie = (String) instruction[2];
             
@@ -72,8 +77,6 @@ public class Routes {
                 default: // if no match is found
                     throw new java.lang.Error("Part " + object + " does not exist");
             }
-            
-            newRoute[newRoute.length] = instruction;
         }
         return newRoute;
     }

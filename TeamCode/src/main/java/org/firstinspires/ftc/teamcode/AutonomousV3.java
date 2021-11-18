@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import java.util.ArrayList;
 import java.util.List;
 import org.firstinspires.ftc.teamcode.Location.Location;
+import org.firstinspires.ftc.teamcode.RobotParts.Arm;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
@@ -18,13 +19,13 @@ public class AutonomousV3 extends OpMode {
     // Robot parts
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    // Arm arm = new Arm();
+    Arm arm = new Arm();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
     // ColorDetector colorSensor = new ColorDetector();
 
     //instructions
-//    Routes routes = new Routes();
+    Routes routes = new Routes();
 
     int instruction = 0;
     List<Object[]> unfinishedInstructions = new ArrayList<Object[]>();
@@ -88,7 +89,7 @@ public class AutonomousV3 extends OpMode {
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
-        // arm.init(hardwareMap, telemetryArm);
+        arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
         // colorSensor.init(hardwareMap, telemetryColorSensor);
@@ -112,7 +113,7 @@ public class AutonomousV3 extends OpMode {
         runtime.reset();
 
         // Correct instruction
-        instructions = Routes.getRoute(program[0], program[1]);
+        instructions = routes.getRoute(program[0], program[1]);
 
         //Telemetry update
         status.setValue("Started");
@@ -198,7 +199,7 @@ public class AutonomousV3 extends OpMode {
             case "ARM":
                 if (function == "mode") {
                     /*done =*/
-                    spinner.setMode((String) instruction[3]);
+                    done = arm.setMode((String) instruction[3]);
                 }
                 ;
                 break;
@@ -206,16 +207,17 @@ public class AutonomousV3 extends OpMode {
             case "WAIT":
                 //Calculate wait time
                 if (wakeUpTime == 0) {
-                    wakeUpTime = (double) runtime.time() + (double) instruction[2];
+                    wakeUpTime = (double) runtime.seconds() + (double) instruction[3];
                 }
 
                 //Check if time passed
                 if (wakeUpTime < runtime.time()) {
                     wakeUpTime = 0;
-                    // done = true;
+                    done = true;
                 } else {
-                    // done = false;
+                    done = false;
                 }
+                break;
 
             case "DRIVETRAIN":
                 switch (function) {
@@ -229,6 +231,7 @@ public class AutonomousV3 extends OpMode {
                     default: // if no match is found
                         throw new java.lang.Error("Part " + part + " does not exist");
                 }
+                break;
         }
         return done;
     }

@@ -71,6 +71,7 @@ public abstract class RobotPart {
     }
 
     public boolean setMode(String mode){
+        boolean done = true;
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
                 for (Map.Entry<String, Object[]> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
@@ -88,7 +89,7 @@ public abstract class RobotPart {
                             motor.setPower(0.69);
                             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         }
-                        return inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
+                        done = inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
                     }
                 }
                 currentMode = mode;
@@ -97,7 +98,7 @@ public abstract class RobotPart {
         } else {
             telemetry.setValue("Mode "+mode+" doesn't exits");
         }
-        return true;
+        return done;
     }
 
     public void switchMode(boolean trigger, String defaultMode, String alternativeMode){
