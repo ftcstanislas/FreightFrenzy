@@ -66,8 +66,9 @@ public class Location {
         // Calculate new position of robot
         double[] positionCamera1 = {17,17};
         double[] locationCamera1 = camera1.getPosition();
-        double robotX = positionCamera1[0] * Math.cos(locationCamera1[2]) + positionCamera1[1] * - Math.sin(locationCamera1[2]);
-        double robotY = positionCamera1[0] * Math.sin(locationCamera1[2]) + positionCamera1[1] * Math.cos(locationCamera1[2]);
+        double robotHeadingRadians = Math.toRadians(locationCamera1[2]-180);
+        double robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * - Math.sin(robotHeadingRadians);
+        double robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
 
         historyX.add(locationCamera1[0]);
         historyY.add(locationCamera1[1]);
