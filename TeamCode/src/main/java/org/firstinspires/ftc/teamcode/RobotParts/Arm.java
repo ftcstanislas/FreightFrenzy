@@ -46,15 +46,15 @@ public class Arm extends RobotPart{
         }});
 
         modes.put("low", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 400.0});
+            put("arm", new Object[]{"position", 1600.0});
         }});
 
         modes.put("mid", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 900.0});
+            put("arm", new Object[]{"position", 3600.0});
         }});
 
         modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 1650.0});
+            put("arm", new Object[]{"position", 6300.0});
         }});
 
     }

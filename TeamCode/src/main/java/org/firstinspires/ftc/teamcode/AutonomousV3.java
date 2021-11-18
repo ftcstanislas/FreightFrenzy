@@ -44,7 +44,7 @@ public class AutonomousV3 extends OpMode {
 
     // Wich program to follow
     String[] program = {"blue", "onbekend"};
-    Object[][] instructions = new Object[][]{{}};
+    Object[][] instructions = null;
 
     // sleeping
     double wakeUpTime = 0;

@@ -21,10 +21,11 @@ public class Routes {
 
 
     public static Object[][] routeRight = {
-            {true, "ARM", "mode", "high"},
-            {true, "ARM", "mode", "base"},
-            {true, "SPINNER", "mode", "spinLeft"},
-
+            {true, "SPINNER", "mode", "spinRight"},
+            {true, "WAIT", "wait", 3},
+            {true, "SPINNER", "mode", "stop"},
+//            {true, "ARM", "mode", "base"},
+//            {true, "ARM", "mode", "high"},
     };
 
     public static Object[][] switchedRouteRight = switchRoute(routeRight);
