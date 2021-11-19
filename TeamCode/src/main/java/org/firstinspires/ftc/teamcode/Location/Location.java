@@ -12,7 +12,9 @@ public class Location {
     private IMU IMU = null;
     private Camera camera1 = null;
     private Telemetry.Item telemetry = null;
+    private Gyro gyro = null;
     private MecanumDrive drivetrain = null;
+    private boolean advanced = false;
 
     //Location
     final int HISTORY_LENGTH = 20;
@@ -23,7 +25,12 @@ public class Location {
     double y = 0;
     double heading = 0;
 
-    public void init(HardwareMap hardwareMap, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
+    public void init(HardwareMap hardwareMap, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
+        advanced = advancedInit; // keep track of location
+        x = position[0];
+        y = position[1];
+        heading = position[2];
+
         // Odometry
 //        odometry = new Odometry(
 //                hardwareMap.get(DcMotor.class, "leftFront"),
@@ -39,14 +46,24 @@ public class Location {
         // IMU
         IMU = new IMU();
         IMU.init(hardwareMap);
+        IMU.setHeading(heading);
 
-        // Camera
-        camera1 = new Camera();
-        camera1.init(hardwareMap, "Webcam 1", 1.27, 0.045, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-        camera1.setPointerPosition(x, y, heading);
+        if (advanced) {
+            // Camera
+            camera1 = new Camera();
+            camera1.init(hardwareMap, "Webcam 1", 1.27, 0.045, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera1.setPointerPosition(x, y, heading);
 
+            // Gyro
+            gyro = new Gyro();
+            gyro.init(hardwareMap);
+        }
         
         telemetry = telemetryInit;
+    }
+
+    public boolean calibrate(){
+        return gyro.calibrate();
     }
     
     public void startDuckDetection() {
@@ -60,19 +77,32 @@ public class Location {
     public void update(){
 //        odometry.globalCoordinatePositionUpdate();
 //        heading = IMU.getOrientation();
-        camera1.update();
 
-        // Calculate new position of robot
-        double[] positionCamera1 = {17,17};
-        double[] locationCamera1 = camera1.getPosition();
-        double robotHeadingRadians = Math.toRadians(locationCamera1[2]-180);
-        double robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * - Math.sin(robotHeadingRadians);
-        double robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
+        // Camera
+        if (advanced) {
+            camera1.update();
 
-        historyX.add(locationCamera1[0]);
-        historyY.add(locationCamera1[1]);
-        historyHeading.add(locationCamera1[2]);
+            // Calculate new position of robot
+            double[] positionCamera1 = {17, 17};
+            double[] locationCamera1 = camera1.getPosition();
+            double robotHeadingRadians = Math.toRadians(locationCamera1[2] - 180);
+            double robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
+            double robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
 
+            historyX.add(locationCamera1[0]);
+            historyY.add(locationCamera1[1]);
+            historyHeading.add(locationCamera1[2]);
+        }
+
+        // Gyro
+        if (advanced) {
+            double[] locationGyro = gyro.getPosition();
+            historyX.add(locationGyro[0]);
+            historyY.add(locationGyro[1]);
+            historyHeading.add(locationGyro[2]);
+        }
+
+        // Remove part of history
         while (historyX.size() > HISTORY_LENGTH){
             historyX.remove(0);
         }
@@ -84,18 +114,26 @@ public class Location {
         }
 
         // Update position
-        x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
-        y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
-        heading = historyHeading.stream().mapToDouble(a -> a).average().getAsDouble();
+        if (historyX.size() != 0) {
+            x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
+        }
+        if (historyY.size() != 0) {
+            y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
+        }
+//        if (historyHeading.size() != 0) {
+//            heading = historyHeading.stream().mapToDouble(a -> a).average().getAsDouble();
+//        }
+        heading = IMU.getHeading();
 
-        // Update servo
-        camera1.setPointerPosition(x, y, heading);
+        // Update servos
+        if (advanced) {
+            camera1.setPointerPosition(x, y, heading);
+        }
 
-        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
-                x, y, heading, robotX, robotY));
-//        telemetry.setValue(historyX.toString());
-//        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f",
-//                x, y, heading));
+//        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
+//                x, y, heading, robotX, robotY));
+        telemetry.setValue(String.format("Pos camera1 (mm) {X, Y, heading} = %.1f, %.1f %.1f",
+                x, y, heading));
 
 
 

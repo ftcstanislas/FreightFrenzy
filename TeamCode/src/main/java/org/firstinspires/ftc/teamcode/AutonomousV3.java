@@ -56,6 +56,9 @@ public class AutonomousV3 extends OpMode {
     // make runtime
     ElapsedTime runtime = new ElapsedTime();
 
+    // variables
+    long lastTime = 0;
+
     //position
     // OdometryGlobalCoordinatePosition globalPositionUpdate;
     // final double COUNTS_PER_INCH = 307.699557;
@@ -70,25 +73,24 @@ public class AutonomousV3 extends OpMode {
     public void init() {
 
         //telemetry setup
-        String startInfo = "      ";
         telemetry.setAutoClear(false);
         telemetry.setCaptionValueSeparator(": ");
-        status = telemetry.addData("Status", "X");
-        telemetryInstruction = telemetry.addData("Instruction", "X");
-        telemetryUnfinishedInstructions = telemetry.addData("Unfinished Instructions", "X");
-        telemetryDrivetrain = telemetry.addData("Robot", "X");
-        telemetryArm = telemetry.addData("Arm", "X");
-        telemetryIntake = telemetry.addData("Intake", "X");
-        telemetrySpinner = telemetry.addData("Spinner", "X");
-        telemetryLocation = telemetry.addData("Location", "X");
-        telemetryColorSensor = telemetry.addData("Color Sensor", "X");
-        telemetryDucks = telemetry.addData("Ducks", "X");
-        telemetryTest = telemetry.addData("Test", "X");
+        status = telemetry.addData("\uD83D\uDD34Status", "X");
+        telemetryInstruction = telemetry.addData("\uD83D\uDD34Instruction", "X");
+        telemetryUnfinishedInstructions = telemetry.addData("\uD83D\uDD34Unfinished Instructions", "X");
+        telemetryDrivetrain = telemetry.addData("\uD83D\uDD34Robot", "X");
+        telemetryArm = telemetry.addData("\uD83D\uDD34Arm", "X");
+        telemetryIntake = telemetry.addData("\uD83D\uDD34Intake", "X");
+        telemetrySpinner = telemetry.addData("\uD83D\uDD34Spinner", "X");
+        telemetryLocation = telemetry.addData("\uD83D\uDD34Location", "X");
+        telemetryColorSensor = telemetry.addData("\uD83D\uDD34Color Sensor", "X");
+        telemetryDucks = telemetry.addData("\uD83D\uDD34Ducks", "X");
+        telemetryTest = telemetry.addData("\uD83D\uDD34Test", "X");
 
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
+        location.init(hardwareMap, true, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -99,9 +101,13 @@ public class AutonomousV3 extends OpMode {
 
     @Override
     public void init_loop() {
+
         //Telemetry update
-        status.setValue("Init looping for " + runtime.toString());
-        
+        long time = System.nanoTime();
+        status.setValue(String.format("Init looping for %.1fs in %.1fms",
+                runtime.seconds(),  (double) (time - lastTime)/1000000));
+        lastTime = time;
+
     }
 
     @Override
@@ -111,6 +117,7 @@ public class AutonomousV3 extends OpMode {
         
         // Reset
         runtime.reset();
+        lastTime = System.nanoTime();
 
         // Correct instruction
         instructions = routes.getRoute(program[0], program[1]);
@@ -122,11 +129,15 @@ public class AutonomousV3 extends OpMode {
     @Override
     public void loop() {
         // Telemetry update
-        status.setValue("Following program " + program[0] + " from " + program[1] + " for " + runtime.toString());
+        long time = System.nanoTime();
+        status.setValue(String.format("Follwing program %s from %s for %.1fs in %.1fms",
+                program[0], program[1], runtime.seconds(),  (double) (time - lastTime)/1000000));
+        lastTime = time;
 
         // location
         location.update();
 
+        // Execute instructions
         if (instruction<instructions.length){
             // Telemetry
             String text = instruction + "/" + (instructions.length-1) + "   " + java.util.Arrays.toString(instructions[instruction]);
@@ -146,7 +157,7 @@ public class AutonomousV3 extends OpMode {
             telemetryInstruction.setValue("Done with instructions");
         }
 
-        // Excute unfinished instructions
+        // Execute unfinished instructions
         if (unfinishedInstructions.size()>0){
             telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
             for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){

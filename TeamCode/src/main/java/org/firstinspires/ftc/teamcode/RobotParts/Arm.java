@@ -46,15 +46,15 @@ public class Arm extends RobotPart{
         }});
 
         modes.put("low", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 1600.0});
+            put("arm", new Object[]{"position", 3318.0});
         }});
 
         modes.put("mid", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3600.0});
+            put("arm", new Object[]{"position", 3921.0});
         }});
 
         modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 6300.0});
+            put("arm", new Object[]{"position", 4936.0});
         }});
 
     }
@@ -71,19 +71,15 @@ public class Arm extends RobotPart{
         } else if (gamepad2.dpad_left) {
             state = "low";
         }
-        if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
-            calibrate();
-        }
 
         setMode(state);
 
 
 //        // set power
-//        position += gamepad1.right_stick_y*2;
+//        position += gamepad2.right_stick_y*2;
 //        motors.get("arm").setTargetPosition((int) position);
 //        motors.get("arm").setPower(0.3);
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        telemetry.setValue(motors.get("arm").getCurrentPosition());
 
         if (gamepad2.x) {
             switchServo();
@@ -98,41 +94,6 @@ public class Arm extends RobotPart{
             servos.get("fork").setPosition(1);
         }
     }
-
-//    public void setPowerState(boolean tipping){
-//        double totalMotorCounts = -1100;
-//        double totalServoCounts = 1.6;
-//
-//        // position motor and servo
-//        double radians = 0;//modes.get(state);
-//        double positionLifter = totalMotorCounts * (radians / (2 * Math.PI));
-//        double radiansLifter = motors.get("lifter").getCurrentPosition()/totalMotorCounts * (2 * Math.PI);
-//        double positionFork;
-//        if (radiansLifter < 0.05 * Math.PI){
-//            positionFork = totalServoCounts * ((0.1 * Math.PI + radiansLifter) / (2 * Math.PI));
-//        } else {
-//            positionFork = totalServoCounts * ((-0.2 * Math.PI + radiansLifter) / (2 * Math.PI));
-//        }
-//
-//        // tipping
-//        if (tipping){
-//            positionFork -= totalServoCounts * 0.3;
-//        }
-//
-//        //setpowers to motors
-//        setPositions(positionLifter, positionFork);
-//    }
-//
-//    private void setPositions(double lifterPosition, double positionFork){
-//        if (motors.get("lifter").getTargetPosition() != lifterPosition){
-//            motors.get("lifter").setTargetPosition((int) lifterPosition);
-//            motors.get("lifter").setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            motors.get("lifter").setPower(0.1);
-//        }
-//        servos.get("fork").setPosition(positionFork);
-//
-//        updateTelemetry();
-//    }
 
     public boolean calibrate() {
         DcMotorEx armMotor = motors.get("arm");
@@ -168,8 +129,7 @@ public class Arm extends RobotPart{
     }
 
     public void updateTelemetry(){
-        telemetry.setValue(motors.get("arm").getCurrentPosition());
-//        debug();
+        debug();
     }
 }
 

@@ -16,6 +16,7 @@ import java.util.Arrays;
 
 public class IMU {
     private BNO055IMU imu;
+    double offset = 0;
 
     public void init(HardwareMap map){
         //Init IMU
@@ -30,18 +31,22 @@ public class IMU {
         imu.initialize(parameters); // set parameters to gyro
     }
 
-    public double getOrientation() {
+    public void setHeading(double heading){
+        offset = heading - getHeading();
+    }
+
+    public double getHeading() {
         // Read the orientation of the robot
-        Orientation angles = new Orientation();
-        angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         imu.getPosition();
-        // Save the heading
+
+        // Return the heading
         double curHeading = angles.thirdAngle;
-        return curHeading;
+        return curHeading + offset;
     }
 
     public String getDisplay() {
-        double curHeading = getOrientation();
+        double curHeading = getHeading();
         return "Orientation: " + curHeading;
     }
 }

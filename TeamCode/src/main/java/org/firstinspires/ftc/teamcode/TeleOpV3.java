@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import java.util.ArrayList;
 import java.util.Collections;
 
-@TeleOp(name="OpMode Iterative 3.10", group="main")
+@TeleOp(name="OpMode Iterative 3.11", group="main")
 public class TeleOpV3 extends OpMode {
     
     //get objects
@@ -70,7 +70,7 @@ public class TeleOpV3 extends OpMode {
         //Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        location.init(hardwareMap, drivetrain, telemetryLocation, telemetryDucks);
+        location.init(hardwareMap, false, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -117,6 +117,12 @@ public class TeleOpV3 extends OpMode {
         spinner.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         location.update();
+
+        // Calibrate
+        if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
+            arm.calibrate();
+            location.calibrate();
+        }
 
 //        if (gamepad1.a) {
 //            location.switchServo();

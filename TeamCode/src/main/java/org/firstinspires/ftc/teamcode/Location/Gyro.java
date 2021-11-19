@@ -8,11 +8,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Gyro {
 
     private ModernRoboticsI2cGyro gyro;
-    public Telemetry.Item telemetry = null;
+    private String calibrating = "no";
 
-    public void init(HardwareMap map, Telemetry.Item telemetryInit) {
+    public void init(HardwareMap map) {
         gyro = map.get(ModernRoboticsI2cGyro.class, "gyro");
-        telemetry = telemetryInit;
     }
 
     public double[] getPosition() {
@@ -24,8 +23,20 @@ public class Gyro {
         return position;
     }
 
-    public void calibrate() {
-        telemetry.setValue("Calibrating");
-        gyro.calibrate();
+    public boolean calibrate() {
+        if (calibrating == "no"){
+            gyro.calibrate();
+            calibrating = "yes";
+        }
+        if (calibrating == "yes"){
+            if (!gyro.isCalibrating()){
+                calibrating = "finished";
+            }
+        }
+        if (calibrating == "finished"){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

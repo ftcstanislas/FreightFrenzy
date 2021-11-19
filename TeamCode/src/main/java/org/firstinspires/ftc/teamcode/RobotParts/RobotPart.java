@@ -36,16 +36,24 @@ public abstract class RobotPart {
             DcMotorEx motor = entry.getValue();
             DcMotor.RunMode mode = motor.getMode();
             if (mode == DcMotor.RunMode.RUN_TO_POSITION || mode == DcMotor.RunMode.RUN_USING_ENCODER){
-                text += "\n" + entry.getKey() + " | encoder " + motor.getCurrentPosition() + "/" + motor.getTargetPosition() + " with " + motor.getPower();
+//                text += "\n" + entry.getKey() + " | encoder " + motor.getCurrentPosition() + "/" + motor.getTargetPosition() + " with " + motor.getPower();
+                text += String.format("\n%s | encoder %d to %d with %.1f",
+                        entry.getKey(), motor.getCurrentPosition(), motor.getTargetPosition(),  motor.getPower());
             } else if (mode == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
-                text += "\n" + entry.getKey() + " | power " + motor.getPower();
+//                text += "\n" + entry.getKey() + " | power " + motor.getPower();
+                text += String.format("\n%s | %.1f power",
+                        entry.getKey(), motor.getPower());
             } else {
-                text += "\n" + entry.getKey() + " | "+ motor.getMode() + " " + motor.getPower();
+//                text += "\n" + entry.getKey() + " | "+ motor.getMode() + " " + motor.getPower();
+                text += String.format("\n%s | %s with %.1f power",
+                        entry.getKey(), mode,  motor.getPower());
             }
         };
         for (Map.Entry<String, Servo> entry : servos.entrySet()){
             Servo servo = entry.getValue();
-            text += "\n" + entry.getKey() + " | servo " + servo.getPosition();
+//            text += "\n" + entry.getKey() + " | servo " + servo.getPosition();
+            text += String.format("\n%s | servo at %.1f",
+                    entry.getKey(),  servo.getPosition());
         };
 //        text += additionalTelemetry;
         telemetry.setValue(text);
@@ -87,7 +95,7 @@ public abstract class RobotPart {
                     } else if (powerType == "position") {
                         if (motor.getTargetPosition() != value) {
                             motor.setTargetPosition((int) Math.round(value));
-                            motor.setPower(0.69);
+                            motor.setPower(0.3);
                             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         }
                         done = inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);
