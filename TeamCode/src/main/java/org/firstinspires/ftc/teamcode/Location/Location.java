@@ -11,7 +11,6 @@ public class Location {
 //    private Odometry odometry = null;
     private IMU IMU = null;
     private Camera camera1 = null;
-    private Camera camera2 = null;
     private Telemetry.Item telemetry = null;
     private MecanumDrive drivetrain = null;
     private boolean advanced = false;
@@ -25,7 +24,7 @@ public class Location {
     double y;
     double heading;
 
-    public void init(HardwareMap hardwareMap, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
+    public void init(HardwareMap hardwareMap, int number, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
         advanced = advancedInit; // keep track of location
         x = position[0];
         y = position[1];
@@ -51,13 +50,12 @@ public class Location {
         if (advanced) {
             // Camera 1
             camera1 = new Camera();
-            camera1.init(hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            if (number == 1) {
+                camera1.init(hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            } else {
+                camera1.init(hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks);
+            }
             camera1.setPointerPosition(x, y, heading);
-
-            // Camera 1
-            camera2 = new Camera();
-            camera2.init(hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-            camera2.setPointerPosition(x, y, heading);
         }
         
         telemetry = telemetryInit;
@@ -95,21 +93,6 @@ public class Location {
                 historyY.add(locationCamera1[1]+robotY);
                 historyHeading.add(locationCamera1[2]);
             }
-
-            // Camera 2
-            camera2.update();
-
-            // Calculate new position of robot
-            double[] positionCamera2 = {17, 17};
-            double[] locationCamera2 = camera2.getPosition();
-            robotX = positionCamera2[0] * Math.cos(robotHeadingRadians) + positionCamera2[1] * -Math.sin(robotHeadingRadians);
-            robotY = positionCamera2[0] * Math.sin(robotHeadingRadians) + positionCamera2[1] * Math.cos(robotHeadingRadians);
-
-            if (camera2.isTargetVisible()) {
-                historyX.add(locationCamera2[0]+robotX);
-                historyY.add(locationCamera2[1]+robotY);
-                historyHeading.add(locationCamera2[2]);
-            }
         }
 
         // Remove part of history
@@ -131,7 +114,6 @@ public class Location {
             y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
         }
 
-
         // Update pointers camera
         if (advanced) {
             double robotHeadingRadians = Math.toRadians(heading - 180);
@@ -141,12 +123,6 @@ public class Location {
             robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
             camera1.setPointerPosition(x-robotX, y-robotY, heading);
-
-            // Camera 2
-            double[] positionCamera2 = {17, 17};
-            robotX = positionCamera2[0] * Math.cos(robotHeadingRadians) + positionCamera2[1] * -Math.sin(robotHeadingRadians);
-            robotY = positionCamera2[0] * Math.sin(robotHeadingRadians) + positionCamera2[1] * Math.cos(robotHeadingRadians);
-            camera2.setPointerPosition(x-robotX, y-robotY, heading);
         }
 
         telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
@@ -181,7 +157,7 @@ public class Location {
 //    FUTURE
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
         //Constants
-        double allowableDistanceError = 10; // mm?
+        double allowableDistanceError = 50;
 
         //Coordinates
         double distanceToXTarget = targetX - getXCoordinate();
@@ -198,7 +174,7 @@ public class Location {
 
             double turning = orientationDifference / 360;
 
-            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
+            drivetrain.setPowerDirection(robotMovementXComponent, -robotMovementYComponent, turning, power);
 
             return false;
         } else {
@@ -206,11 +182,9 @@ public class Location {
         }
     }
 
-    public boolean goToCircle(double radius, double[] midPoint) {
+    public boolean goToCircle(double midPointX, double midPointY, double radius) {
         double currentX = getXCoordinate();
         double currentY = getYCoordinate();
-        double midPointX = midPoint[0];
-        double midPointY = midPoint[1];
         double dx = currentX - midPointX;
         double dy = currentY - midPointY;
         double distance = Math.hypot(dx, dy);
@@ -220,7 +194,7 @@ public class Location {
 
         boolean targetReached = goToPosition(closestX, closestY, rotation, 1); 
 
-        return targetReached; //Remove after
+        return targetReached;
     }
 
     private double calculateX(double desiredAngle, double speed) {

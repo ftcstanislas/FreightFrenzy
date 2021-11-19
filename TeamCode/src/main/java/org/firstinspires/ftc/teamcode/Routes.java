@@ -59,10 +59,15 @@ public class Routes {
             // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
     };
 
+    public Object[][] test = {
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -600.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -0.0, -600.0, 180.0, 0.3}
+    };
+
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition){
-        return routeLeftOfficial;
+        return test;
     }
 
     public Object[][] switchRoute(Object[][] route){

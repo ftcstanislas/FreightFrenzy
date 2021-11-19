@@ -123,8 +123,6 @@ public class Camera{
         identifyTarget(2, "Red Storage", -halfField, -oneAndHalfTile, mmTargetHeight, 90, 0, 90);
         identifyTarget(3, "Red Alliance Wall", halfTile, -halfField, mmTargetHeight, 90, 0, 180);
 
-//        setCameraPosition(0,0,200,90);//90
-
 
         targets.activate();
 
@@ -250,7 +248,14 @@ public class Camera{
             while (newPointerAngle >= 180) {
                 newPointerAngle -= 360;
             }
-            double score = Math.hypot(dx, dy);
+
+            double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
+            double score;
+            if (targetPointerPosition >= 0 && targetPointerPosition <= 1) {
+                score = Math.hypot(dx, dy) ;
+            } else {
+                score = Double.MAX_VALUE;
+            }
 
             if (score < bestScore){
                 bestScore = score;

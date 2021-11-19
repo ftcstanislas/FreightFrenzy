@@ -44,7 +44,7 @@ public class AutonomousV3 extends OpMode {
     Telemetry.Item telemetryTest = null;
 
     // Wich program to follow
-    String[] program = {"blue", "onbekend"};
+    String[] program = {"blue", "left", "onbekend"};
     Object[][] instructions = null;
 
     // sleeping
@@ -90,7 +90,15 @@ public class AutonomousV3 extends OpMode {
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        location.init(hardwareMap, true, new double[]{-1200, -600, 180}, drivetrain, telemetryLocation, telemetryDucks);
+        int number;
+        double[] location;
+        if (program[1].equals("left")){
+            number = 2;
+            location = new double[]{914.4, };
+        } else {
+            number = new double[]{304.8, };
+        }
+        location.init(hardwareMap, number, true, new double[]{-1200, -600, 180}, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -242,10 +250,10 @@ public class AutonomousV3 extends OpMode {
             case "DRIVETRAIN":
                 switch (function) {
                     case "toPosition":
-                        //done = location.goToPosition(instruction[3], instruction[4], instruction[5], instruction[6]);  // x, y, rotation, speed
+                        done = location.goToPosition((double) instruction[3], (double) instruction[4], (double) instruction[5], (double) instruction[6]);  // x, y, rotation, speed
                         break;
                     case "toCircle":
-                        //done = location.goToCircle(instruction[3], instruction[4], instruction[5]); // x, y, radius
+                        done = location.goToCircle((double) instruction[3], (double) instruction[4], (double) instruction[5]); // x, y, radius
                         break;
 
                     default: // if no match is found

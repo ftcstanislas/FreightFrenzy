@@ -46,15 +46,15 @@ public class Arm extends RobotPart{
         }});
 
         modes.put("low", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3318.0});
+            put("arm", new Object[]{"position", 1770.0});
         }});
 
         modes.put("mid", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3921.0});
+            put("arm", new Object[]{"position", 3025.0});
         }});
 
         modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 4936.0});
+            put("arm", new Object[]{"position", 3864.0});
         }});
 
     }
@@ -88,7 +88,7 @@ public class Arm extends RobotPart{
     }
 
     public boolean switchServo() {
-        if (servos.get("fork").getPosition() > 0) {
+        if (servos.get("fork").getPosition() > 0.2) {
             servos.get("fork").setPosition(0);
         } else {
             servos.get("fork").setPosition(1);
