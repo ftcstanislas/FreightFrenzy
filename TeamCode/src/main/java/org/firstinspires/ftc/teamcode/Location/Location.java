@@ -21,9 +21,9 @@ public class Location {
     ArrayList<Double> historyX = new ArrayList<Double>();
     ArrayList<Double> historyY = new ArrayList<Double>();
     ArrayList<Double> historyHeading = new ArrayList<Double>();
-    double x = 0;
-    double y = 0;
-    double heading = 0;
+    double x;
+    double y;
+    double heading;
 
     public void init(HardwareMap hardwareMap, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
         advanced = advancedInit; // keep track of location
@@ -114,12 +114,12 @@ public class Location {
         }
 
         // Update position
-        if (historyX.size() != 0) {
-            x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
-        }
-        if (historyY.size() != 0) {
-            y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
-        }
+//        if (historyX.size() != 0) {
+//            x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
+//        }
+//        if (historyY.size() != 0) {
+//            y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
+//        }
 //        if (historyHeading.size() != 0) {
 //            heading = historyHeading.stream().mapToDouble(a -> a).average().getAsDouble();
 //        }
