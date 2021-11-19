@@ -187,7 +187,7 @@ public class Camera{
 
         // Provide feedback as to where the robot is located (if we know).
         String text = "";
-        if (lastLocation != null) {
+        if (isTargetVisible()) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
             text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
@@ -199,6 +199,14 @@ public class Camera{
         }
 
         telemetry.setValue(text);
+    }
+
+    public boolean isTargetVisible(){
+        if (lastLocation != null){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setPointerPosition(double x, double y, double heading){
