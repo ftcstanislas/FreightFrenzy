@@ -108,6 +108,10 @@ public class AutonomousV3 extends OpMode {
                 runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
 
+        // location
+        location.update();
+
+
     }
 
     @Override
