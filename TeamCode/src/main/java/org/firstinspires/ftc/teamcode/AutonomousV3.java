@@ -105,6 +105,8 @@ public class AutonomousV3 extends OpMode {
         spinner.init(hardwareMap, telemetrySpinner);
         // colorSensor.init(hardwareMap, telemetryColorSensor);
 
+        location.addZoomBox();
+
         status.setValue("Initialized");
     }
 
@@ -116,6 +118,8 @@ public class AutonomousV3 extends OpMode {
         status.setValue(String.format("Init looping for %.1fs in %.1fms",
                 runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
+
+        String duckResult = location.detectDuck();
 
         // location
         location.update();
@@ -135,6 +139,9 @@ public class AutonomousV3 extends OpMode {
         // Correct instruction
         instructions = routes.getRoute(program[0], program[1], program[2]);
 
+        //Duck
+        location.removeZoomBox();
+
         //Telemetry update
         status.setValue("Started");
     }
@@ -144,7 +151,7 @@ public class AutonomousV3 extends OpMode {
         // Telemetry update
         long time = System.nanoTime();
         status.setValue(String.format("Follwing program %s from %s with %s for %.1fs in %.1fms",
-                program[0], program[1], program[1], runtime.seconds(),  (double) (time - lastTime)/1000000));
+                program[0], program[1], program[2], runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
 
         // location
