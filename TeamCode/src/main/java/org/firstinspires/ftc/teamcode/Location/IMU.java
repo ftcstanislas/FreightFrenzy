@@ -55,7 +55,7 @@ public class IMU {
     public double[] getPosition() {
         Position position = imu.getPosition();
         position = position.toUnit(DistanceUnit.MM);
-        double[] pos = {position.x, position.y, position.z};
+        double[] pos = {position.x, position.y};
         return pos;
     }
 }
