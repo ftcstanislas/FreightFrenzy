@@ -94,11 +94,12 @@ public class AutonomousV3 extends OpMode {
         double[] location;
         if (program[1].equals("left")){
             number = 2;
-            location = new double[]{914.4, };
+            location = new double[]{-914.4, -1584.96};
         } else {
-            number = new double[]{304.8, };
+            number = 1;
+            location = new double[]{304.8, -1584.96};
         }
-        location.init(hardwareMap, number, true, new double[]{-1200, -600, 180}, drivetrain, telemetryLocation, telemetryDucks);
+        location.init(hardwareMap, number, true, location, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
