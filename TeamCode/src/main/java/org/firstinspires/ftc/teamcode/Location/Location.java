@@ -80,9 +80,11 @@ public class Location {
             double robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
             double robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
 
-            historyX.add(locationCamera1[0]);
-            historyY.add(locationCamera1[1]);
-            historyHeading.add(locationCamera1[2]);
+            if (camera1.isTargetVisible()) {
+                historyX.add(locationCamera1[0]);
+                historyY.add(locationCamera1[1]);
+                historyHeading.add(locationCamera1[2]);
+            }
         }
 
         // Remove part of history
