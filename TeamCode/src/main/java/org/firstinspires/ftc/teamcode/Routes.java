@@ -33,14 +33,23 @@ public class Routes {
             {true, "ARM", "mode", "base"},
     };
 
-    public Object[][] routeRightOfficial = {
-            {}
+    public Object[][] routeLeftOfficial = {
+            // {true, "DRIVETRAIN", "toPosition", -1600, -1600, 180},
+            {true, "WAIT", "wait", 0.5},
+            {true, "SPINNER", "mode", "spinLeft"},
+            {true, "WAIT", "wait", 2},
+            {true, "SPINNER", "mode", "stop"},
+            {true, "WAIT", "wait", 1}, 
+            {true, "SPINNER", "mode", "spinLeft"},
+            {true, "WAIT", "wait", 2},
+            {true, "SPINNER", "mode", "stop"}
+            // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition){
-        return routeRight;
+        return routeLeftOfficial;
     }
 
     public Object[][] switchRoute(Object[][] route){
