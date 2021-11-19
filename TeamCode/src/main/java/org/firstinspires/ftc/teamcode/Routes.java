@@ -33,6 +33,10 @@ public class Routes {
             {true, "ARM", "mode", "base"},
     };
 
+    public Object[][] routeRightOfficial = {
+            {}
+    };
+
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition){
