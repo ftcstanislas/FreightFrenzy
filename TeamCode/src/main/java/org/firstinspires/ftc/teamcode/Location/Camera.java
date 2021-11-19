@@ -328,42 +328,38 @@ public class Camera{
     }
 
     public void startDuckDetection() {
-        checkDuck = true;
         tfod.setZoom(2.5, 16.0/9.0);
-        if (tfod != null) {
-            while (checkDuck) {
-                detectDuck();
-            }
-        }
     }
 
     public void stopDuckDetection() {
-        checkDuck = false;
+        tfod.setZoom(1, 16.0/9.0);
     }
 
     public void detectDuck() {
-        String text = "";
-        // getUpdatedRecognitions() will return null if no new information is available since
-        // the last time that call was made.
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-        if (updatedRecognitions != null) {
-            text = "# Object Detected " + updatedRecognitions.size();
-            // step through the list of recognitions and display boundary info.
-            int i = 0;
-            for (Recognition recognition : updatedRecognitions) {
-                text += String.format("label (%d)", i) + recognition.getLabel();
-                text += String.format("  left,top (%d)", i) + 
-                    // "%.03f , %.03f" + 
-                    recognition.getLeft() + recognition.getTop();
-                text += String.format("  right,bottom (%d)", i) + 
-                    // "%.03f , %.03f" +
-                    recognition.getRight() + recognition.getBottom();
-                i++;
+        if (tfod !== null) {
+            String text = "";
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                text = "# Object Detected " + updatedRecognitions.size();
+                // step through the list of recognitions and display boundary info.
+                int i = 0;
+                for (Recognition recognition : updatedRecognitions) {
+                    text += String.format("label (%d)", i) + recognition.getLabel();
+                    text += String.format("  left,top (%d)", i) + 
+                        // "%.03f , %.03f" + 
+                        recognition.getLeft() + recognition.getTop();
+                    text += String.format("  right,bottom (%d)", i) + 
+                        // "%.03f , %.03f" +
+                        recognition.getRight() + recognition.getBottom();
+                    i++;
+                }
+            } else {
+                text = "No Objects Detected";
             }
-        } else {
-            text = "No Objects Detected";
+            telemetryDucks.setValue(text);
         }
-        telemetryDucks.setValue(text);
     }
 }
 
