@@ -95,7 +95,7 @@ public abstract class RobotPart {
                     } else if (powerType == "position") {
                         if (motor.getTargetPosition() != value) {
                             motor.setTargetPosition((int) Math.round(value));
-                            motor.setPower(0.3);
+                            motor.setPower(0.4);
                             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         }
                         done = inMargin(motor.getCurrentPosition(), motor.getTargetPosition(), 100);

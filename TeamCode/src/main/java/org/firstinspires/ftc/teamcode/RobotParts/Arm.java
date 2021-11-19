@@ -57,6 +57,7 @@ public class Arm extends RobotPart{
             put("arm", new Object[]{"position", 3864.0});
         }});
 
+//        servos.get("fork").setPosition(0);
     }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
@@ -76,10 +77,8 @@ public class Arm extends RobotPart{
 
 
 //        // set power
-//        position += gamepad2.right_stick_y*2;
-//        motors.get("arm").setTargetPosition((int) position);
-//        motors.get("arm").setPower(0.3);
-//        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        position += gamepad2.right_stick_y/1000;
+        servos.get("fork").setPosition((int) position);
 
         if (gamepad2.x) {
             switchServo();

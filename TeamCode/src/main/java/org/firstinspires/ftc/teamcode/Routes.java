@@ -49,6 +49,10 @@ public class Routes {
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
+    public Object[][] routeStorage = {
+            {true, "SPINNER", "mode", "spinLeft"}
+    };
+
     public Object[][] routeWarehouseOfficial = {
             // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
             {true, "ARM", "mode", "high"},
