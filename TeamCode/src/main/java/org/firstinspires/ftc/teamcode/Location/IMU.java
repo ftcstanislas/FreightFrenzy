@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
@@ -51,8 +52,10 @@ public class IMU {
         return "Orientation: " + curHeading;
     }
 
-//    public double[] getPosition() {
-//        Position position =
-//        return
-//    }
+    public double[] getPosition() {
+        Position position = imu.getPosition();
+        position = position.toUnit(DistanceUnit.MM);
+        double[] pos = {position.x, position.y, position.z};
+        return pos;
+    }
 }
