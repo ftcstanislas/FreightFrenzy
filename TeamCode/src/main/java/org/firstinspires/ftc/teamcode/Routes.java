@@ -15,6 +15,7 @@ public class Routes {
     false / true          INTAKE                mode                stop / intaking
     false / true          SPINNER               mode                stop / spinLeft / spinRight
     false / true          ARM                   mode                base / low / mid / high
+    false / true          ARM                   mode                drop / intake      (voor bakje)
     false / true          DRIVETRAIN            toPosition          x, y, rotation, speed
     false / true          DRIVETRAIN            toCircle            x, y, radius
 
@@ -34,17 +35,29 @@ public class Routes {
     };
 
     public Object[][] routeLeftOfficial = {
-            // {true, "DRIVETRAIN", "toPosition", -1600, -1600, 180},
+            // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
+            {true, "ARM", "mode", "high"},
+            {true, "ARM", "mode", "drop"},
+            {true, "WAIT", "wait", 1.0},
+            {true, "ARM", "mode", "intake"},
+            {false, "ARM", "mode", "base"},
+            // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
             {true, "WAIT", "wait", 0.5},
             {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2.0},
+            {true, "WAIT", "wait", 2},
             {true, "SPINNER", "mode", "stop"},
-            {true, "WAIT", "wait", 1.0},
-            {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2.0},
-            {true, "SPINNER", "mode", "stop"}
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
+
+    public Object[][] routeRightOfficial = {
+            // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
+            {true, "ARM", "mode", "high"},
+            {true, "ARM", "mode", "drop"},
+            {true, "WAIT", "wait", 1.0},
+            {true, "ARM", "mode", "intake"},
+            {false, "ARM", "mode", "base"},
+            // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
+    }
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
