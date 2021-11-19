@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 
 
-@Autonomous(name="Final Autonomous 3.11", group="main")
+//@Autonomous(name="Final Autonomous 3.11", group="main")
 public class AutonomousV3 extends OpMode {
 
     // Robot parts
@@ -44,7 +44,7 @@ public class AutonomousV3 extends OpMode {
     Telemetry.Item telemetryTest = null;
 
     // Wich program to follow
-    String[] program = {"red", "storage", "onbekend"};
+    public String[] program = {"red", "storage", "onbekend"};
     Object[][] instructions = null;
 
     // sleeping
@@ -68,6 +68,10 @@ public class AutonomousV3 extends OpMode {
     // File positionXFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
     // File positionYFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
     // File orientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
+
+    public void setTeam(String team){
+        program[0] = team;
+    }
 
     @Override
     public void init() {
@@ -105,7 +109,7 @@ public class AutonomousV3 extends OpMode {
         spinner.init(hardwareMap, telemetrySpinner);
         // colorSensor.init(hardwareMap, telemetryColorSensor);
 
-        location.addZoomBox();
+//        location.addZoomBox();
 
         status.setValue("Initialized");
     }
@@ -120,7 +124,7 @@ public class AutonomousV3 extends OpMode {
         lastTime = time;
 
         //Duck
-        String duckResult = location.detectDuck();
+//        String duckResult = location.detectDuck();
     }
 
     @Override
@@ -136,7 +140,7 @@ public class AutonomousV3 extends OpMode {
         instructions = routes.getRoute(program[0], program[1], program[2]);
 
         //Duck
-        location.removeZoomBox();
+//        location.removeZoomBox();
 
         //Telemetry update
         status.setValue("Started");

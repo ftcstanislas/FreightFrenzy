@@ -31,11 +31,11 @@ public class Spinner extends RobotPart{
         }});
 
         modes.put("spinLeft", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", 1.0});
+            put("spinner", new Object[]{"power", 0.5});
         }});
 
         modes.put("spinRight", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", -1.0});
+            put("spinner", new Object[]{"power", -0.5});
         }});
         
         // setup telemetry
@@ -45,7 +45,8 @@ public class Spinner extends RobotPart{
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad2.b, "stop","spinLeft");
+        switchMode(gamepad2.left_bumper, "stop","spinLeft");
+        switchMode(gamepad2.right_bumper, "stop","spinRight");
     }
     
     public void updateTelemetry(){

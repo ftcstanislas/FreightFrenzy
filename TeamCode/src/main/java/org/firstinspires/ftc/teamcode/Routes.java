@@ -49,9 +49,11 @@ public class Routes {
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
-    public Object[][] routeStorage = {
-            {true, "SPINNER", "mode", "spinLeft"}
+    public Object[][] spinning = {
+            {true, "SPINNER", "mode", "spinLeft"},
+            {true, "WAIT", "wait", 2.0}
     };
+
 
     public Object[][] routeWarehouseOfficial = {
             // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
@@ -71,7 +73,11 @@ public class Routes {
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition, String ducks){
-        return test;
+        if (team == "red"){
+            return spinning;
+        } else {
+            return switchRoute(spinning);
+        }
     }
 
     public Object[][] switchRoute(Object[][] route){

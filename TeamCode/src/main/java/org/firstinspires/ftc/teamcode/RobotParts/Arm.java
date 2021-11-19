@@ -27,6 +27,7 @@ public class Arm extends RobotPart{
     double position = 0; //temp
     double stuck = 0;
     boolean goUp = false;
+    boolean isSwitchPressed = false;
 
 //    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
 
@@ -57,7 +58,7 @@ public class Arm extends RobotPart{
             put("arm", new Object[]{"position", 3864.0});
         }});
 
-//        servos.get("fork").setPosition(0);
+        servos.get("fork").setPosition(0.8);
     }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
@@ -75,22 +76,27 @@ public class Arm extends RobotPart{
 
         setMode(state);
 
-
 //        // set power
-        position += gamepad2.right_stick_y/1000;
-        servos.get("fork").setPosition((int) position);
+//        position += gamepad2.right_stick_y/1000;
+//        servos.get("fork").setPosition(position);
+//        telemetry.setValue(servos.get("fork").getPosition() +" to " +position);
 
-        if (gamepad2.x) {
+        if (gamepad2.x && !isSwitchPressed){
+            isSwitchPressed = true;
             switchServo();
+        } else if (!gamepad2.x && isSwitchPressed){
+            isSwitchPressed = false;
         }
         updateTelemetry();
     }
 
     public boolean switchServo() {
-        if (servos.get("fork").getPosition() > 0.2) {
+        if (servos.get("fork").getPosition() > 0.5) {
+            servos.get("fork").setPosition(0.4);
+        } else if (servos.get("fork").getPosition() > 0.2){
             servos.get("fork").setPosition(0);
         } else {
-            servos.get("fork").setPosition(1);
+            servos.get("fork").setPosition(0.8);
         }
         return true;
     }
