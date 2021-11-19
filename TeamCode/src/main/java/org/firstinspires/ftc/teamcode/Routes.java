@@ -37,11 +37,11 @@ public class Routes {
             // {true, "DRIVETRAIN", "toPosition", -1600, -1600, 180},
             {true, "WAIT", "wait", 0.5},
             {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2},
+            {true, "WAIT", "wait", 2.0},
             {true, "SPINNER", "mode", "stop"},
-            {true, "WAIT", "wait", 1}, 
+            {true, "WAIT", "wait", 1.0},
             {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2},
+            {true, "WAIT", "wait", 2.0},
             {true, "SPINNER", "mode", "stop"}
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
