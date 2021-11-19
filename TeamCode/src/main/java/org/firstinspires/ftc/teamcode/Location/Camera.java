@@ -239,10 +239,10 @@ public class Camera{
             }
 
             // max speed of servo
-            double difference = newAngle - pointerAngle;
-            difference = (difference + 180) % 360 - 180;
-            difference = Math.max(Math.min(difference, 0.2), -0.2);
-            double newPointerAngle = pointerAngle + difference;
+//            double difference = newAngle - pointerAngle;
+//            difference = (difference + 180) % 360 - 180;
+//            difference = Math.max(Math.min(difference, 0.2), -0.2);
+            double newPointerAngle = newAngle;//pointerAngle + difference;
 
             while (newPointerAngle < -180) {
                 newPointerAngle += 360;

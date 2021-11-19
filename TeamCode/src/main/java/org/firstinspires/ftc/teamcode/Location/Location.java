@@ -11,12 +11,13 @@ public class Location {
 //    private Odometry odometry = null;
     private IMU IMU = null;
     private Camera camera1 = null;
+    private Camera camera2 = null;
     private Telemetry.Item telemetry = null;
     private MecanumDrive drivetrain = null;
     private boolean advanced = false;
 
     //Location
-    final int HISTORY_LENGTH = 20;
+    final int HISTORY_LENGTH = 6;
     ArrayList<Double> historyX = new ArrayList<Double>();
     ArrayList<Double> historyY = new ArrayList<Double>();
     ArrayList<Double> historyHeading = new ArrayList<Double>();
@@ -48,9 +49,14 @@ public class Location {
         IMU.setHeading(heading);
 
         if (advanced) {
-            // Camera
+            // Camera 1
             camera1 = new Camera();
-            camera1.init(hardwareMap, "Webcam 1", 1.27, 0.045, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera1.init(hardwareMap, "Webcam 1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera1.setPointerPosition(x, y, heading);
+
+            // Camera 1
+            camera1 = new Camera();
+            camera1.init(hardwareMap, "Webcam 2", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading);
         }
         
@@ -66,24 +72,43 @@ public class Location {
     }
 
     public void update(){
-//        odometry.globalCoordinatePositionUpdate();
-//        heading = IMU.getOrientation();
+        // Update heading
+        heading = IMU.getHeading();
 
         // Camera
+        double robotX = 0;
+        double robotY = 0;
         if (advanced) {
+            double robotHeadingRadians = Math.toRadians(heading - 180);
+
+            // Camera 1
             camera1.update();
 
             // Calculate new position of robot
-            double[] positionCamera1 = {17, 17};
+            double[] positionCamera1 = {17, -17};
             double[] locationCamera1 = camera1.getPosition();
-            double robotHeadingRadians = Math.toRadians(locationCamera1[2] - 180);
-            double robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
-            double robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
+            robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
+            robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
 
             if (camera1.isTargetVisible()) {
-                historyX.add(locationCamera1[0]);
-                historyY.add(locationCamera1[1]);
+                historyX.add(locationCamera1[0]+robotX);
+                historyY.add(locationCamera1[1]+robotY);
                 historyHeading.add(locationCamera1[2]);
+            }
+
+            // Camera 2
+            camera2.update();
+
+            // Calculate new position of robot
+            double[] positionCamera2 = {17, -17};
+            double[] locationCamera2 = camera2.getPosition();
+            robotX = positionCamera2[0] * Math.cos(robotHeadingRadians) + positionCamera2[1] * -Math.sin(robotHeadingRadians);
+            robotY = positionCamera2[0] * Math.sin(robotHeadingRadians) + positionCamera2[1] * Math.cos(robotHeadingRadians);
+
+            if (camera2.isTargetVisible()) {
+                historyX.add(locationCamera2[0]+robotX);
+                historyY.add(locationCamera2[1]+robotY);
+                historyHeading.add(locationCamera2[2]);
             }
         }
 
@@ -105,17 +130,29 @@ public class Location {
         if (historyY.size() != 0) {
             y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
         }
-        heading = IMU.getHeading();
 
-        // Update servos
+
+        // Update pointers camera
         if (advanced) {
-            camera1.setPointerPosition(x, y, heading);
+            double robotHeadingRadians = Math.toRadians(heading - 180);
+
+            // Camera 1
+            double[] positionCamera1 = {17, -17};
+            robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
+            robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
+            camera1.setPointerPosition(x-robotX, y-robotY, heading);
+
+            // Camera 2
+            double[] positionCamera2 = {17, -17};
+            robotX = positionCamera2[0] * Math.cos(robotHeadingRadians) + positionCamera2[1] * -Math.sin(robotHeadingRadians);
+            robotY = positionCamera2[0] * Math.sin(robotHeadingRadians) + positionCamera2[1] * Math.cos(robotHeadingRadians);
+            camera2.setPointerPosition(x-robotX, y-robotY, heading);
         }
 
-//        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
-//                x, y, heading, robotX, robotY));
-        telemetry.setValue(String.format("Pos camera1 (mm) {X, Y, heading} = %.1f, %.1f %.1f",
-                x, y, heading));
+        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
+                x, y, heading, robotX, robotY));
+//        telemetry.setValue(String.format("Pos camera1 (mm) {X, Y, heading} = %.1f, %.1f %.1f",
+//                x, y, heading));
 
 
 

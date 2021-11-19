@@ -57,10 +57,6 @@ public class Arm extends RobotPart{
             put("arm", new Object[]{"position", 4936.0});
         }});
 
-        modes.put("drop", new HashMap<String, Object[]>()) {{
-            put("")
-        }});
-
     }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){

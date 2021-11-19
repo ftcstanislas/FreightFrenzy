@@ -121,7 +121,6 @@ public class TeleOpV3 extends OpMode {
         // Calibrate
         if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
             arm.calibrate();
-            location.calibrate();
         }
 
 //        if (gamepad1.a) {
