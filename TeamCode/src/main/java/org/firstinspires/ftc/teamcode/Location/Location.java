@@ -51,13 +51,13 @@ public class Location {
         if (advanced) {
             // Camera 1
             camera1 = new Camera();
-            camera1.init(hardwareMap, "Webcam 1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera1.init(hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading);
 
             // Camera 1
-            camera1 = new Camera();
-            camera1.init(hardwareMap, "Webcam 2", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-            camera1.setPointerPosition(x, y, heading);
+            camera2 = new Camera();
+            camera2.init(hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera2.setPointerPosition(x, y, heading);
         }
         
         telemetry = telemetryInit;
@@ -100,7 +100,7 @@ public class Location {
             camera2.update();
 
             // Calculate new position of robot
-            double[] positionCamera2 = {17, -17};
+            double[] positionCamera2 = {17, 17};
             double[] locationCamera2 = camera2.getPosition();
             robotX = positionCamera2[0] * Math.cos(robotHeadingRadians) + positionCamera2[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera2[0] * Math.sin(robotHeadingRadians) + positionCamera2[1] * Math.cos(robotHeadingRadians);
@@ -143,7 +143,7 @@ public class Location {
             camera1.setPointerPosition(x-robotX, y-robotY, heading);
 
             // Camera 2
-            double[] positionCamera2 = {17, -17};
+            double[] positionCamera2 = {17, 17};
             robotX = positionCamera2[0] * Math.cos(robotHeadingRadians) + positionCamera2[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera2[0] * Math.sin(robotHeadingRadians) + positionCamera2[1] * Math.cos(robotHeadingRadians);
             camera2.setPointerPosition(x-robotX, y-robotY, heading);

@@ -76,16 +76,16 @@ public class Camera{
 
     private boolean checkDuck = false;
 
-    public void init(HardwareMap hardwareMap, String name, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
         telemetryDucks = telemetryDucksInit;
 
         // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
-        webcamName = hardwareMap.get(WebcamName.class, name);
+        webcamName = hardwareMap.get(WebcamName.class, "Webcam "+number);
 
         // Servo pointer
-        pointer = hardwareMap.get(Servo.class, "cameraPointer1");
+        pointer = hardwareMap.get(Servo.class, "cameraPointer"+number);
         TOTAL_COUNTS_PER_ROUND = TOTAL_COUNTS_PER_ROUND_INIT;
         OFFSET = OFFSET_INIT;
 
