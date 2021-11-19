@@ -206,6 +206,7 @@ public class Location {
     }
 
     public String detectDuck() {
+        camera1.setPointerAngle(90);//look right ahead
         String position = "none";
         while (position == "none") {
             position = camera1.detectDuck();

@@ -119,12 +119,8 @@ public class AutonomousV3 extends OpMode {
                 runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
 
+        //Duck
         String duckResult = location.detectDuck();
-
-        // location
-        location.update();
-
-
     }
 
     @Override

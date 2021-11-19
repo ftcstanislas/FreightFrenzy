@@ -364,7 +364,7 @@ public class Camera{
             }
             telemetryDucks.setValue(text);
         }
-        return "none";
+        return "none";//Need to be removed
     } 
 }
 
