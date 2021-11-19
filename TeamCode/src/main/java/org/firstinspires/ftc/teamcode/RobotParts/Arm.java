@@ -87,12 +87,13 @@ public class Arm extends RobotPart{
         updateTelemetry();
     }
 
-    public void switchServo() {
+    public boolean switchServo() {
         if (servos.get("fork").getPosition() > 0) {
             servos.get("fork").setPosition(0);
         } else {
             servos.get("fork").setPosition(1);
         }
+        return true;
     }
 
     public boolean calibrate() {

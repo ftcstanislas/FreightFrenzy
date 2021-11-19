@@ -105,9 +105,6 @@ public class Location {
         if (historyY.size() != 0) {
             y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
         }
-//        if (historyHeading.size() != 0) {
-//            heading = historyHeading.stream().mapToDouble(a -> a).average().getAsDouble();
-//        }
         heading = IMU.getHeading();
 
         // Update servos

@@ -216,20 +216,19 @@ public class Camera{
         double bestAngle = 90;
         for (double[] location : locations) {
 //        double[] location =  {halfTile, halfField, 90};
-            double robotOrientation = heading;
             double dx = location[0] - x;
             double dy = location[1] - y;
             double relativeHeading;
             double newAngle = 0;
             if (location[2] == 180){
                 relativeHeading = -Math.atan2(dx, dy) / Math.PI * 180;
-                newAngle = 180 - robotOrientation + relativeHeading;
+                newAngle = 180 - heading + relativeHeading;
             } else if (location[2] == 90) {
                 relativeHeading = Math.atan2(dy, dx) / Math.PI * 180;
-                newAngle = 90 - robotOrientation + relativeHeading;
+                newAngle = 90 - heading + relativeHeading;
             } else if (location[2] == -90) {
                 relativeHeading = -Math.atan2(dy, dx) / Math.PI * 180;
-                newAngle = 270 - robotOrientation + relativeHeading;
+                newAngle = 270 - heading + relativeHeading;
             }
 //            double newAngle = 180 - robotOrientation + relativeHeading ; // 270 was 180
             while (newAngle < 0) {
@@ -292,7 +291,7 @@ public class Camera{
 //        }
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
-        setCameraPosition(0,0, 230, (float) angle); //OLD (WORKS)
+        setCameraPosition(0,0, 230, (float) angle);
     }
 
     // Called when stopping script

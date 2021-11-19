@@ -214,7 +214,12 @@ public class AutonomousV3 extends OpMode {
             case "ARM":
                 if (function == "mode") {
                     /*done =*/
-                    done = arm.setMode((String) instruction[3]);
+                    String mode = (String) instruction[3];
+                    if (mode == "drop" || mode == "intake") {
+                        done = arm.switchServo();
+                    } else {
+                        done = arm.setMode((String) instruction[3]);
+                    }
                 }
                 ;
                 break;
