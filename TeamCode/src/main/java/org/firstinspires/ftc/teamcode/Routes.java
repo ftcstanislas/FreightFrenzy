@@ -34,12 +34,12 @@ public class Routes {
             {true, "ARM", "mode", "base"},
     };
 
-    public Object[][] routeLeftOfficial = {
+    public Object[][] routeStorageOfficial = {
             // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
             {true, "ARM", "mode", "high"},
-            {true, "ARM", "mode", "drop"},
+            {true, "ARM", "switchServo"},
             {true, "WAIT", "wait", 1.0},
-            {true, "ARM", "mode", "intake"},
+            {true, "ARM", "switchServo"},
             {false, "ARM", "mode", "base"},
             // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
             {true, "WAIT", "wait", 0.5},
@@ -49,12 +49,12 @@ public class Routes {
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
-    public Object[][] routeRightOfficial = {
+    public Object[][] routeWarehouseOfficial = {
             // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
             {true, "ARM", "mode", "high"},
-            {true, "ARM", "mode", "drop"},
+            {true, "ARM", "switchServo"},
             {true, "WAIT", "wait", 1.0},
-            {true, "ARM", "mode", "intake"},
+            {true, "ARM", "switchServo"},
             {false, "ARM", "mode", "base"}
             // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
     };
@@ -66,7 +66,7 @@ public class Routes {
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
-    public Object[][] getRoute(String team, String startPosition){
+    public Object[][] getRoute(String team, String startPosition, String ducks){
         return test;
     }
 

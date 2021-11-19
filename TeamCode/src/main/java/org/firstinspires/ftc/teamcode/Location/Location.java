@@ -60,14 +60,6 @@ public class Location {
         
         telemetry = telemetryInit;
     }
-    
-    public void startDuckDetection() {
-        camera1.startDuckDetection();
-    }
-
-    public void stopDuckDetection() {
-        camera1.stopDuckDetection();
-    }
 
     public void update(){
         // Update heading
@@ -213,7 +205,7 @@ public class Location {
         camera1.removeZoomBox();
     }
 
-    public String startDuckDetection() {
+    public String detectDuck() {
         String position = "none";
         while (position == "none") {
             position = camera1.detectDuck();
