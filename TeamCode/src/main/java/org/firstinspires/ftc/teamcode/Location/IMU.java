@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 import java.util.Arrays;
 
@@ -49,4 +50,9 @@ public class IMU {
         double curHeading = getHeading();
         return "Orientation: " + curHeading;
     }
+
+//    public double[] getPosition() {
+//        Position position =
+//        return
+//    }
 }

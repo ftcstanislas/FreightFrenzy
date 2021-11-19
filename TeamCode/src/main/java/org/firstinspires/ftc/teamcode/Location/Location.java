@@ -12,7 +12,6 @@ public class Location {
     private IMU IMU = null;
     private Camera camera1 = null;
     private Telemetry.Item telemetry = null;
-    private Gyro gyro = null;
     private MecanumDrive drivetrain = null;
     private boolean advanced = false;
 
@@ -53,17 +52,9 @@ public class Location {
             camera1 = new Camera();
             camera1.init(hardwareMap, "Webcam 1", 1.27, 0.045, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading);
-
-            // Gyro
-            gyro = new Gyro();
-            gyro.init(hardwareMap);
         }
         
         telemetry = telemetryInit;
-    }
-
-    public boolean calibrate(){
-        return gyro.calibrate();
     }
     
     public void startDuckDetection() {
@@ -92,14 +83,6 @@ public class Location {
             historyX.add(locationCamera1[0]);
             historyY.add(locationCamera1[1]);
             historyHeading.add(locationCamera1[2]);
-        }
-
-        // Gyro
-        if (advanced) {
-            double[] locationGyro = gyro.getPosition();
-            historyX.add(locationGyro[0]);
-            historyY.add(locationGyro[1]);
-            historyHeading.add(locationGyro[2]);
         }
 
         // Remove part of history
