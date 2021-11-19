@@ -35,7 +35,7 @@ public class Routes {
     };
 
     public Object[][] routeLeftOfficial = {
-            // {true, "DRIVETRAIN", "toCircle", -300, -600, 2286},
+            // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
             {true, "ARM", "mode", "high"},
             {true, "ARM", "mode", "drop"},
             {true, "WAIT", "wait", 1.0},
