@@ -204,4 +204,20 @@ public class Location {
     private double calculateY(double desiredAngle, double speed) {
         return Math.cos(Math.toRadians(desiredAngle)) * speed;
     }
+
+    public void addZoomBox() {
+        camera1.addZoomBox();
+    }
+
+    public void removeZoomBox() {
+        camera1.removeZoomBox();
+    }
+
+    public String startDuckDetection() {
+        String position = "none";
+        while (position == "none") {
+            position = camera1.detectDuck();
+        }
+        return position;
+    }
 }

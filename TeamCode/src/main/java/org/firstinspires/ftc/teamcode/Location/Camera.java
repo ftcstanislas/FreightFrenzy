@@ -140,7 +140,6 @@ public class Camera{
             if (tfod != null) {
                 tfod.activate();
 
-//            setZoom(false); JELMER
             }
         }
     }
@@ -332,15 +331,15 @@ public class Camera{
         return position;
     }
 
-    public void startDuckDetection() {
+    public void addZoomBox() {
         tfod.setZoom(2.5, 16.0/9.0);
     }
 
-    public void stopDuckDetection() {
+    public void removeZoomBox() {
         tfod.setZoom(1, 16.0/9.0);
     }
 
-    public void detectDuck() {
+    public String detectDuck() {
         if (tfod !== null) {
             String text = "";
             // getUpdatedRecognitions() will return null if no new information is available since
@@ -365,6 +364,7 @@ public class Camera{
             }
             telemetryDucks.setValue(text);
         }
-    }
+        return "none";
+    } 
 }
 
