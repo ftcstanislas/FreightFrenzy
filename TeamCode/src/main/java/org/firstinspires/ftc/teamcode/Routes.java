@@ -49,6 +49,16 @@ public class Routes {
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
+    public Object[][] routeRightOfficial = {
+            // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
+            {true, "ARM", "mode", "high"},
+            {true, "ARM", "mode", "drop"},
+            {true, "WAIT", "wait", 1.0},
+            {true, "ARM", "mode", "intake"},
+            {false, "ARM", "mode", "base"},
+            // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
+    }
+
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition){
