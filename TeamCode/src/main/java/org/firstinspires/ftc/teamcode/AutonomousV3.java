@@ -44,7 +44,7 @@ public class AutonomousV3 extends OpMode {
     Telemetry.Item telemetryTest = null;
 
     // Wich program to follow
-    String[] program = {"blue", "left", "onbekend"};
+    String[] program = {"red", "storage", "onbekend"};
     Object[][] instructions = null;
 
     // sleeping
@@ -90,16 +90,16 @@ public class AutonomousV3 extends OpMode {
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        int number;
-        double[] location;
-        if (program[1].equals("left")){
+        int number = 0;
+        double[] locationRobot = {0,0,0};
+        if (program[0].equals("red")){
             number = 2;
-            location = new double[]{-914.4, -1584.96};
-        } else {
+            locationRobot = new double[]{-914.4, -1584.96, 90};
+        } else if (program[0].equals("blue")){
             number = 1;
-            location = new double[]{304.8, -1584.96};
+            locationRobot = new double[]{304.8, -1584.96, 90};
         }
-        location.init(hardwareMap, number, true, location, drivetrain, telemetryLocation, telemetryDucks);
+        location.init(hardwareMap, number, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -133,7 +133,7 @@ public class AutonomousV3 extends OpMode {
         lastTime = System.nanoTime();
 
         // Correct instruction
-        instructions = routes.getRoute(program[0], program[1]);
+        instructions = routes.getRoute(program[0], program[1], program[2]);
 
         //Telemetry update
         status.setValue("Started");
@@ -143,8 +143,8 @@ public class AutonomousV3 extends OpMode {
     public void loop() {
         // Telemetry update
         long time = System.nanoTime();
-        status.setValue(String.format("Follwing program %s from %s for %.1fs in %.1fms",
-                program[0], program[1], runtime.seconds(),  (double) (time - lastTime)/1000000));
+        status.setValue(String.format("Follwing program %s from %s with %s for %.1fs in %.1fms",
+                program[0], program[1], program[1], runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
 
         // location
@@ -224,13 +224,11 @@ public class AutonomousV3 extends OpMode {
                 if (function == "mode") {
                     /*done =*/
                     String mode = (String) instruction[3];
-                    if (mode == "drop" || mode == "intake") {
-                        done = arm.switchServo();
-                    } else {
-                        done = arm.setMode((String) instruction[3]);
-                    }
+                    done = arm.setMode((String) instruction[3]);
+                } else if (function == "switchServo") {
+                    arm.switchServo();
                 }
-                ;
+
                 break;
 
             case "WAIT":
