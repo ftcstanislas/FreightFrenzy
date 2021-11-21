@@ -49,9 +49,34 @@ public class Routes {
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
-    public Object[][] spinning = {
+    public Object[][] spinningRed = {
+            {true, "DRIVETRAIN", "timeBased", -1.0, 0.3, 0.2},
+            {true, "WAIT", "wait", 2.0},
+            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
             {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2.0}
+            {true, "WAIT", "wait", 5.0},
+            {true, "SPINNER", "mode", "stop"},
+            {true, "DRIVETRAIN", "timeBased1", 0.0, 1.0, -0.3},
+            {true, "WAIT", "wait", 1.5},
+            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
+    };
+
+    public Object[][] spinningBlue = {
+            {true, "DRIVETRAIN", "timeBased", -1.0, -0.1, 0.0},
+            {true, "WAIT", "wait", 1.5},
+            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
+            {true, "SPINNER", "mode", "spinRight"},
+            {true, "WAIT", "wait", 5.0},
+            {true, "SPINNER", "mode", "stop"},
+            //{true, "DRIVETRAIN", "timeBased1", -0.3, -1.0, -0.0},
+            //{true, "WAIT", "wait", 1.2},
+            // {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
+    };
+
+    public Object[][] warehouse = {
+            {true, "DRIVETRAIN", "timeBased", 1.0, 0.0, 0.0},
+            {true, "WAIT", "wait", 3.0},
+            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0}
     };
 
 
@@ -73,10 +98,14 @@ public class Routes {
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition, String ducks){
-        if (team == "red"){
-            return spinning;
+        if (startPosition=="storage") {
+            if (team == "red") {
+                return spinningRed;
+            } else {
+                return spinningBlue;
+            }
         } else {
-            return switchRoute(spinning);
+            return warehouse;
         }
     }
 
@@ -112,6 +141,9 @@ public class Routes {
                     }
                     if (functie == "toPosition") {
                         instruction[5] = (double) instruction[5] * -1; //rotation
+                    }
+                    if (functie == "timeBased1") {
+                        instruction[4] = (double) instruction[4] * -1;
                     }
                     break;
                 

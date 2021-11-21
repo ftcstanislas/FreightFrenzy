@@ -73,6 +73,10 @@ public class AutonomousV3 extends OpMode {
         program[0] = team;
     }
 
+    public void setStart(String startPosition){
+        program[1] = startPosition;
+    }
+
     @Override
     public void init() {
 
@@ -260,6 +264,11 @@ public class AutonomousV3 extends OpMode {
                         break;
                     case "toCircle":
                         done = location.goToCircle((double) instruction[3], (double) instruction[4], (double) instruction[5]); // x, y, radius
+                        break;
+
+                    case "timeBased1":
+                    case "timeBased":
+                        drivetrain.setPowerDirection((double) instruction[3],(double) instruction[4],(double) instruction[5], 0.5);
                         break;
 
                     default: // if no match is found
