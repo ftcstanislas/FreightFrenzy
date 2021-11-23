@@ -98,16 +98,14 @@ public class AutonomousV3 extends OpMode {
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        int number = 0;
         double[] locationRobot = {0,0,0};
         if (program[0].equals("red")){
-            number = 2;
             locationRobot = new double[]{-914.4, -1584.96, 90};
         } else if (program[0].equals("blue")){
-            number = 1;
             locationRobot = new double[]{304.8, -1584.96, 90};
         }
-        location.init(hardwareMap, number, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
+        locationRobot = new double[]{-1200, -1200, 180};
+        location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -126,6 +124,14 @@ public class AutonomousV3 extends OpMode {
         status.setValue(String.format("Init looping for %.1fs in %.1fms",
                 runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
+
+        if (gamepad1.a){
+            drivetrain.setPowerDirection(0,0,0,0);
+            return;
+        }
+
+        // Location
+        location.update();
 
         //Duck
 //        String duckResult = location.detectDuck();
@@ -157,6 +163,11 @@ public class AutonomousV3 extends OpMode {
         status.setValue(String.format("Follwing program %s from %s with %s for %.1fs in %.1fms",
                 program[0], program[1], program[2], runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
+
+        if (gamepad1.a){
+            drivetrain.setPowerDirection(0,0,0,0);
+            return;
+        }
 
         // location
         location.update();

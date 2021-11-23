@@ -92,21 +92,22 @@ public class Routes {
 
     public Object[][] test = {
             {true, "DRIVETRAIN", "toPosition", -1200.0, -600.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -0.0, -600.0, 180.0, 0.3}
+            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 180.0, 0.3}
     };
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition, String ducks){
-        if (startPosition=="storage") {
-            if (team == "red") {
-                return spinningRed;
-            } else {
-                return spinningBlue;
-            }
-        } else {
-            return warehouse;
-        }
+        return test;
+//        if (startPosition=="storage") {
+//            if (team == "red") {
+//                return spinningRed;
+//            } else {
+//                return spinningBlue;
+//            }
+//        } else {
+//            return warehouse;
+//        }
     }
 
     public Object[][] switchRoute(Object[][] route){

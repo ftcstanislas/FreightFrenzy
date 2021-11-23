@@ -24,7 +24,7 @@ public class Location {
     double y;
     double heading;
 
-    public void init(HardwareMap hardwareMap, int number, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
+    public void init(HardwareMap hardwareMap, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
         advanced = advancedInit; // keep track of location
         x = position[0];
         y = position[1];
@@ -50,11 +50,7 @@ public class Location {
         if (advanced) {
             // Camera 1
             camera1 = new Camera();
-            if (number == 1) {
-                camera1.init(hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-            } else {
-                camera1.init(hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks);
-            }
+            camera1.init(hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading);
         }
         
@@ -62,6 +58,8 @@ public class Location {
     }
 
     public void update(){
+        double[] positionCamera1 = {170, -170};
+
         // Update heading
         heading = IMU.getHeading();
 
@@ -75,7 +73,7 @@ public class Location {
             camera1.update();
 
             // Calculate new position of robot
-            double[] positionCamera1 = {17, -17};
+
             double[] locationCamera1 = camera1.getPosition();
             robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
@@ -111,16 +109,13 @@ public class Location {
             double robotHeadingRadians = Math.toRadians(heading - 180);
 
             // Camera 1
-            double[] positionCamera1 = {17, -17};
             robotX = positionCamera1[0] * Math.cos(robotHeadingRadians) + positionCamera1[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera1[0] * Math.sin(robotHeadingRadians) + positionCamera1[1] * Math.cos(robotHeadingRadians);
             camera1.setPointerPosition(x-robotX, y-robotY, heading);
         }
 
-        telemetry.setValue(String.format("Pos camera (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos (mm) {X, Y,} = %.1f, %.1f",
+        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y,} = %.1f, %.1f",
                 x, y, heading, robotX, robotY));
-//        telemetry.setValue(String.format("Pos camera1 (mm) {X, Y, heading} = %.1f, %.1f %.1f",
-//                x, y, heading));
 
 
 
