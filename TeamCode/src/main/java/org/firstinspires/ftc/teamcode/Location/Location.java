@@ -161,8 +161,8 @@ public class Location {
 
             double turning = orientationDifference / 360;
 
-            drivetrain.setPowerDirection(robotMovementXComponent, -robotMovementYComponent, turning, power);
-
+//            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
+            drivetrain.setPowerDirection(robotMovementYComponent, robotMovementXComponent, turning, power);
             return false;
         } else {
             return true;
