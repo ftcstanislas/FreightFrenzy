@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Routes {
     
     /*
-    stiins telefoon was hier
+    Stijns telefoon was hier
     -----------------------------------------------------------------------------------------------
     WAIT UNTIL FINISHED   OBJECT                FUNCTIE             ARGUMENTEN (achter elkaar)
     -----------------------------------------------------------------------------------------------
@@ -92,7 +92,13 @@ public class Routes {
 
     public Object[][] test = {
             {true, "DRIVETRAIN", "toPosition", -1200.0, -600.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 180.0, 0.3}
+            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -600.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", 0.0, -600.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3}
     };
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);

@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@TeleOp(name="Servos test", group="testing")
+@TeleOp(name="Servo test", group="testing")
 public class ServoTest extends OpMode {
     /* Declare OpMode members. */
     

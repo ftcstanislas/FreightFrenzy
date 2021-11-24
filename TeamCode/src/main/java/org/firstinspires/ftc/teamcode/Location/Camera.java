@@ -250,8 +250,8 @@ public class Camera{
 
             double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
             double score;
-            if (targetPointerPosition >= 0 && targetPointerPosition <= 1) {
-                score = Math.hypot(dx, dy) ;
+            if (targetPointerPosition >= 0.05 && targetPointerPosition <= 0.88) {
+                score = Math.hypot(dx, dy);
             } else {
                 score = Double.MAX_VALUE;
             }
