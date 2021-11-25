@@ -70,7 +70,7 @@ public class TeleOpV3 extends OpMode {
         //Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        location.init(hardwareMap, false, new double[]{0, 0, 180}, drivetrain, telemetryLocation, telemetryDucks);
+        location.init(hardwareMap, true, new double[]{0, 0, 180}, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);

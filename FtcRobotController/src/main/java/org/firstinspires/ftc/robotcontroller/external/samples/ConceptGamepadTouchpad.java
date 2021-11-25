@@ -34,7 +34,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 
-@Disabled
+//@Disabled
 @TeleOp(name="Concept: Gamepad Touchpad", group ="Concept")
 public class ConceptGamepadTouchpad extends LinearOpMode
 {
@@ -51,6 +51,8 @@ public class ConceptGamepadTouchpad extends LinearOpMode
         while (opModeIsActive())
         {
             boolean finger = false;
+
+            telemetry.addLine(String.valueOf(gamepad1.touchpad));
 
             // Display finger 1 x & y position if finger detected
             if(gamepad1.touchpad_finger_1)
@@ -72,7 +74,7 @@ public class ConceptGamepadTouchpad extends LinearOpMode
             }
 
             telemetry.update();
-            sleep(10);
+//            sleep(10);
         }
     }
 }
