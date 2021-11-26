@@ -42,7 +42,6 @@ public class Camera{
     private VuforiaLocalizer vuforia    = null;
     private TFObjectDetector tfod       = null;
     private VuforiaTrackables targets   = null;
-    private WebcamName webcamName       = null;
 
     private boolean targetVisible       = false;
 
@@ -76,43 +75,22 @@ public class Camera{
 
     private boolean checkDuck = false;
 
-    public void init(HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
         telemetryDucks = telemetryDucksInit;
-
-        // Connect to the camera we are to use.  This name must match what is set up in Robot Configuration
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam "+number);
 
         // Servo pointer
         pointer = hardwareMap.get(Servo.class, "cameraPointer"+number);
         TOTAL_COUNTS_PER_ROUND = TOTAL_COUNTS_PER_ROUND_INIT;
         OFFSET = OFFSET_INIT;
 
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         * We can pass Vuforia the handle to a camera preview resource (on the RC screen);
-         * If no camera-preview is desired, use the parameter-less constructor instead (commented out below).
-         * Note: A preview window is required if you want to view the camera stream on the Driver Station Phone.
-         */
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-
-        // We also indicate which camera we wish to use.
-        parameters.cameraName = webcamName;
-
-        // Turn off Extended tracking.  Set this true if you want Vuforia to track beyond the target.
-        parameters.useExtendedTracking = false;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        vuforia = vuforiaInit;
+        parameters = parametersInit;
 
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
-        targets = this.vuforia.loadTrackablesFromAsset("FreightFrenzy");
+        targets = vuforia.loadTrackablesFromAsset("FreightFrenzy");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         allTrackables.addAll(targets);
@@ -207,17 +185,24 @@ public class Camera{
     }
 
     public void setPointerPosition(double x, double y, double heading){
-        // Blue storage
+        double[] data = getBestScore(x, y, heading);
+        double bestAngle = data[1];
+        setPointerAngle(bestAngle);
+
+//        telemetryDucks.setValue(String.format("relativeHeading %.1f newAngle %.1f",
+//                relativeHeading, newAngle));
+    }
+
+    public double[] getBestScore(double x, double y, double heading){
         double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, 90},{halfTile, -halfField, -90}};
         double bestScore = Double.MAX_VALUE;
         double bestAngle = 90;
         for (double[] location : locations) {
-//        double[] location =  {halfTile, halfField, 90};
             double dx = location[0] - x;
             double dy = location[1] - y;
             double relativeHeading;
             double newAngle = 0;
-            if (location[2] == 180){
+            if (location[2] == 180) {
                 relativeHeading = -Math.atan2(dx, dy) / Math.PI * 180;
                 newAngle = 180 - heading + relativeHeading;
             } else if (location[2] == 90) {
@@ -235,11 +220,7 @@ public class Camera{
                 newAngle -= 360;
             }
 
-            // max speed of servo
-//            double difference = newAngle - pointerAngle;
-//            difference = (difference + 180) % 360 - 180;
-//            difference = Math.max(Math.min(difference, 0.2), -0.2);
-            double newPointerAngle = newAngle;//pointerAngle + difference;
+            double newPointerAngle = newAngle;
 
             while (newPointerAngle < -180) {
                 newPointerAngle += 360;
@@ -250,23 +231,18 @@ public class Camera{
 
             double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
             double score;
-            if (targetPointerPosition >= 0.05 && targetPointerPosition <= 0.88) {
+            if (targetPointerPosition >= 0.05 && targetPointerPosition <= 0.95) {
                 score = Math.hypot(dx, dy);
             } else {
                 score = Double.MAX_VALUE;
             }
 
-            if (score < bestScore){
+            if (score < bestScore) {
                 bestScore = score;
                 bestAngle = newPointerAngle;
             }
         }
-        pointerAngle = bestAngle;
-        setPointerAngle(bestAngle);
-
-
-//        telemetryDucks.setValue(String.format("relativeHeading %.1f newAngle %.1f",
-//                relativeHeading, newAngle));
+        return new double[]{bestScore, bestAngle};
     }
 
     public void updateServoPosition(){

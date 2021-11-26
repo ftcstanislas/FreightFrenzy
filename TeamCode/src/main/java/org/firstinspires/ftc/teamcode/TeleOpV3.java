@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
 import java.util.ArrayList;
 import java.util.Collections;
 
-@TeleOp(name="OpMode Iterative 3.11", group="main")
+@TeleOp(name="OpMode Iterative 3.12", group="main")
 public class TeleOpV3 extends OpMode {
     
     //get objects

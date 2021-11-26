@@ -12,9 +12,12 @@ import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 
-
 //@Autonomous(name="Final Autonomous 3.11", group="main")
 public class AutonomousV3 extends OpMode {
+    // Init time longer
+    {
+        msStuckDetectInit = 10000;
+    }
 
     // Robot parts
     Location location = new Location();
