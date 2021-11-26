@@ -68,7 +68,7 @@ public class Location {
 
             // Camera 2
             camera2 = new Camera();
-            camera2.init(vuforia, parameters, hardwareMap, "2", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera2.init(vuforia, parameters, hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading);
         }
         
@@ -102,14 +102,14 @@ public class Location {
 
             // Calculate new position of robot
 
-            double[] locationCamera1 = camera.getPosition();
+            double[] locationCamera = camera.getPosition();
             robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
 
             if (camera.isTargetVisible()) {
-                historyX.add(locationCamera1[0]+robotX);
-                historyY.add(locationCamera1[1]+robotY);
-                historyHeading.add(locationCamera1[2]);
+                historyX.add(locationCamera[0]+robotX);
+                historyY.add(locationCamera[1]+robotY);
+                historyHeading.add(locationCamera[2]);
             }
         }
 
@@ -136,7 +136,7 @@ public class Location {
         if (advanced) {
             double robotHeadingRadians = Math.toRadians(heading - 180);
 
-            // Camera 1
+            // Camera x
             robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
             robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
             camera.setPointerPosition(x-robotX, y-robotY, heading);
@@ -154,9 +154,9 @@ public class Location {
     }
 
     public void initVuforia(HardwareMap hardwareMap){
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters = new VuforiaLocalizer.Parameters();
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+//        parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = "AYijR7b/////AAABmQXodEBY4E1gjxKsoSygzWsm4RFjj/z+nzPa0q3oo3vJNz51j477KysEdl4h1YfezCokKxkUeK3ARNjE1tH80M5gZbubu2bkdF6Ja8gINhJTAY/ZJrFkPGiiLfausXsCWAygHW7ufeu3FLIDp1DN2NHj4rzDP4vRv5z/0T0deRLucpRcv36hqUkJ1N6Duumo0se+BCmdAh7ycUW2wteJ3T1e/LxuO5sI6qtwnJW64fe2n6cehk5su76c9t45AcBfod6f0txGezdzpqY5NoHjz0G/gLvah0vAYW+/0x3yaWy8thEd64OVMVb2q37TsJ1UDjl5qupztdG7nXkRGYF5oaR8CGkm2lqPyugJuRFNMRcM";;
 
@@ -170,14 +170,15 @@ public class Location {
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        // Set the active camera to Webcam 1.
+        // Set the active camera to Webcam x
         switchableCamera = (SwitchableCamera) vuforia.getCamera();
-        switchableCamera.setActiveCamera(webcam1);
+        switchableCamera.setActiveCamera(webcam2);
 
     }
 
     public void stop(){
         camera1.stop();
+        camera2.stop();
     }
 
     public double getXCoordinate() {
@@ -244,20 +245,20 @@ public class Location {
         return Math.cos(Math.toRadians(desiredAngle)) * speed;
     }
 
-    public void addZoomBox() {
-        camera1.addZoomBox();
-    }
-
-    public void removeZoomBox() {
-        camera1.removeZoomBox();
-    }
-
-    public String detectDuck() {
-        camera1.setPointerAngle(90);//look right ahead
-        String position = "none";
-        while (position == "none") {
-            position = camera1.detectDuck();
-        }
-        return position;
-    }
+//    public void addZoomBox() {
+//        camera1.addZoomBox();
+//    }
+//
+//    public void removeZoomBox() {
+//        camera1.removeZoomBox();
+//    }
+//
+//    public String detectDuck() {
+//        camera1.setPointerAngle(90);//look right ahead
+//        String position = "none";
+//        while (position == "none") {
+//            position = camera1.detectDuck();
+//        }
+//        return position;
+//    }
 }

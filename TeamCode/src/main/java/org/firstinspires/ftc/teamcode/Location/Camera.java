@@ -133,14 +133,12 @@ public class Camera{
         }
     }
 
-    public void update() { // -TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180=  angle
+    public void update() {
         updateServoPosition();
 
         if (pointerPosition == pointer.getPosition()) {
-//            setCameraPosition(0, 0, 230, (float) (-TOTAL_COUNTS_PER_ROUND / (pointerPosition - OFFSET) / 360 + 180));
             updateCamera();
         }
-
     }
 
     public void updateCamera(){
@@ -173,7 +171,7 @@ public class Camera{
             text += String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
         }
 
-        telemetry.setValue(text);
+//        telemetryDucks.setValue(text);
     }
 
     public boolean isTargetVisible(){
@@ -255,7 +253,7 @@ public class Camera{
             pointerPosition += Math.max(-POINTER_SPEED * timePassed, movement);
         }
 
-        telemetryDucks.setValue(pointerPosition+" = "+pointer.getPosition());
+//        telemetryDucks.setValue(pointerPosition+" = "+pointer.getPosition());
 
         pointerLastUpdate = currentTime;
     }
