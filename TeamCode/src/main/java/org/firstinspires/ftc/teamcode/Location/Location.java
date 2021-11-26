@@ -172,7 +172,7 @@ public class Location {
 
         // Set the active camera to Webcam 1.
         switchableCamera = (SwitchableCamera) vuforia.getCamera();
-        switchableCamera.setActiveCamera(webcam2);
+        switchableCamera.setActiveCamera(webcam1);
 
     }
 
