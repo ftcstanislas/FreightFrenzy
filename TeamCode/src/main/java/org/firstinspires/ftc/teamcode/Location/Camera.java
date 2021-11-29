@@ -191,6 +191,13 @@ public class Camera{
 //                relativeHeading, newAngle));
     }
 
+    public double[] calculateRobotCoordinates(double[] positionCamera, double heading) {
+        double robotHeadingRadians = Math.toRadians(heading - 180);
+        double robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
+        double robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
+        return new double[]{robotX, robotY};
+    }
+
     public double[] getBestScore(double x, double y, double heading){
         double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, 90},{halfTile, -halfField, -90}};
         double bestScore = Double.MAX_VALUE;
@@ -220,7 +227,7 @@ public class Camera{
 
             double newPointerAngle = newAngle;
 
-            while (newPointerAngle < -180) {
+            while (newPointerAngle < -180) {//IS DIT MOGELIJK???
                 newPointerAngle += 360;
             }
             while (newPointerAngle >= 180) {
@@ -230,7 +237,9 @@ public class Camera{
             double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
             double score;
             if (targetPointerPosition >= 0.05 && targetPointerPosition <= 0.95) {
-                score = Math.hypot(dx, dy);
+                double distance = Math.hypot(dx, dy);
+                double angleScore = Math.abs(targetPointerPosition - 0.5) * 2;
+                score = angleScore * distance;
             } else {
                 score = Double.MAX_VALUE;
             }

@@ -62,11 +62,13 @@ public class Location {
             initVuforia(hardwareMap);
 
             // Camera 1
+            switchableCamera.setActiveCamera(webcam1);
             camera1 = new Camera();
             camera1.init(vuforia, parameters, hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading);
 
             // Camera 2
+            switchableCamera.setActiveCamera(webcam2);
             camera2 = new Camera();
             camera2.init(vuforia, parameters, hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading);
@@ -87,7 +89,7 @@ public class Location {
         Camera camera = null;
         double[] positionCamera = null;
         if (advanced) {
-            double robotHeadingRadians = Math.toRadians(heading - 180);
+//            double robotHeadingRadians = Math.toRadians(heading - 180);
 
             if (switchableCamera.getActiveCamera() == webcam1) {
                 camera = camera1;
@@ -101,10 +103,12 @@ public class Location {
             camera.update();
 
             // Calculate new position of robot
-
             double[] locationCamera = camera.getPosition();
-            robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
-            robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
+//            robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
+//            robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
+            double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
+            robotX = robotCoordinates[0];
+            robotY = robotCoordinates[1];
 
             if (camera.isTargetVisible()) {
                 historyX.add(locationCamera[0]+robotX);
@@ -134,11 +138,37 @@ public class Location {
 
         // Update pointers camera
         if (advanced) {
-            double robotHeadingRadians = Math.toRadians(heading - 180);
+//            double robotHeadingRadians = Math.toRadians(heading - 180);
+//
+//            // Camera x
+//            robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
+//            robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
 
-            // Camera x
-            robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
-            robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
+            double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
+            robotX = robotCoordinates[0];
+            robotY = robotCoordinates[1];
+
+            //Camera 1
+            double[] robotCoordinates1 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
+            double camera1RobotX = robotCoordinates1[0];
+            double camera1RobotY = robotCoordinates1[1];
+
+            //Camera 2
+            double[] robotCoordinates2 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
+            double camera2RobotX = robotCoordinates2[0];
+            double camera2RobotY = robotCoordinates2[1];
+
+            //Switch camera with best score
+            double[] scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading);
+            double[] scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading);
+            if (scoreCamera1[0] > scoreCamera2[0]) {
+                camera = camera1;
+                positionCamera = positionCameras[0];
+            } else {
+                camera = camera2;
+                positionCamera = positionCameras[1];
+            }
+
             camera.setPointerPosition(x-robotX, y-robotY, heading);
         }
 
@@ -170,10 +200,7 @@ public class Location {
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        // Set the active camera to Webcam x
         switchableCamera = (SwitchableCamera) vuforia.getCamera();
-        switchableCamera.setActiveCamera(webcam2);
-
     }
 
     public void stop(){
