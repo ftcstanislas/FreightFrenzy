@@ -41,7 +41,7 @@ public class Camera{
     private OpenGLMatrix lastLocation   = null;
     private VuforiaLocalizer vuforia    = null;
     private TFObjectDetector tfod       = null;
-    private VuforiaTrackables targets   = null;
+//    private VuforiaTrackables targets   = null;
 
     private boolean targetVisible       = false;
 
@@ -63,6 +63,7 @@ public class Camera{
     private double pointerAngle = 90;
     double TOTAL_COUNTS_PER_ROUND = 0;
     double OFFSET = 0;
+    double angleMultiplier = 2;
 
     // Game element detection
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
@@ -75,7 +76,7 @@ public class Camera{
 
     private boolean checkDuck = false;
 
-    public void init(VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
         telemetryDucks = telemetryDucksInit;
@@ -85,24 +86,10 @@ public class Camera{
         TOTAL_COUNTS_PER_ROUND = TOTAL_COUNTS_PER_ROUND_INIT;
         OFFSET = OFFSET_INIT;
 
+        // Init
         vuforia = vuforiaInit;
         parameters = parametersInit;
-
-        // Load the data sets for the trackable objects. These particular data
-        // sets are stored in the 'assets' part of our application.
-        targets = vuforia.loadTrackablesFromAsset("FreightFrenzy");
-
-        // For convenience, gather together all the trackable objects in one easily-iterable collection */
-        allTrackables.addAll(targets);
-
-        // Name and locate each trackable object
-        identifyTarget(0, "Blue Storage", -halfField, oneAndHalfTile, mmTargetHeight, 90, 0, 90);
-        identifyTarget(1, "Blue Alliance Wall", halfTile, halfField, mmTargetHeight, 90, 0, 0);
-        identifyTarget(2, "Red Storage", -halfField, -oneAndHalfTile, mmTargetHeight, 90, 0, 90);
-        identifyTarget(3, "Red Alliance Wall", halfTile, -halfField, mmTargetHeight, 90, 0, 180);
-
-
-        targets.activate();
+        allTrackables = allTrackablesInit;
 
         //Duck
         if (false) {
@@ -238,7 +225,8 @@ public class Camera{
             double score;
             if (targetPointerPosition >= 0.05 && targetPointerPosition <= 0.95) {
                 double distance = Math.hypot(dx, dy);
-                double angleScore = Math.abs(targetPointerPosition - 0.5) * 2;
+                angleMultiplier = 4;
+                double angleScore = 1;//Math.abs(targetPointerPosition - 0.5) * angleMultiplier;
                 score = angleScore * distance;
             } else {
                 score = Double.MAX_VALUE;
@@ -284,22 +272,8 @@ public class Camera{
     // Called when stopping script
     public void stop(){
         // Disable Tracking when we are done;
-        targets.deactivate();
+//        targets.deactivate();
 //        stopDuckDetection();
-    }
-
-    /***
-     * Identify a target by naming it, and setting its position and orientation on the field
-     * @param targetIndex
-     * @param targetName
-     * @param dx, dy, dz  Target offsets in x,y,z axes
-     * @param rx, ry, rz  Target rotations in x,y,z axes
-     */
-    void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
-        VuforiaTrackable aTarget = targets.get(targetIndex);
-        aTarget.setName(targetName);
-        aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
     }
 
     public double[] getPosition() {

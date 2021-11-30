@@ -1,15 +1,25 @@
 package org.firstinspires.ftc.teamcode.Location;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.SwitchableCamera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Location {
 //    private Odometry odometry = null;
@@ -29,11 +39,27 @@ public class Location {
     double y;
     double heading;
 
+    // Targets
+    private VuforiaTrackables targets = null;
+    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+
+    // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+    // We will define some constants and conversions here
+    private static final float mmTargetHeight   = 152.4f;// the height of the center of the target image above the floor
+    private static final float fieldTile        = 609.6f;
+    private static final float halfField        = 3 * fieldTile;
+    private static final float halfTile         = 0.5f * fieldTile;
+    private static final float oneAndHalfTile   = 1.5f * fieldTile;
+
     // Camera
     private WebcamName webcam1, webcam2;
     private SwitchableCamera switchableCamera;
     VuforiaLocalizer.Parameters parameters = null;
     private VuforiaLocalizer vuforia;
+
+    double[][] positionCameras = {{170, -170}, {170, 170}};
+    Camera camera = null;
+    double[] positionCamera = null;
 
     public void init(HardwareMap hardwareMap, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks){
         advanced = advancedInit; // keep track of location
@@ -60,25 +86,25 @@ public class Location {
 
         if (advanced) {
             initVuforia(hardwareMap);
+            initTargets();
 
             // Camera 1
-            switchableCamera.setActiveCamera(webcam1);
             camera1 = new Camera();
-            camera1.init(vuforia, parameters, hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera1.init(allTrackables, vuforia, parameters, hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading);
 
             // Camera 2
-            switchableCamera.setActiveCamera(webcam2);
             camera2 = new Camera();
-            camera2.init(vuforia, parameters, hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading);
+
+            setActiveCamera(2);
         }
         
         telemetry = telemetryInit;
     }
 
     public void update(){
-        double[][] positionCameras = {{170, -170}, {170, 170}};
 
         // Update heading
         heading = IMU.getHeading();
@@ -86,33 +112,20 @@ public class Location {
         // Camera
         double robotX = 0;
         double robotY = 0;
-        Camera camera = null;
-        double[] positionCamera = null;
         if (advanced) {
-//            double robotHeadingRadians = Math.toRadians(heading - 180);
-
-            if (switchableCamera.getActiveCamera() == webcam1) {
-                camera = camera1;
-                positionCamera = positionCameras[0];
-            } else if (switchableCamera.getActiveCamera() == webcam2){
-                camera = camera2;
-                positionCamera = positionCameras[1];
-            }
 
             // Camera update
             camera.update();
 
             // Calculate new position of robot
             double[] locationCamera = camera.getPosition();
-//            robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
-//            robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
             double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
             robotX = robotCoordinates[0];
             robotY = robotCoordinates[1];
 
             if (camera.isTargetVisible()) {
-                historyX.add(locationCamera[0]+robotX);
-                historyY.add(locationCamera[1]+robotY);
+                historyX.add(locationCamera[0] + robotX);
+                historyY.add(locationCamera[1] + robotY);
                 historyHeading.add(locationCamera[2]);
             }
         }
@@ -136,14 +149,13 @@ public class Location {
             y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
         }
 
+        double[] scoreCamera1 = null;
+        double[] scoreCamera2 = null;
+
         // Update pointers camera
         if (advanced) {
-//            double robotHeadingRadians = Math.toRadians(heading - 180);
-//
-//            // Camera x
-//            robotX = positionCamera[0] * Math.cos(robotHeadingRadians) + positionCamera[1] * -Math.sin(robotHeadingRadians);
-//            robotY = positionCamera[0] * Math.sin(robotHeadingRadians) + positionCamera[1] * Math.cos(robotHeadingRadians);
 
+            // Relative robot coordinates camera x
             double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
             robotX = robotCoordinates[0];
             robotY = robotCoordinates[1];
@@ -154,26 +166,28 @@ public class Location {
             double camera1RobotY = robotCoordinates1[1];
 
             //Camera 2
-            double[] robotCoordinates2 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
+            double[] robotCoordinates2 = camera2.calculateRobotCoordinates(positionCameras[1], heading);
             double camera2RobotX = robotCoordinates2[0];
             double camera2RobotY = robotCoordinates2[1];
 
-            //Switch camera with best score
-            double[] scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading);
-            double[] scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading);
-            if (scoreCamera1[0] > scoreCamera2[0]) {
-                camera = camera1;
-                positionCamera = positionCameras[0];
-            } else {
-                camera = camera2;
-                positionCamera = positionCameras[1];
+            // Switch camera with best score
+            scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading);
+            scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading);
+            double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
+            if (scoreDifference >= 20) {
+                if (scoreCamera1[0] < scoreCamera2[0]) {
+                    setActiveCamera(1);
+                } else {
+                    setActiveCamera(2);
+                }
             }
-
-            camera.setPointerPosition(x-robotX, y-robotY, heading);
+            camera1.setPointerPosition(x-camera1RobotX, y-camera1RobotY, heading);
+            camera2.setPointerPosition(x-camera2RobotX, y-camera2RobotY, heading);
         }
 
-        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y,} = %.1f, %.1f",
-                x, y, heading, robotX, robotY));
+
+        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y,} = %.1f, %.1f \nScores{cam1,2} = %.1f, %.1f",
+                x, y, heading, robotX, robotY, scoreCamera1[0], scoreCamera2[0]));
 
 
 
@@ -181,6 +195,18 @@ public class Location {
 //        camera.setZoom(true);
 //        camera.detectDuck();
 //        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
+    }
+
+    public void setActiveCamera(int number){
+        if (number == 1) {
+            camera = camera1;
+            positionCamera = positionCameras[0];
+            switchableCamera.setActiveCamera(webcam1);
+        } else {
+            camera = camera2;
+            positionCamera = positionCameras[1];
+            switchableCamera.setActiveCamera(webcam2);
+        }
     }
 
     public void initVuforia(HardwareMap hardwareMap){
@@ -203,9 +229,28 @@ public class Location {
         switchableCamera = (SwitchableCamera) vuforia.getCamera();
     }
 
+    public void initTargets(){
+        // Load the data sets for the trackable objects. These particular data
+        // sets are stored in the 'assets' part of our application.
+        targets = vuforia.loadTrackablesFromAsset("FreightFrenzy");
+
+        // For convenience, gather together all the trackable objects in one easily-iterable collection */
+        allTrackables.addAll(targets);
+
+        // Name and locate each trackable object
+        identifyTarget(0, "Blue Storage", -halfField, oneAndHalfTile, mmTargetHeight, 90, 0, 90);
+        identifyTarget(1, "Blue Alliance Wall", halfTile, halfField, mmTargetHeight, 90, 0, 0);
+        identifyTarget(2, "Red Storage", -halfField, -oneAndHalfTile, mmTargetHeight, 90, 0, 90);
+        identifyTarget(3, "Red Alliance Wall", halfTile, -halfField, mmTargetHeight, 90, 0, 180);
+
+
+        targets.activate();
+    }
+
     public void stop(){
         camera1.stop();
         camera2.stop();
+        targets.deactivate();
     }
 
     public double getXCoordinate() {
@@ -288,4 +333,18 @@ public class Location {
 //        }
 //        return position;
 //    }
+
+    /***
+     * Identify a target by naming it, and setting its position and orientation on the field
+     * @param targetIndex
+     * @param targetName
+     * @param dx, dy, dz  Target offsets in x,y,z axes
+     * @param rx, ry, rz  Target rotations in x,y,z axes
+     */
+    void identifyTarget(int targetIndex, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
+        VuforiaTrackable aTarget = targets.get(targetIndex);
+        aTarget.setName(targetName);
+        aTarget.setLocation(OpenGLMatrix.translation(dx, dy, dz)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, rx, ry, rz)));
+    }
 }

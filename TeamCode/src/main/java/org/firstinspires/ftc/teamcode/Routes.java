@@ -91,10 +91,12 @@ public class Routes {
     };
 
     public Object[][] test = {
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -600.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
             {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3}
+//            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 180.0, 0.3},
+//            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
+//            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
 //            {true, "DRIVETRAIN", "toPosition", -1200.0, -600.0, 180.0, 0.3},
 //            {true, "DRIVETRAIN", "toPosition", 0.0, -600.0, 180.0, 0.3},
 //            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 180.0, 0.3},

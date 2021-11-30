@@ -49,6 +49,7 @@ public class TeleOpV3 extends OpMode {
         
         //add telemetry
         telemetry.setAutoClear(false);
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
