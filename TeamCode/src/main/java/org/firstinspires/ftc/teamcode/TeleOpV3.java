@@ -19,6 +19,10 @@ import java.util.Collections;
 
 @TeleOp(name="OpMode Iterative 3.12", group="main")
 public class TeleOpV3 extends OpMode {
+    // Init time longer
+    {
+        msStuckDetectInit = 10000;
+    }
     
     //get objects
     Location location = new Location();
@@ -71,7 +75,7 @@ public class TeleOpV3 extends OpMode {
         //Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        location.init(hardwareMap, true, new double[]{0, 0, 180}, drivetrain, telemetryLocation, telemetryDucks);
+        location.init(hardwareMap, true, new double[]{-1200, -1200, 180}, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);

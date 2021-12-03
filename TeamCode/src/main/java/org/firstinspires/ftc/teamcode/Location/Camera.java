@@ -186,9 +186,11 @@ public class Camera{
     }
 
     public double[] getBestScore(double x, double y, double heading){
-        double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, 90},{halfTile, -halfField, -90}};
+        double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, -90},{halfTile, -halfField, 90}};
         double bestScore = Double.MAX_VALUE;
         double bestAngle = 90;
+        double bestIndex = -1;
+        double index = 0;
         for (double[] location : locations) {
             double dx = location[0] - x;
             double dy = location[1] - y;
@@ -233,11 +235,13 @@ public class Camera{
             }
 
             if (score < bestScore) {
+                bestIndex = index;
                 bestScore = score;
                 bestAngle = newPointerAngle;
             }
+            index++;
         }
-        return new double[]{bestScore, bestAngle};
+        return new double[]{bestScore, bestAngle, bestIndex};
     }
 
     public void updateServoPosition(){

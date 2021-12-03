@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Location {
@@ -30,8 +31,12 @@ public class Location {
     private MecanumDrive drivetrain = null;
     private boolean advanced = false;
 
+    // Switch camera
+    final double MIN_LOOPS_PASSED = 20;
+    double loops_passed = 0;
+
     //Location
-    final int HISTORY_LENGTH = 6;
+    final int HISTORY_LENGTH = 20;
     ArrayList<Double> historyX = new ArrayList<Double>();
     ArrayList<Double> historyY = new ArrayList<Double>();
     ArrayList<Double> historyHeading = new ArrayList<Double>();
@@ -144,9 +149,13 @@ public class Location {
         // Update position
         if (historyX.size() != 0) {
             x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
+//            x = (historyX.get(historyX.size()/2) + historyX.get(historyX.size()/2+1))/2;
+//            x = getMedian(historyX);
         }
         if (historyY.size() != 0) {
             y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
+//            y = (historyY.get(historyY.size()/2) + historyY.get(historyY.size()/2+1))/2;
+//            y = getMedian(historyY);
         }
 
         double[] scoreCamera1 = null;
@@ -174,20 +183,23 @@ public class Location {
             scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading);
             scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading);
             double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            if (scoreDifference >= 20) {
-                if (scoreCamera1[0] < scoreCamera2[0]) {
+            if (scoreDifference >= 50 && loops_passed > MIN_LOOPS_PASSED) {
+                if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1) {
                     setActiveCamera(1);
-                } else {
+                } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2){
                     setActiveCamera(2);
                 }
             }
+            loops_passed++;
+
+            // Update pointer positions
             camera1.setPointerPosition(x-camera1RobotX, y-camera1RobotY, heading);
             camera2.setPointerPosition(x-camera2RobotX, y-camera2RobotY, heading);
         }
 
 
-        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y,} = %.1f, %.1f \nScores{cam1,2} = %.1f, %.1f",
-                x, y, heading, robotX, robotY, scoreCamera1[0], scoreCamera2[0]));
+        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f \ncam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)",
+                x, y, heading, robotX, robotY, scoreCamera1[2], scoreCamera1[0], scoreCamera2[2], scoreCamera2[0]));
 
 
 
@@ -207,6 +219,7 @@ public class Location {
             positionCamera = positionCameras[1];
             switchableCamera.setActiveCamera(webcam2);
         }
+        loops_passed = 0;
     }
 
     public void initVuforia(HardwareMap hardwareMap){
@@ -333,6 +346,13 @@ public class Location {
 //        }
 //        return position;
 //    }
+
+    public double getMedian(ArrayList<Double> list){
+        Collections.sort(list);
+        int middle = list.size() / 2;
+        middle = middle> 0 && middle % 2 == 0 ? middle -1 : middle;
+        return list.get(middle);
+    }
 
     /***
      * Identify a target by naming it, and setting its position and orientation on the field
