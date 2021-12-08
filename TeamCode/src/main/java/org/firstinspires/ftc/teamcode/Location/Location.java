@@ -32,7 +32,7 @@ public class Location {
     private boolean advanced = false;
 
     // Switch camera
-    final double MIN_LOOPS_PASSED = 100;
+    final double MIN_LOOPS_PASSED = 20;
     double loops_passed = 0;
 
     //Location
@@ -96,14 +96,14 @@ public class Location {
             // Camera 1
             camera1 = new Camera();
             camera1.init(allTrackables, vuforia, parameters, hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-            camera1.setPointerPosition(x, y, heading, true);
+            camera1.setPointerPosition(x, y, heading);
 
             // Camera 2
             camera2 = new Camera();
             camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
-            camera2.setPointerPosition(x, y, heading, false);
+            camera2.setPointerPosition(x, y, heading);
 
-            setActiveCamera(1);
+            setActiveCamera(2);
         }
         
         telemetry = telemetryInit;
@@ -118,9 +118,6 @@ public class Location {
         double robotX = 0;
         double robotY = 0;
         if (advanced) {
-
-            camera1.updateServoPosition();
-            camera2.updateServoPosition();
 
             // Camera update
             camera.update();
@@ -182,11 +179,11 @@ public class Location {
             double camera2RobotX = robotCoordinates2[0];
             double camera2RobotY = robotCoordinates2[1];
 
-            // Switch camera to the best score
+            // Switch camera with best score
             scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading);
             scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading);
             double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            if (scoreDifference >= 20 && loops_passed > MIN_LOOPS_PASSED) {
+            if (scoreDifference >= 50 && loops_passed > MIN_LOOPS_PASSED) {
                 if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1) {
                     setActiveCamera(1);
                 } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2){
@@ -196,13 +193,8 @@ public class Location {
             loops_passed++;
 
             // Update pointer positions
-            if (camera == camera1) {
-                camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, true);
-                camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading,false);
-            }   else {
-                camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading,false);
-                camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, true);
-            }
+            camera1.setPointerPosition(x-camera1RobotX, y-camera1RobotY, heading);
+            camera2.setPointerPosition(x-camera2RobotX, y-camera2RobotY, heading);
         }
 
 
