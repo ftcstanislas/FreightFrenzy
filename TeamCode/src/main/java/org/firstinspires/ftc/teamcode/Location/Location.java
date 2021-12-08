@@ -72,6 +72,10 @@ public class Location {
         y = position[1];
         heading = position[2];
 
+        historyX.add(x);
+        historyY.add(y);
+        historyHeading.add(heading);
+
         // Odometry
 //        odometry = new Odometry(
 //                hardwareMap.get(DcMotor.class, "leftFront"),
@@ -198,8 +202,8 @@ public class Location {
         }
 
 
-        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f \ncam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)",
-                x, y, heading, robotX, robotY, scoreCamera1[2], scoreCamera1[0], scoreCamera2[2], scoreCamera2[0]));
+        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f ", //cam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)
+                x, y, heading, robotX, robotY));
 
 
 
