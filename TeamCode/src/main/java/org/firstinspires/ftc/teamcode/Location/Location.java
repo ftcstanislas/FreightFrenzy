@@ -135,7 +135,7 @@ public class Location {
             robotX = robotCoordinates[0];
             robotY = robotCoordinates[1];
 
-            if (camera.isTargetVisible()) {
+            if (camera.targetVisible) {
                 historyX.add(locationCamera[0] + robotX);
                 historyY.add(locationCamera[1] + robotY);
                 historyHeading.add(locationCamera[2]);
@@ -172,9 +172,9 @@ public class Location {
         if (advanced) {
 
             // Relative robot coordinates camera x
-            double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
-            robotX = robotCoordinates[0];
-            robotY = robotCoordinates[1];
+//            double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
+//            robotX = robotCoordinates[0];
+//            robotY = robotCoordinates[1];
 
             //Camera 1
             double[] robotCoordinates1 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
@@ -231,6 +231,7 @@ public class Location {
             positionCamera = positionCameras[1];
             switchableCamera.setActiveCamera(webcam2);
         }
+        camera.targetVisible = false;
         loops_passed = 0;
     }
 
@@ -290,7 +291,6 @@ public class Location {
         return heading;
     }
 
-//    FUTURE
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
         //Constants
         double allowableDistanceError = 50;
@@ -300,6 +300,14 @@ public class Location {
         double distanceToYTarget = targetY - getYCoordinate();
 
         double orientationDifference = targetRotation - getOrientation();
+
+        // (-180; 180]
+        while (orientationDifference < -180){
+            orientationDifference += 360;
+        };
+        while (orientationDifference >= 180){
+            orientationDifference -= 360;
+        }
 
         double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
 

@@ -43,7 +43,7 @@ public class Camera{
     private TFObjectDetector tfod       = null;
 //    private VuforiaTrackables targets   = null;
 
-    private boolean targetVisible       = false;
+    public boolean targetVisible       = false;
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
@@ -121,6 +121,7 @@ public class Camera{
     }
 
     public void update() {
+        targetVisible = false;
         updateServoPosition();
 
         if (pointerPosition == pointer.getPosition()) {
@@ -147,7 +148,7 @@ public class Camera{
 
         // Provide feedback as to where the robot is located (if we know).
         String text = "";
-        if (isTargetVisible()) {
+        if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
             text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
@@ -159,14 +160,6 @@ public class Camera{
         }
 
 //        telemetryDucks.setValue(text);
-    }
-
-    public boolean isTargetVisible(){
-        if (lastLocation != null){
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public void setPointerPosition(double x, double y, double heading, boolean updateTrackables){
@@ -225,7 +218,7 @@ public class Camera{
 
             double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
             double score;
-            if (targetPointerPosition >= 0.05 && targetPointerPosition <= 0.95) {
+            if (targetPointerPosition >= 0.0 && targetPointerPosition <= 0.1) {
                 double distance = Math.hypot(dx, dy);
                 angleMultiplier = 4;
                 double angleScore = 1;//Math.abs(targetPointerPosition - 0.5) * angleMultiplier;
@@ -288,8 +281,8 @@ public class Camera{
             VectorF translation = lastLocation.getTranslation();
             Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
             position = new double[]{translation.get(0), translation.get(1), rotation.thirdAngle};
-        }  else {
-            position = new double[]{0, 0, 90};
+        } else {
+            position = new double[]{0, 0, 0};
         }
         return position;
     }
