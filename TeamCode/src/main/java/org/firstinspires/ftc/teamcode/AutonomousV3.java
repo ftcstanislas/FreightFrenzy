@@ -18,6 +18,7 @@ public class AutonomousV3 extends OpMode {
     {
         msStuckDetectInit = 10000;
         msStuckDetectInitLoop = 10000;
+        msStuckDetectLoop = 10000;
     }
 
     // Robot parts

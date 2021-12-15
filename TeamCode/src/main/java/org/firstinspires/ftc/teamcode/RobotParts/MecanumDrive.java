@@ -54,8 +54,7 @@ public class MecanumDrive extends RobotPart{
         } else if (gamepad1.b){
             power *= 0.3;
         }
-        power *= 0.5;
-        
+
         // set power
         double MAX_DIFFERENCE = 0.025;
         double difference = Math.max(Math.min(lastPower - power, MAX_DIFFERENCE), MAX_DIFFERENCE);
@@ -63,6 +62,7 @@ public class MecanumDrive extends RobotPart{
         double newAngle = Math.atan2(x,y);
         double angleDifference = Math.abs(newAngle-lastAngle);
         newPower *= 1-angleDifference/(Math.PI);
+        newPower = power;
         setPowerDirection(x, y, turning, newPower);
         lastAngle = newAngle;
         lastPower = newPower;
@@ -98,6 +98,10 @@ public class MecanumDrive extends RobotPart{
         motors.get("rightBack").setPower(powerRightBack);
 
         updateTelemetry();
+    }
+
+    public void pause(){
+        setPower(0);
     }
     
     public void updateTelemetry(){

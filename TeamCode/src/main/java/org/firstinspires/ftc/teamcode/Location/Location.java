@@ -222,6 +222,8 @@ public class Location {
     }
 
     public void setActiveCamera(int number){
+        drivetrain.pause();
+
         if (number == 1) {
             camera = camera1;
             positionCamera = positionCameras[0];
