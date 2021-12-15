@@ -104,7 +104,7 @@ public class Location {
 
             // Camera 2
             camera2 = new Camera();
-            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.15, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.25, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading, false);
 
             setActiveCamera(1);
@@ -203,7 +203,7 @@ public class Location {
             if (camera == camera1) {
                 camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, true);
                 camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading,false);
-            }   else {
+            } else {
                 camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading,false);
                 camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, true);
             }

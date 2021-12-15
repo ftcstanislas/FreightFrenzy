@@ -148,7 +148,7 @@ public class Camera{
 
         // Provide feedback as to where the robot is located (if we know).
         String text = "";
-        if (targetVisible) {
+        if (lastLocation != null) {
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
             text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
@@ -167,8 +167,8 @@ public class Camera{
         double bestAngle = data[1];
         setPointerAngle(bestAngle, updateTrackables);
 
-//        telemetryDucks.setValue(String.format("relativeHeading %.1f newAngle %.1f",
-//                relativeHeading, newAngle));
+//        telemetryDucks.setValue(String.format("heading %.1f newAngle %.1f",
+//                heading, bestAngle));
     }
 
     public double[] calculateRobotCoordinates(double[] positionCamera, double heading) {
@@ -218,7 +218,7 @@ public class Camera{
 
             double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
             double score;
-            if (targetPointerPosition >= 0.0 && targetPointerPosition <= 0.1) {
+            if (targetPointerPosition >= 0.0 && targetPointerPosition <= 1.0) {
                 double distance = Math.hypot(dx, dy);
                 angleMultiplier = 4;
                 double angleScore = 1;//Math.abs(targetPointerPosition - 0.5) * angleMultiplier;
@@ -226,6 +226,7 @@ public class Camera{
             } else {
                 score = Double.MAX_VALUE;
             }
+            telemetryDucks.setValue(targetPointerPosition);
 
             if (score < bestScore) {
                 bestIndex = index;
@@ -234,6 +235,7 @@ public class Camera{
             }
             index++;
         }
+//        telemetryDucks.setValue(bestScore+" "+bestAngle+" "+bestIndex+" ");
         return new double[]{bestScore, bestAngle, bestIndex};
     }
 
@@ -264,7 +266,7 @@ public class Camera{
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
         if (updateTrackables) {
-            setCameraPosition(0, 0, 230, (float) angle);
+            setCameraPosition(0, 0, 222, (float) angle);
         }
     }
 

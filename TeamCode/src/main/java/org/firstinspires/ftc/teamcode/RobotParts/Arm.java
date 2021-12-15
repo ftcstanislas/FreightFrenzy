@@ -55,7 +55,7 @@ public class Arm extends RobotPart{
         }});
 
         modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3864.0});
+            put("arm", new Object[]{"position", 3264.0});
         }});
 
         servos.get("fork").setPosition(0.8);
@@ -70,6 +70,7 @@ public class Arm extends RobotPart{
             state = "high";
         } else if (gamepad2.dpad_down) {
             state = "base";
+            servos.get("fork").setPosition(0.8);
         } else if (gamepad2.dpad_left) {
             state = "low";
         }
@@ -81,7 +82,7 @@ public class Arm extends RobotPart{
 //        servos.get("fork").setPosition(position);
 //        telemetry.setValue(servos.get("fork").getPosition() +" to " +position);
 
-        if (gamepad2.x && !isSwitchPressed){
+        if (gamepad2.x && !isSwitchPressed && (state == "mid" || state=="low" || state=="high")){
             isSwitchPressed = true;
             switchServo();
         } else if (!gamepad2.x && isSwitchPressed){

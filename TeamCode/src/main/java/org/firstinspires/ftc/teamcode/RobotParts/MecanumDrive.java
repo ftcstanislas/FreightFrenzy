@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.Location.Location;
 
 public class MecanumDrive extends RobotPart{
     Location location = null;
+    double lastPower = 0;
+    double lastAngle = 0;
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit){
         // get motors
@@ -52,9 +54,18 @@ public class MecanumDrive extends RobotPart{
         } else if (gamepad1.b){
             power *= 0.3;
         }
+        power *= 0.5;
         
         // set power
-        setPowerDirection(x, y, turning, power);
+        double MAX_DIFFERENCE = 0.025;
+        double difference = Math.max(Math.min(lastPower - power, MAX_DIFFERENCE), MAX_DIFFERENCE);
+        double newPower = lastPower+difference;
+        double newAngle = Math.atan2(x,y);
+        double angleDifference = Math.abs(newAngle-lastAngle);
+        newPower *= 1-angleDifference/(Math.PI);
+        setPowerDirection(x, y, turning, newPower);
+        lastAngle = newAngle;
+        lastPower = newPower;
     }
     
     public void setPowerDirection(double x, double y, double turn, double power){
