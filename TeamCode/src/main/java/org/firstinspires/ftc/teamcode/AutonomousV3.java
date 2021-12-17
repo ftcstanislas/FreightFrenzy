@@ -104,17 +104,22 @@ public class AutonomousV3 extends OpMode {
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         double[] locationRobot = {0,0,0};
-        if (program[0].equals("red")){
+        int useCamera = 1;
+        if (program[0].equals("red") && program[1].equals("spinner")){
             locationRobot = new double[]{-914.4, -1584.96, 90};
+            useCamera = 1;
         } else if (program[0].equals("blue")){
             locationRobot = new double[]{304.8, -1584.96, 90};
         }
-        locationRobot = new double[]{-1200.0, -1200.0, 180.0};//{-914.4, -1584.96, 180};
+//        locationRobot = new double[]{-1200.0, -1200.0, 180.0};//{-914.4, -1584.96, 180};
         location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
         arm.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
         // colorSensor.init(hardwareMap, telemetryColorSensor);
+
+        // Set correct camera
+        location.setActiveCamera(useCamera);
 
 //        location.addZoomBox();
 
@@ -291,6 +296,12 @@ public class AutonomousV3 extends OpMode {
                         throw new java.lang.Error("Part " + part + " does not exist");
                 }
                 break;
+
+            case "CAMERA":
+                switch (function) {
+                    case "setCamera":
+                        location.setActiveCamera((int) instruction[3]);
+                }
         }
         return done;
     }

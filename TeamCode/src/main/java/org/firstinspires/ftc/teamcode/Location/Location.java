@@ -107,7 +107,7 @@ public class Location {
             camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.25, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading, false);
 
-            setActiveCamera(1);
+//            setActiveCamera(1);
         }
         
         telemetry = telemetryInit;
@@ -210,8 +210,8 @@ public class Location {
         }
 
 
-        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f ", //cam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)
-                x, y, heading, robotX, robotY));
+//        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f ", //cam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)
+//                x, y, heading, robotX, robotY));
 
 
 
@@ -312,6 +312,15 @@ public class Location {
         }
 
         double distance = Math.hypot(distanceToXTarget, distanceToYTarget);
+
+        // slow down
+        double slowDownFrom = 1000;
+        double minPower = Math.min(0.2, power);
+
+        if (distance < slowDownFrom){
+            power = minPower + (power-minPower) * distance/slowDownFrom;
+        }
+        telemetry.setValue(distance+" "+power);
 
         if (distance > allowableDistanceError) {
             double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget)) - getOrientation();

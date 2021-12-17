@@ -7,6 +7,7 @@ public class TeamBlue extends AutonomousV3{
     @Override
     public void init() {
         super.setTeam("blue");
+        super.setStart("storage");
         super.init();
     }
 }

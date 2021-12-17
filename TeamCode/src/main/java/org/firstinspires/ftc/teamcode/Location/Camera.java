@@ -226,7 +226,6 @@ public class Camera{
             } else {
                 score = Double.MAX_VALUE;
             }
-            telemetryDucks.setValue(targetPointerPosition);
 
             if (score < bestScore) {
                 bestIndex = index;

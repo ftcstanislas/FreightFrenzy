@@ -49,29 +49,6 @@ public class Routes {
             // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
     };
 
-    public Object[][] spinningRed = {
-            {true, "DRIVETRAIN", "timeBased", -1.0, 0.3, 0.2},
-            {true, "WAIT", "wait", 2.0},
-            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
-            {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 5.0},
-            {true, "SPINNER", "mode", "stop"},
-            {true, "DRIVETRAIN", "timeBased1", 0.0, 1.0, -0.3},
-            {true, "WAIT", "wait", 1.5},
-            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
-    };
-
-    public Object[][] spinningBlue = {
-            {true, "DRIVETRAIN", "timeBased", -1.0, -0.1, 0.0},
-            {true, "WAIT", "wait", 1.5},
-            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
-            {true, "SPINNER", "mode", "spinRight"},
-            {true, "WAIT", "wait", 5.0},
-            {true, "SPINNER", "mode", "stop"},
-            //{true, "DRIVETRAIN", "timeBased1", -0.3, -1.0, -0.0},
-            //{true, "WAIT", "wait", 1.2},
-            // {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0},
-    };
 
     public Object[][] warehouse = {
             {true, "DRIVETRAIN", "timeBased", 1.0, 0.0, 0.0},
@@ -91,13 +68,9 @@ public class Routes {
     };
 
     public Object[][] test = {
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 0.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 0.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 0.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.6},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.6},
+            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.6},
     };
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
