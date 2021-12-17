@@ -118,6 +118,9 @@ public class Location {
         // Update heading
         heading = IMU.getHeading();
 
+        //Odometry
+//        odometry.globalCoordinatePositionUpdate();
+
         // Camera
         double robotX = 0;
         double robotY = 0;
@@ -187,10 +190,16 @@ public class Location {
             double camera2RobotY = robotCoordinates2[1];
 
             // Switch camera to the best score
-            scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading);
-            scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading);
+            if (camera == camera1) {
+                scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, true);
+                scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading, false);
+            } else {
+                scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, true);
+                scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading,false);
+            }
+
             double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            if (scoreDifference >= 20 && loops_passed > MIN_LOOPS_PASSED) {
+            if (scoreDifference >= 200 && loops_passed > MIN_LOOPS_PASSED) {
                 if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1) {
                     setActiveCamera(1);
                 } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2){
@@ -210,8 +219,8 @@ public class Location {
         }
 
 
-//        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f ", //cam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)
-//                x, y, heading, robotX, robotY));
+        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f ", //cam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)
+                x, y, heading, robotX, robotY));
 
 
 
@@ -315,12 +324,11 @@ public class Location {
 
         // slow down
         double slowDownFrom = 1000;
-        double minPower = Math.min(0.2, power);
+        double minPower = Math.min(0.3, power);
 
         if (distance < slowDownFrom){
             power = minPower + (power-minPower) * distance/slowDownFrom;
         }
-        telemetry.setValue(distance+" "+power);
 
         if (distance > allowableDistanceError) {
             double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget)) - getOrientation();

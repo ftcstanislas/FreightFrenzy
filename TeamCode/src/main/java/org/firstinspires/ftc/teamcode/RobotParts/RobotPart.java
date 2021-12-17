@@ -25,7 +25,7 @@ public abstract class RobotPart {
     protected String additionalTelemetry = "";
     abstract void updateTelemetry();
     
-    abstract void checkController(Gamepad gamepad1, Gamepad gamepad2);
+    abstract public void checkController(Gamepad gamepad1, Gamepad gamepad2);
     
     protected void debug(){
         String text = "";

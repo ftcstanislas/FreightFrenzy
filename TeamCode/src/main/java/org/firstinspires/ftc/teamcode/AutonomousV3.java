@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import java.util.ArrayList;
 import java.util.List;
 import org.firstinspires.ftc.teamcode.Location.Location;
-import org.firstinspires.ftc.teamcode.RobotParts.Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Slider;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
@@ -24,7 +24,7 @@ public class AutonomousV3 extends OpMode {
     // Robot parts
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    Arm arm = new Arm();
+    Slider slider = new Slider();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
     // ColorDetector colorSensor = new ColorDetector();
@@ -111,9 +111,9 @@ public class AutonomousV3 extends OpMode {
         } else if (program[0].equals("blue")){
             locationRobot = new double[]{304.8, -1584.96, 90};
         }
-//        locationRobot = new double[]{-1200.0, -1200.0, 180.0};//{-914.4, -1584.96, 180};
+        locationRobot = new double[]{-1200.0, -1200.0, 180.0};//{-914.4, -1584.96, 180};
         location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
-        arm.init(hardwareMap, telemetryArm);
+        slider.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
         // colorSensor.init(hardwareMap, telemetryColorSensor);
@@ -256,9 +256,9 @@ public class AutonomousV3 extends OpMode {
                 if (function == "mode") {
                     /*done =*/
                     String mode = (String) instruction[3];
-                    done = arm.setMode((String) instruction[3]);
+                    done = slider.setMode((String) instruction[3]);
                 } else if (function == "switchServo") {
-                    arm.switchServo();
+                    slider.switchServo();
                 }
 
                 break;

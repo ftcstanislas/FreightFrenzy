@@ -64,6 +64,7 @@ public class Camera{
     double TOTAL_COUNTS_PER_ROUND = 0;
     double OFFSET = 0;
     double angleMultiplier = 2;
+    double pointingAt = 0;
 
     // Game element detection
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
@@ -162,10 +163,11 @@ public class Camera{
 //        telemetryDucks.setValue(text);
     }
 
-    public void setPointerPosition(double x, double y, double heading, boolean updateTrackables){
-        double[] data = getBestScore(x, y, heading);
+    public void setPointerPosition(double x, double y, double heading, boolean locked){
+        double[] data = getBestScore(x, y, heading, locked);
+        pointingAt = data[2];
         double bestAngle = data[1];
-        setPointerAngle(bestAngle, updateTrackables);
+        setPointerAngle(bestAngle, locked);
 
 //        telemetryDucks.setValue(String.format("heading %.1f newAngle %.1f",
 //                heading, bestAngle));
@@ -178,7 +180,7 @@ public class Camera{
         return new double[]{robotX, robotY};
     }
 
-    public double[] getBestScore(double x, double y, double heading){
+    public double[] getBestScore(double x, double y, double heading, boolean locked){
         double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, -90},{halfTile, -halfField, 90}};
         double bestScore = Double.MAX_VALUE;
         double bestAngle = 90;

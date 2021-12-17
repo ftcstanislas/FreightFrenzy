@@ -1,152 +1,54 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
-import java.util.Arrays;
-
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.robot.Robot;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import java.util.Map;
-import java.util.HashMap;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-// debug, setBrake, setPower,
-// Nathalie wasn't here
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Location.Location;
+
+import java.util.HashMap;
 
 public class Arm extends RobotPart{
+    private final double ENCODER_TICK_PER_ROUND = 560;
+    Location location = null;
 
-    String state = "input";
-    ColorSensor colorSensor;
-
-    double position = 0; //temp
-    double stuck = 0;
-    boolean goUp = false;
-    boolean isSwitchPressed = false;
-
-//    public Map<String, Integer> sensorInput = new HashMap<String, Integer>();
-
-    public void init(HardwareMap map, Telemetry.Item telemetryInit){
-        // setup
-        telemetry = telemetryInit;
-        motors.put("arm", map.get(DcMotorEx.class, "arm"));
-        motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
-        motors.get("arm").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit){
+        // get motors
+        motors.put("arm", map.get(DcMotorEx.class, "spinner"));
         motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors.get("arm").setPower(0.5);
+        motors.get("arm").setTargetPosition(0);
+        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         setBrake(true);
-        servos.put("fork", map.get(Servo.class, "fork"));
 
-        // not final
-        modes.put("base", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 0.0});
-        }});
-
-        modes.put("low", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 1770.0});
-        }});
-
-        modes.put("mid", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3025.0});
-        }});
-
-        modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3264.0});
-        }});
-
-        servos.get("fork").setPosition(0.8);
+        // setup variables
+        telemetry = telemetryInit;
+        location = locationInit;
     }
 
-    public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-//        boolean tipping = false;
-//        checkSensorInput();
-        if (gamepad2.dpad_up) {
-            state = "mid";
-        } else if (gamepad2.dpad_right) {
-            state = "high";
-        } else if (gamepad2.dpad_down) {
-            state = "base";
-            servos.get("fork").setPosition(0.8);
-        } else if (gamepad2.dpad_left) {
-            state = "low";
-        }
-
-        setMode(state);
-
-//        // set power
-//        position += gamepad2.right_stick_y/1000;
-//        servos.get("fork").setPosition(position);
-//        telemetry.setValue(servos.get("fork").getPosition() +" to " +position);
-
-        if (gamepad2.x && !isSwitchPressed && (state == "mid" || state=="low" || state=="high")){
-            isSwitchPressed = true;
-            switchServo();
-        } else if (!gamepad2.x && isSwitchPressed){
-            isSwitchPressed = false;
-        }
-        updateTelemetry();
+    @Override
+    public void updateTelemetry() {
+//        debug();
     }
 
-    public boolean switchServo() {
-        if (servos.get("fork").getPosition() > 0.5) {
-            servos.get("fork").setPosition(0.4);
-        } else if (servos.get("fork").getPosition() > 0.2){
-            servos.get("fork").setPosition(0);
-        } else {
-            servos.get("fork").setPosition(0.8);
+    @Override
+    public void checkController(Gamepad gamepad1, Gamepad gamepad2) {
+        if (gamepad2.right_stick_y == 0 && gamepad2.right_stick_x == 0) {
+            return;
         }
-        return true;
-    }
+        double heading = Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x);
+        double armPosition = motors.get("arm").getCurrentPosition();
+        double armHeading = armPosition % ENCODER_TICK_PER_ROUND / ENCODER_TICK_PER_ROUND * (2*Math.PI);
 
-    public boolean calibrate() {
-        DcMotorEx armMotor = motors.get("arm");
-        //Set arm position to -100 (previous encoder 0 position - 100);
-        if (goUp == false) {
-            if (armMotor.getTargetPosition() != -100) {
-                armMotor.setTargetPosition(-100);
-                armMotor.setVelocity(80);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            }
-            if (inMargin(armMotor.getCurrentPosition(), armMotor.getTargetPosition(), 50)) {
-            goUp = true;
-            }
-        } else {
-            //Go up slowly
-            if (armMotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
-                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setPower(0.1);
-            }
-            //Check stuck
-            if (armMotor.getVelocity() <= 10) {
-                stuck += 1;
-            }
-            if (stuck >= 30) {
-                stuck = 0;
-                goUp = false;
-                armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                return true;
-            }
-        }
-        return false;
-    }
+        double difference = (heading - armHeading + Math.PI) % (2*Math.PI) - Math.PI;
+        telemetry.setValue(armHeading+" "+heading+ " "+difference);
 
-    public void updateTelemetry(){
-        debug();
+        double newArmPosition = armPosition + difference/(2*Math.PI)*ENCODER_TICK_PER_ROUND;
+        motors.get("arm").setTargetPosition((int) Math.round(newArmPosition));
+        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 }
-
-
-
-
-
-
-
-
-
-
-

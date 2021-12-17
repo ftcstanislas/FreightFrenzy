@@ -9,13 +9,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Location.Location;
 import org.firstinspires.ftc.teamcode.RobotParts.Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Slider;
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
-import org.firstinspires.ftc.teamcode.Sensors.ColorDetector;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @TeleOp(name="OpMode Iterative 3.12", group="main")
 public class TeleOpV3 extends OpMode {
@@ -27,14 +24,16 @@ public class TeleOpV3 extends OpMode {
     //get objects
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    Arm arm = new Arm();
+    Slider slider = new Slider();
     Intake intake = new Intake();
-    Spinner spinner = new Spinner();
+//    Spinner spinner = new Spinner();
+    Arm arm = new Arm();
 //    ColorDetector colorSensor = new ColorDetector();
     
     // telemetry
     Telemetry.Item status = null;
     Telemetry.Item telemetryDrivetrain = null;
+    Telemetry.Item telemetrySlider = null;
     Telemetry.Item telemetryArm = null;
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
@@ -53,10 +52,11 @@ public class TeleOpV3 extends OpMode {
         
         //add telemetry
         telemetry.setAutoClear(false);
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+//        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
         telemetryDrivetrain = telemetry.addData("Robot", "X");
+        telemetrySlider = telemetry.addData("Slider", "X");
         telemetryArm = telemetry.addData("Arm", "X");
         telemetryIntake = telemetry.addData("Intake", "X");
         telemetrySpinner = telemetry.addData("Spinner", "X");
@@ -76,9 +76,10 @@ public class TeleOpV3 extends OpMode {
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         location.init(hardwareMap, false, new double[]{-1200, -1200, 180}, drivetrain, telemetryLocation, telemetryDucks);
-        arm.init(hardwareMap, telemetryArm);
+        slider.init(hardwareMap, telemetrySlider);
         intake.init(hardwareMap, telemetryIntake);
-        spinner.init(hardwareMap, telemetrySpinner);
+//        spinner.init(hardwareMap, telemetrySpinner);
+        arm.init(hardwareMap, telemetryArm, location);
 //        colorSensor.init(hardwareMap, telemetryColorSensor);
 
         status.setValue("Initialized");
@@ -117,21 +118,18 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
         drivetrain.checkController(gamepad1, gamepad2);
-        arm.checkController(gamepad1, gamepad2);
+        slider.checkController(gamepad1, gamepad2);
         intake.checkController(gamepad1, gamepad2);
-        spinner.checkController(gamepad1, gamepad2);
+//        spinner.checkController(gamepad1, gamepad2);
+        arm.checkController(gamepad1, gamepad2);
 //        colorSensor.update();
         location.update();
 
         // Calibrate
         if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
-            arm.calibrate();
+            slider.calibrate();
         }
-
-//        if (gamepad1.a) {
-//            location.switchServo();
-//        }
-
+        telemetry.update();
     }
 
     @Override
