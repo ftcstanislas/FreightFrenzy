@@ -62,7 +62,7 @@ public class Location {
     VuforiaLocalizer.Parameters parameters = null;
     private VuforiaLocalizer vuforia;
 
-    double[][] positionCameras = {{170, -170}, {170, 170}};
+    double[][] positionCameras = {{230, -115}, {230, 115}};
     Camera camera = null;
     double[] positionCamera = null;
 
