@@ -99,12 +99,12 @@ public class Location {
 
             // Camera 1
             camera1 = new Camera();
-            camera1.init(allTrackables, vuforia, parameters, hardwareMap, "1", 1.32, -0.028, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera1.init(allTrackables, vuforia, parameters, hardwareMap, "1", 1.32, -0.01, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera1.setPointerPosition(x, y, heading, true);
 
             // Camera 2
             camera2 = new Camera();
-            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.25, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
+            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.41, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading, false);
 
 //            setActiveCamera(1);
@@ -338,7 +338,7 @@ public class Location {
             double turning = orientationDifference / 360;
 
 //            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
-            drivetrain.setPowerDirection(robotMovementYComponent, -robotMovementXComponent, turning, power);
+            drivetrain.setPowerDirection(-robotMovementYComponent, robotMovementXComponent, -   turning, power);
             return false;
         } else {
             drivetrain.setPowerDirection(0,0,0,0);

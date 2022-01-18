@@ -22,7 +22,7 @@ public class ServoTest extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-        servo = hardwareMap.get(Servo.class, "cameraPointer1");
+        servo = hardwareMap.get(Servo.class, "cameraPointer2");
     }
 
     /*
@@ -58,7 +58,7 @@ public class ServoTest extends OpMode {
 
     public void setServoAngle(double angle) {
         final double TOTAL_COUNTS_PER_ROUND = 1.32;
-        final double OFFSET = 0.58;
+        final double OFFSET = 0.41;
         double pointerPosition = TOTAL_COUNTS_PER_ROUND/360*(180-angle) + OFFSET;
         // while (pointerPosition < -0.19){
         //     pointerPosition+=2;
