@@ -61,7 +61,7 @@ public class Arm extends RobotPart{
 //        double newArmPosition = armPosition + difference/(2*Math.PI)*ENCODER_TICK_PER_ROUND;
 //        motors.get("arm").setTargetPosition((int) Math.round(newArmPosition));
 //        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motors.get("arm").setPower(gamepad2.left_stick_y);
-        motors.get("armSpinner").setPower(gamepad2.left_stick_x);
+        motors.get("arm").setPower(gamepad1.left_stick_y);
+        motors.get("armSpinner").setPower(gamepad1.left_stick_x);
     }
 }
