@@ -31,10 +31,6 @@ public class Location {
     private MecanumDrive drivetrain = null;
     private boolean advanced = false;
 
-    // Switch camera
-    final double MIN_LOOPS_PASSED = 100;
-    double loops_passed = 0;
-
     //Location
     final int HISTORY_LENGTH = 20;
     ArrayList<Double> historyX = new ArrayList<Double>();
@@ -142,6 +138,9 @@ public class Location {
                 historyX.add(locationCamera[0] + robotX);
                 historyY.add(locationCamera[1] + robotY);
                 historyHeading.add(locationCamera[2]);
+            } else {
+                drivetrain.setPowerDirection(0,0,0,0);
+                return;
             }
         }
 
@@ -168,8 +167,8 @@ public class Location {
 //            y = getMedian(historyY);
         }
 
-        double[] scoreCamera1 = null;
-        double[] scoreCamera2 = null;
+        double[] scoreCamera1 = {0};
+        double[] scoreCamera2 = {0};
 
         // Update pointers camera
         if (advanced) {
@@ -199,14 +198,13 @@ public class Location {
             }
 
             double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            if (scoreDifference >= 200 && loops_passed > MIN_LOOPS_PASSED) {
+            if (scoreDifference >= 100) {
                 if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1) {
                     setActiveCamera(1);
                 } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2){
                     setActiveCamera(2);
                 }
             }
-            loops_passed++;
 
             // Update pointer positions
             if (camera == camera1) {
@@ -219,8 +217,8 @@ public class Location {
         }
 
 
-        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f ", //cam1,2{index, score} = (%.1f: %.1f) (%.1f: %.1f)
-                x, y, heading, robotX, robotY));
+        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f cam1,2{score} = (%.1f) (%.1f)",
+                x, y, heading, robotX, robotY, scoreCamera1[0], scoreCamera2[0]));
 
 
 
@@ -243,7 +241,6 @@ public class Location {
             switchableCamera.setActiveCamera(webcam2);
         }
         camera.targetVisible = false;
-        loops_passed = 0;
     }
 
     public void initVuforia(HardwareMap hardwareMap){
@@ -303,6 +300,11 @@ public class Location {
     }
 
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
+        if (camera.targetVisible == false){
+            drivetrain.setPowerDirection(0,0,0,0);
+            return false;
+        }
+
         //Constants
         double allowableDistanceError = 50;
 
@@ -338,7 +340,7 @@ public class Location {
             double turning = orientationDifference / 360;
 
 //            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
-            drivetrain.setPowerDirection(-robotMovementYComponent, robotMovementXComponent, -   turning, power);
+            drivetrain.setPowerDirection(-robotMovementYComponent, robotMovementXComponent, turning, power);
             return false;
         } else {
             drivetrain.setPowerDirection(0,0,0,0);
