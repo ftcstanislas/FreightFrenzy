@@ -66,7 +66,6 @@ public abstract class RobotPart {
         updateTelemetry();
     }
 
-    
     public void setBrake(boolean check){
         DcMotor.ZeroPowerBehavior option;
         if (check){

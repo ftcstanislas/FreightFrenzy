@@ -90,6 +90,8 @@ public class MecanumDrive extends RobotPart{
         
         //setpowers to motors
         setPowers(powerLeftFront, powerRightFront, powerLeftBack, powerRightBack);
+
+        updateTelemetry(x,y,turn);
     }
     
     private void setPowers(double powerLeftFront, double powerRightFront, double powerLeftBack, double powerRightBack){
@@ -97,42 +99,14 @@ public class MecanumDrive extends RobotPart{
         motors.get("rightFront").setPower(powerRightFront);
         motors.get("leftBack").setPower(powerLeftBack);
         motors.get("rightBack").setPower(powerRightBack);
-
-        updateTelemetry();
     }
 
     public void pause(){
         setPower(0);
     }
     
-    public void updateTelemetry(){
+    public void updateTelemetry(double x, double y, double turn){
         debug();
-        return;
-
-        // get values
-//        double powerLeftFront = motors.get("leftFront").getPower();
-//        double displayPowerLeftFront = Math.round(powerLeftFront*100);
-//        double powerRightFront = motors.get("rightFront").getPower();
-//        double displayPowerRightFront = Math.round(powerRightFront*100);
-//        double powerLeftBack= motors.get("leftBack").getPower();
-//        double displayPowerLeftBack = Math.round(powerLeftBack*100);
-//        double powerRightBack = motors.get("rightBack").getPower();
-//        double displayPowerRightBack = Math.round(powerRightBack*100);
-//        double[] powers = {Math.abs(powerLeftFront),Math.abs(powerRightFront),Math.abs(powerLeftBack),Math.abs(powerRightBack)};
-//        double power = Arrays.stream(powers).max().getAsDouble();
-//        double displayPower = Math.round(power*100);
-//
-//
-//        // make and display text
-//        String text =
-//        "\n"+"        ______      "
-//        +"\n "+displayPowerLeftFront/10+" |          | "+displayPowerRightFront/10
-//        +"\n"+"        |  "+displayPower/10+"  |      "
-//        +"\n "+displayPowerLeftBack/10+" |          | "+displayPowerRightBack/10
-//        +"\n"+"        ¯¯¯¯¯¯      ";
-//
-//        // display text
-//        telemetry.setValue(text);
     }
 }
 
