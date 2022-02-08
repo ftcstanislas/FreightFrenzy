@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -68,7 +69,12 @@ public class SingleMotorTest extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        motor  = hardwareMap.get(DcMotor.class, "arm");
+        motor  = hardwareMap.get(DcMotor.class, "armSpinner");
+        motor.setDirection(DcMotor.Direction.FORWARD);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setPower(0.1);
+        motor.setTargetPosition(0);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -94,12 +100,13 @@ public class SingleMotorTest extends OpMode
      */
     @Override
     public void loop() {
-        double power = gamepad1.right_stick_y;
-        motor.setPower(power);
-
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "Power (%.2f)", power);
+//        double power = gamepad1.right_stick_y;
+//        motor.setPower(power);
+//
+//        // Show the elapsed game time and wheel power.
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("Motors", "Power (%.2f)", power);
+        telemetry.addData("position", motor.getCurrentPosition());
     }
 
     /*

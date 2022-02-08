@@ -106,12 +106,12 @@ public class AutonomousV3 extends OpMode {
         double[] locationRobot = {0,0,0};
         int useCamera = 1;
         if (program[0].equals("red") && program[1].equals("spinner")){
-            locationRobot = new double[]{-914.4, -1584.96, 90};
+            locationRobot = new double[]{-914.4, -1584.96, 90.0};
             useCamera = 1;
         } else if (program[0].equals("blue")){
-            locationRobot = new double[]{304.8, -1584.96, 90};
+            locationRobot = new double[]{304.8, -1584.96, 90.0};
         }
-        locationRobot = new double[]{-1200.0, 1200.0, 180.0};//{-914.4, -1584.96, 180};
+        locationRobot = new double[]{-1100.0, 1584.96, -90.0};//{-914.4, -1584.96, 180};
         location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
         slider.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);

@@ -24,7 +24,6 @@ public class TeleOpV3 extends OpMode {
     //get objects
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    Slider slider = new Slider();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
     Arm arm = new Arm();
@@ -33,7 +32,6 @@ public class TeleOpV3 extends OpMode {
     // telemetry
     Telemetry.Item status = null;
     Telemetry.Item telemetryDrivetrain = null;
-    Telemetry.Item telemetrySlider = null;
     Telemetry.Item telemetryArm = null;
     Telemetry.Item telemetryIntake = null;
     Telemetry.Item telemetrySpinner = null;
@@ -55,8 +53,7 @@ public class TeleOpV3 extends OpMode {
 //        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         telemetry.setCaptionValueSeparator(": ");
         status = telemetry.addData("Status", "X");
-        telemetryDrivetrain = telemetry.addData("Robot", "X");
-        telemetrySlider = telemetry.addData("Slider", "X");
+        telemetryDrivetrain = telemetry.addData("Drivetrain", "X");
         telemetryArm = telemetry.addData("Arm", "X");
         telemetryIntake = telemetry.addData("Intake", "X");
         telemetrySpinner = telemetry.addData("Spinner", "X");
@@ -72,11 +69,10 @@ public class TeleOpV3 extends OpMode {
         // double y = Double.parseDouble(ReadWriteFile.readFile(yFile).trim());
         // double o = Double.parseDouble(ReadWriteFile.readFile(OrientationFile).trim());
         
-        //Initialize objects
+        // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         location.init(hardwareMap, false, new double[]{-1200, -1200, 180}, drivetrain, telemetryLocation, telemetryDucks);
-        slider.init(hardwareMap, telemetrySlider);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
         arm.init(hardwareMap, telemetryArm, location);
@@ -87,11 +83,13 @@ public class TeleOpV3 extends OpMode {
     
     @Override
     public void init_loop() {
+        // Update status
         long time = System.nanoTime();
-//        status.setValue("Init looping for " + runtime.toString());
         status.setValue(String.format("Init looping for %.1fs in %.1fms",
                 runtime.seconds(),  (double) (time - lastTime)/1000000));
         lastTime = time;
+
+        // Update location
         location.update();
     }
 
@@ -118,7 +116,6 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
         drivetrain.checkController(gamepad1, gamepad2);
-        slider.checkController(gamepad1, gamepad2);
         intake.checkController(gamepad1, gamepad2);
         spinner.checkController(gamepad1, gamepad2);
         arm.checkController(gamepad1, gamepad2);
@@ -127,8 +124,9 @@ public class TeleOpV3 extends OpMode {
 
         // Calibrate
         if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
-            slider.calibrate();
+            arm.calibrate();
         }
+
         telemetry.update();
     }
 

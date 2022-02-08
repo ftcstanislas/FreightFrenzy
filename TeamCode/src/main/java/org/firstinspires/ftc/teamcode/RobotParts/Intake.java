@@ -47,8 +47,8 @@ public class Intake extends RobotPart{
     }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad1.a, "stop","intaking");
-        switchMode(gamepad1.y, "stop","outtaking");
+        switchMode(gamepad2.a, "stop","intaking");
+        switchMode(gamepad2.y, "stop","outtaking");
     }
     
     public void updateTelemetry() {

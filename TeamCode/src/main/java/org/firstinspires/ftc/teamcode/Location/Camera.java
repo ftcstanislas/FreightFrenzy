@@ -65,6 +65,7 @@ public class Camera{
     double OFFSET = 0;
     double angleMultiplier = 2;
     double pointingAt = 0;
+    String id = "";
 
     // Game element detection
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
@@ -83,6 +84,7 @@ public class Camera{
         telemetryDucks = telemetryDucksInit;
 
         // Servo pointer
+        id = number;
         pointer = hardwareMap.get(Servo.class, "cameraPointer"+number);
         TOTAL_COUNTS_PER_ROUND = TOTAL_COUNTS_PER_ROUND_INIT;
         OFFSET = OFFSET_INIT;
@@ -146,21 +148,6 @@ public class Camera{
                 break;
             }
         }
-
-        // Provide feedback as to where the robot is located (if we know).
-        String text = "";
-        if (lastLocation != null) {
-            // express position (translation) of robot in inches.
-            VectorF translation = lastLocation.getTranslation();
-            text += String.format("Pos (mm) {X, Y} = %.1f, %.1f",
-                    translation.get(0), translation.get(1));
-
-            // express the rotation of the robot in degrees.
-            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            text += String.format("\nRot (deg) {Heading} = %.0f", rotation.thirdAngle);
-        }
-
-//        telemetryDucks.setValue(text);
     }
 
     public void setPointerPosition(double x, double y, double heading, boolean locked){
@@ -168,9 +155,6 @@ public class Camera{
         pointingAt = data[2];
         double bestAngle = data[1];
         setPointerAngle(bestAngle, locked);
-
-//        telemetryDucks.setValue(String.format("heading %.1f newAngle %.1f",
-//                heading, bestAngle));
     }
 
     public double[] calculateRobotCoordinates(double[] positionCamera, double heading) {

@@ -106,7 +106,7 @@ public class MecanumDrive extends RobotPart{
     }
     
     public void updateTelemetry(){
-//        debug();
+        debug();
         return;
 
         // get values

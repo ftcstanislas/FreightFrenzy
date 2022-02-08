@@ -140,7 +140,6 @@ public class Location {
                 historyHeading.add(locationCamera[2]);
             } else {
                 drivetrain.setPowerDirection(0,0,0,0);
-                return;
             }
         }
 
@@ -198,10 +197,12 @@ public class Location {
             }
 
             double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            if (scoreDifference >= 100) {
-                if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1) {
+            double MIN_SCORE_TO_SWITCH = 1500;
+            double MIN_SCORE_DIFFERENCE = 100;
+            if (scoreDifference >= MIN_SCORE_DIFFERENCE) {
+                if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1 && scoreCamera1[0] < MIN_SCORE_TO_SWITCH) {
                     setActiveCamera(1);
-                } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2){
+                } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2  && scoreCamera2[0] < MIN_SCORE_TO_SWITCH){
                     setActiveCamera(2);
                 }
             }
@@ -216,9 +217,13 @@ public class Location {
             }
         }
 
-
-        telemetry.setValue(String.format("Pos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nPos relative camera (mm) {X, Y} = %.1f, %.1f cam1,2{score} = (%.1f) (%.1f)",
-                x, y, heading, robotX, robotY, scoreCamera1[0], scoreCamera2[0]));
+        if (advanced) {
+            telemetry.setValue(String.format("\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b\n score cam 1,2 = (%.1f) (%.1f)",
+                    x, y, heading, camera.id, camera.targetVisible, scoreCamera1[0], scoreCamera2[0]));
+        } else {
+            telemetry.setValue(String.format("\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f",
+                    x, y, heading));
+        }
 
 
 

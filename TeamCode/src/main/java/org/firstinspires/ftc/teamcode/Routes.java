@@ -67,6 +67,12 @@ public class Routes {
             // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
     };
 
+    public Object[][] spinner = {
+            {true, "DRIVETRAIN", "toPosition", -900.0, 900.0, -90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1584.96, 1584.96, -90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1584.96, 900.0, -90.0, 0.3}
+    };
+
     public Object[][] test = {
             {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3},
             {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
@@ -79,10 +85,14 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3}
     };
 
+    public Object[][] test2 = {
+            {true, "DRIVETRAIN", "toPosition", 0.0, 0.0, -90.0, 0.3}
+    };
+
     // public Object[][] switchedRouteRight = switchRoute(routeRight);
     
     public Object[][] getRoute(String team, String startPosition, String ducks){
-        return test;
+        return test2;
 //        if (startPosition=="storage") {
 //            if (team == "red") {
 //                return spinningRed;
