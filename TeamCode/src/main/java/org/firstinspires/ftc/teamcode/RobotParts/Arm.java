@@ -23,10 +23,11 @@ public class Arm extends RobotPart{
         motors.put("arm", map.get(DcMotorEx.class, "arm"));
         motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
 
-//        motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        motors.get("arm").setPower(0.5);
-//        motors.get("arm").setTargetPosition(0);
-//        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motors.get("armSpinner").setPower(0.5);
+//        motors.get("armSpinner").setTargetPosition(0);
+//        motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         setBrake(true);
 
@@ -52,16 +53,19 @@ public class Arm extends RobotPart{
 //        while (heading >= 2*Math.PI){
 //            heading -= 2*Math.PI;
 //        }
-//        double armPosition = motors.get("arm").getCurrentPosition();
+//        double armPosition = motors.get("armSpinner").getCurrentPosition();
 //        double armHeading = armPosition % ENCODER_TICK_PER_ROUND / ENCODER_TICK_PER_ROUND * (2*Math.PI);
 //
 //        double difference = (heading - armHeading + Math.PI) % (2*Math.PI) - Math.PI;
 //        telemetry.setValue(armHeading+" "+heading+ " "+difference);
 //
 //        double newArmPosition = armPosition + difference/(2*Math.PI)*ENCODER_TICK_PER_ROUND;
-//        motors.get("arm").setTargetPosition((int) Math.round(newArmPosition));
-//        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        motors.get("armSpinner").setTargetPosition((int) Math.round(newArmPosition));
+//        motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motors.get("arm").setPower(gamepad1.right_stick_y);
         motors.get("armSpinner").setPower(gamepad1.right_stick_x);
+
+        updateTelemetry();
+
     }
 }

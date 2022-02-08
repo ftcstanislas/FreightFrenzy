@@ -76,7 +76,7 @@ public class TeleOpV3 extends OpMode {
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
         location.init(hardwareMap, false, new double[]{-1200, -1200, 180}, drivetrain, telemetryLocation, telemetryDucks);
-        slider.init(hardwareMap, telemetrySlider);
+//        slider.init(hardwareMap, telemetrySlider);
         intake.init(hardwareMap, telemetryIntake);
 //        spinner.init(hardwareMap, telemetrySpinner);
         arm.init(hardwareMap, telemetryArm, location);
@@ -118,7 +118,7 @@ public class TeleOpV3 extends OpMode {
         // globalPositionUpdate.returnYCoordinate()+"\n O:"+globalPositionUpdate.returnOrientation());
         
         drivetrain.checkController(gamepad1, gamepad2);
-        slider.checkController(gamepad1, gamepad2);
+//        slider.checkController(gamepad1, gamepad2);
         intake.checkController(gamepad1, gamepad2);
 //        spinner.checkController(gamepad1, gamepad2);
         arm.checkController(gamepad1, gamepad2);
@@ -126,9 +126,9 @@ public class TeleOpV3 extends OpMode {
         location.update();
 
         // Calibrate
-        if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
-            slider.calibrate();
-        }
+//        if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
+//            slider.calibrate();
+//        }
         telemetry.update();
     }
 
