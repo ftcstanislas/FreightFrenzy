@@ -2,14 +2,11 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Location.Location;
-
-import java.util.HashMap;
 
 public class Arm extends RobotPart{
     private final double ENCODER_TICK_PER_ROUND = 2786.2;

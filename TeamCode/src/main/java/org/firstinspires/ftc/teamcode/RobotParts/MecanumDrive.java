@@ -74,13 +74,13 @@ public class MecanumDrive extends RobotPart{
 //        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
         double robotAngle = Math.atan2(-y, -x) - Math.PI / 4;
         
-        //calculate power wheels
+        // Calculate power wheels
         double powerLeftFront = straal * Math.cos(robotAngle) + turn;
         double powerRightFront = straal * Math.sin(robotAngle) - turn;
         double powerLeftBack = straal * Math.sin(robotAngle) + turn;
         double powerRightBack = straal * Math.cos(robotAngle) - turn;
 
-        //setpower to correct power
+        // Set powers to cap at 1
         double[] powers = {Math.abs(powerLeftFront),Math.abs(powerRightFront),Math.abs(powerLeftBack),Math.abs(powerRightBack)};
         double max = Arrays.stream(powers).max().getAsDouble();
         powerLeftFront = powerLeftFront/max*power;
@@ -88,10 +88,8 @@ public class MecanumDrive extends RobotPart{
         powerLeftBack = powerLeftBack/max*power;
         powerRightBack = powerRightBack/max*power;
         
-        //setpowers to motors
+        // Set powers to motors
         setPowers(powerLeftFront, powerRightFront, powerLeftBack, powerRightBack);
-
-        updateTelemetry(x,y,turn);
     }
     
     private void setPowers(double powerLeftFront, double powerRightFront, double powerLeftBack, double powerRightBack){
@@ -99,14 +97,41 @@ public class MecanumDrive extends RobotPart{
         motors.get("rightFront").setPower(powerRightFront);
         motors.get("leftBack").setPower(powerLeftBack);
         motors.get("rightBack").setPower(powerRightBack);
+
+        updateTelemetry();
     }
 
     public void pause(){
         setPower(0);
     }
     
-    public void updateTelemetry(double x, double y, double turn){
-        debug();
+    public void updateTelemetry(){
+        double powerLeftFront = motors.get("leftFront").getPower();
+        double powerRightFront = motors.get("rightFront").getPower();
+        double powerRightBack = motors.get("rightBack").getPower();
+
+        double turn = (powerRightBack - powerLeftFront) / 2;
+
+        // Update
+        powerLeftFront -= turn;
+        powerRightFront += turn;
+        powerRightBack += turn;
+
+        double dif = (powerRightBack - powerRightFront) / 2 ;
+        double orientation = Math.toDegrees(Math.asin(dif));
+        if (powerLeftFront + powerRightFront > 0) {
+            if (orientation > 0) {
+                orientation = 180 - orientation;
+            } else {
+                orientation = -180 - orientation;
+            }
+        }
+
+        telemetry.setValue(turn+" "+orientation);
+
+
+        String text = "";
+
     }
 }
 
