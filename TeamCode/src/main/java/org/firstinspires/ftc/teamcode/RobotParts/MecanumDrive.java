@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,20 +19,33 @@ public class MecanumDrive extends RobotPart{
     Location location = null;
     double lastPower = 0;
     double lastAngle = 0;
+    HashMap<Double, String> drawArrowsMap = new HashMap<>();
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit){
         // get motors
         motors.put("leftFront", map.get(DcMotorEx.class, "leftFront"));
-        motors.get("leftFront").setDirection(DcMotor.Direction.FORWARD);
+        motors.get("leftFront").setDirection(DcMotor.Direction.REVERSE);
         motors.put("rightFront", map.get(DcMotorEx.class, "rightFront"));
-        motors.get("rightFront").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("rightFront").setDirection(DcMotor.Direction.FORWARD);
         motors.put("leftBack", map.get(DcMotorEx.class, "leftBack"));
-        motors.get("leftBack").setDirection(DcMotor.Direction.FORWARD);
+        motors.get("leftBack").setDirection(DcMotor.Direction.REVERSE);
         motors.put("rightBack", map.get(DcMotorEx.class, "rightBack"));
-        motors.get("rightBack").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("rightBack").setDirection(DcMotor.Direction.FORWARD);
         
         // telemetry setup
         telemetry = telemetryInit;
+
+        // Orientation draw setup
+        // Orientation
+        drawArrowsMap.put(0.0, "→");
+        drawArrowsMap.put(45.0, "↗");
+        drawArrowsMap.put(90.0, "↑");
+        drawArrowsMap.put(135.0, "↖");
+        drawArrowsMap.put(180.0, "←");
+        drawArrowsMap.put(-180.0, "←");
+        drawArrowsMap.put(-135.0, "↙");
+        drawArrowsMap.put(-90.0, "↓");
+        drawArrowsMap.put(-45.0, "↘");
 
         // location setup
         location = locationInit;
@@ -69,16 +85,17 @@ public class MecanumDrive extends RobotPart{
     }
     
     public void setPowerDirection(double x, double y, double turn, double power){
-        telemetry.setValue(x + " "+ y);
         double straal = Math.hypot(x, y);
 //        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
-        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4;
+        double robotAngle = Math.atan2(y, x);
+//        drawArrows(robotAngle, turn);
         
         // Calculate power wheels
-        double powerLeftFront = straal * Math.cos(robotAngle) + turn;
-        double powerRightFront = straal * Math.sin(robotAngle) - turn;
-        double powerLeftBack = straal * Math.sin(robotAngle) + turn;
-        double powerRightBack = straal * Math.cos(robotAngle) - turn;
+        double calcRobotAngle = robotAngle - 0.25 * Math.PI;
+        double powerLeftFront = straal * Math.cos(calcRobotAngle) - turn;
+        double powerRightFront = straal * Math.sin(calcRobotAngle) + turn;
+        double powerLeftBack = straal * Math.sin(calcRobotAngle) - turn;
+        double powerRightBack = straal * Math.cos(calcRobotAngle) + turn;
 
         // Set powers to cap at 1
         double[] powers = {Math.abs(powerLeftFront),Math.abs(powerRightFront),Math.abs(powerLeftBack),Math.abs(powerRightBack)};
@@ -112,10 +129,11 @@ public class MecanumDrive extends RobotPart{
 
         double turn = (powerRightBack - powerLeftFront) / 2;
 
-        // Update
-        powerLeftFront -= turn;
-        powerRightFront += turn;
-        powerRightBack += turn;
+        // powers without turning
+        powerLeftFront += turn;
+        powerRightFront -= turn;
+        powerRightBack -= turn;
+
 
         double dif = (powerRightBack - powerRightFront) / 2 ;
         double orientation = Math.toDegrees(Math.asin(dif));
@@ -127,11 +145,40 @@ public class MecanumDrive extends RobotPart{
             }
         }
 
-        telemetry.setValue(turn+" "+orientation);
+        drawArrows(Math.toRadians(orientation), turn);
+    }
 
-
+    public void drawArrows(double orientationRadians, double turn){
+        double orientation = Math.toDegrees(orientationRadians);
         String text = "";
 
+        // Orientation
+        double key = nearestKey(drawArrowsMap, orientation);
+        text += drawArrowsMap.get(key);
+
+        // Turn
+        if (turn < 0){
+            text += "⟳";
+        } else if (turn > 0){
+            text += "⟲";
+        } else {
+            text += "╳";
+        }
+
+        telemetry.setValue(orientation+"\n"+turn+"\n"+text);
+    }
+
+    private double nearestKey(Map<Double, String> map, Double target) {
+        double minDiff = Double.MAX_VALUE;
+        double nearest = 0;
+        for (double key : map.keySet()) {
+            double diff = Math.abs((double) target - (double) key);
+            if (diff < minDiff) {
+                nearest = key;
+                minDiff = diff;
+            }
+        }
+        return nearest;
     }
 }
 
