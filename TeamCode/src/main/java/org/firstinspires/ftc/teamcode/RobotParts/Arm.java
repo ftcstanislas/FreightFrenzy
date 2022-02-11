@@ -17,14 +17,19 @@ public class Arm extends RobotPart{
         // get motors
         motors.put("armSpinner", map.get(DcMotorEx.class, "armSpinner"));
         motors.get("armSpinner").setDirection(DcMotor.Direction.REVERSE);
-        motors.put("arm", map.get(DcMotorEx.class, "arm"));
-        motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
-
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.get("armSpinner").setPower(1);
         motors.get("armSpinner").setTargetPosition(motors.get("armSpinner").getTargetPosition());
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motors.get("armSpinner").setTargetPositionTolerance(10); //5
+
+        motors.put("arm", map.get(DcMotorEx.class, "arm"));
+        motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("arm").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors.get("arm").setPower(1);
+        motors.get("arm").setTargetPosition(0);
+        motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         setBrake(true);
 
@@ -80,7 +85,7 @@ public class Arm extends RobotPart{
 
 //        debug();
 //        telemetry.setValue(armPosition+" "+newArmPosition);
-        motors.get("arm").setPower(gamepad2.left_stick_y);
+        motors.get("arm").setTargetPosition((int) (motors.get("arm").getCurrentPosition() + 120 * gamepad2.left_stick_y));
 //        motors.get("armSpinner").setPower(gamepad1.right_stick_x);
     }
 

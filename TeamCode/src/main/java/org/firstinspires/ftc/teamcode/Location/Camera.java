@@ -63,7 +63,6 @@ public class Camera{
     private double pointerAngle = 90;
     double TOTAL_COUNTS_PER_ROUND = 0;
     double OFFSET = 0;
-    double angleMultiplier = 2;
     double pointingAt = 0;
     String id = "";
 
@@ -150,11 +149,11 @@ public class Camera{
         }
     }
 
-    public void setPointerPosition(double x, double y, double heading, boolean locked){
-        double[] data = getBestScore(x, y, heading, locked);
+    public void setPointerPosition(double x, double y, double heading, boolean activeCamera){
+        double[] data = getBestScore(x, y, heading, activeCamera);
         pointingAt = data[2];
         double bestAngle = data[1];
-        setPointerAngle(bestAngle, locked);
+        setPointerAngle(bestAngle, activeCamera);
     }
 
     public double[] calculateRobotCoordinates(double[] positionCamera, double heading) {
@@ -164,64 +163,48 @@ public class Camera{
         return new double[]{robotX, robotY};
     }
 
-    public double[] getBestScore(double x, double y, double heading, boolean locked){
-        double[][] locations = {{-halfField, oneAndHalfTile, 180},{-halfField, -oneAndHalfTile, 180}, {halfTile, halfField, -90},{halfTile, -halfField, 90}};
+    public double[] getBestScore(double x, double y, double heading, boolean activeCamera){
+        double[][] locations = {
+                {-halfField, oneAndHalfTile}, // 0: blue storage
+                {-halfField, -oneAndHalfTile}, // 1: red storage
+                {halfTile, halfField}, // 2: blue warehouse
+                {halfTile, -halfField} // 3: red warehouse
+        };
         double bestScore = Double.MAX_VALUE;
-        double bestAngle = 90;
+        double bestPointerAngle = 90;
         double bestIndex = -1;
-        double index = 0;
-        for (double[] location : locations) {
-            double dx = location[0] - x;
-            double dy = location[1] - y;
-            double relativeHeading;
-            double newAngle = 0;
-            if (location[2] == 180) {
-                relativeHeading = -Math.atan2(dx, dy) / Math.PI * 180;
-                newAngle = 180 - heading + relativeHeading;
-            } else if (location[2] == 90) {
-                relativeHeading = Math.atan2(dy, dx) / Math.PI * 180;
-                newAngle = 90 - heading + relativeHeading;
-            } else if (location[2] == -90) {
-                relativeHeading = -Math.atan2(dy, dx) / Math.PI * 180;
-                newAngle = 270 - heading + relativeHeading;
-            }
-//            double newAngle = 180 - robotOrientation + relativeHeading ; // 270 was 180
-            while (newAngle < 0) {
-                newAngle += 360;
-            }
-            while (newAngle >= 360) {
-                newAngle -= 360;
-            }
+        for (int index = 0; index < locations.length; index++) {
+            double dx = locations[index][0] - x;
+            double dy = locations[index][1] - y;
 
-            double newPointerAngle = newAngle;
+            double pointerAngle = (Math.toDegrees(Math.atan2(dy, dx)) - heading + 90);
+//            while (pointerAngle < -180) {
+//                pointerAngle += 360;
+//            }
+//            while (pointerAngle >= 180) {
+//                pointerAngle -= 360;
+//            }
 
-            while (newPointerAngle < -180) {//IS DIT MOGELIJK???
-                newPointerAngle += 360;
+            double pointerTargetPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - pointerAngle) + OFFSET;
+            if (index == 2) {
+                telemetryDucks.setValue(pointerTargetPosition);
             }
-            while (newPointerAngle >= 180) {
-                newPointerAngle -= 360;
-            }
-
-            double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - newPointerAngle) + OFFSET;
             double score;
-            if (targetPointerPosition >= 0.0 && targetPointerPosition <= 1.0) {
+            if (pointerTargetPosition >= 0.0 && pointerTargetPosition <= 1.0) {
                 double distance = Math.hypot(dx, dy);
-                angleMultiplier = 4;
-                double angleScore = 1;//Math.abs(targetPointerPosition - 0.5) * angleMultiplier;
-                score = angleScore * distance;
+                score = distance;
             } else {
                 score = Double.MAX_VALUE;
             }
 
-            if (score < bestScore) {
-                bestIndex = index;
+
+            if ((score < bestScore && !activeCamera) || (activeCamera && index == pointingAt)) {
                 bestScore = score;
-                bestAngle = newPointerAngle;
+                bestPointerAngle = pointerAngle;
+                bestIndex = index;
             }
-            index++;
         }
-//        telemetryDucks.setValue(bestScore+" "+bestAngle+" "+bestIndex+" ");
-        return new double[]{bestScore, bestAngle, bestIndex};
+        return new double[]{bestScore, bestPointerAngle, bestIndex};
     }
 
     public void updateServoPosition(){
@@ -240,17 +223,11 @@ public class Camera{
     }
 
     // Set angle of servo (angle in degrees)
-    public void setPointerAngle(double angle, boolean updateTrackables) {
+    public void setPointerAngle(double angle, boolean activeCamera) {
         double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
-//        while (targetPointerPosition < -0.19){
-//            targetPointerPosition+=2;
-//        }
-//        while (targetPointerPosition >= 1.19){
-//            targetPointerPosition-=2;
-//        }
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
-        if (updateTrackables) {
+        if (activeCamera) {
             setCameraPosition(0, 0, 222, (float) angle);
         }
     }

@@ -113,6 +113,11 @@ public class Location {
 
         // Update heading
         heading = IMU.getHeading();
+        if (heading < -180) {
+            heading += 360;
+        } else if (heading >= 180) {
+            heading -= 360;
+        }
 
         //Odometry
 //        odometry.globalCoordinatePositionUpdate();
@@ -166,8 +171,8 @@ public class Location {
 //            y = getMedian(historyY);
         }
 
-        double[] scoreCamera1 = {0};
-        double[] scoreCamera2 = {0};
+        double[] scoreCamera1 = {};
+        double[] scoreCamera2 = {};
 
         // Update pointers camera
         if (advanced) {
@@ -197,7 +202,7 @@ public class Location {
             }
 
             double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            double MIN_SCORE_TO_SWITCH = 1500;
+            double MIN_SCORE_TO_SWITCH = 1000;
             double MIN_SCORE_DIFFERENCE = 100;
             if (scoreDifference >= MIN_SCORE_DIFFERENCE) {
                 if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1 && scoreCamera1[0] < MIN_SCORE_TO_SWITCH) {
@@ -207,19 +212,20 @@ public class Location {
                 }
             }
 
-            // Update pointer positions
+            // Update pointer positions, keep this way because of pointing at variable
             if (camera == camera1) {
                 camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, true);
-                camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading,false);
+                camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, false);
             } else {
-                camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading,false);
+                camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, false);
                 camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, true);
             }
         }
 
         if (advanced) {
-            telemetry.setValue(String.format("\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b\n score cam 1,2 = (%.1f) (%.1f)",
-                    x, y, heading, camera.id, camera.targetVisible, scoreCamera1[0], scoreCamera2[0]));
+            telemetry.setValue(String.format(
+                    "\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b\n score cam 1,2 = (%.0f: %.1f) (%.0f: %.1f)",
+                    x, y, heading, camera.id, camera.targetVisible, scoreCamera1[2], scoreCamera1[0], scoreCamera2[2], scoreCamera2[0]));
         } else {
             telemetry.setValue(String.format("\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f",
                     x, y, heading));
@@ -338,14 +344,16 @@ public class Location {
         }
 
         if (distance > allowableDistanceError) {
-            double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToXTarget, distanceToYTarget)) - getOrientation();
+            double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToYTarget, distanceToXTarget)) - getOrientation();
             double robotMovementXComponent = calculateX(robotMovementAngle, power);
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
+
+//            telemetry.setValue(orientationDifference+"\n"+robotMovementAngle+"\n"+robotMovementXComponent+"\n"+robotMovementYComponent);
 
             double turning = orientationDifference / 360;
 
 //            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
-            drivetrain.setPowerDirection(-robotMovementYComponent, robotMovementXComponent, turning, power);
+            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
             return false;
         } else {
             drivetrain.setPowerDirection(0,0,0,0);

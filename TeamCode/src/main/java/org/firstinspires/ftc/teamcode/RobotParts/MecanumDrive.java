@@ -88,7 +88,7 @@ public class MecanumDrive extends RobotPart{
         double straal = Math.hypot(x, y);
 //        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
         double robotAngle = Math.atan2(y, x);
-//        drawArrows(robotAngle, turn);
+//        drawArrows(x, y, turn);
         
         // Calculate power wheels
         double calcRobotAngle = robotAngle - 0.25 * Math.PI;
@@ -134,27 +134,31 @@ public class MecanumDrive extends RobotPart{
         powerRightFront -= turn;
         powerRightBack -= turn;
 
-
-        double dif = (powerRightBack - powerRightFront) / 2 ;
-        double orientation = Math.toDegrees(Math.asin(dif));
-        if (powerLeftFront + powerRightFront > 0) {
-            if (orientation > 0) {
-                orientation = 180 - orientation;
-            } else {
-                orientation = -180 - orientation;
-            }
+        double orientation = Math.toDegrees(Math.atan2(powerRightFront, powerLeftFront)) + 45;
+        if (orientation <= -180) {
+            orientation += 360;
+        } else if (orientation > 180){
+            orientation -= 360;
         }
 
-        drawArrows(Math.toRadians(orientation), turn);
+        orientation = Math.toRadians(orientation);
+        double x = Math.cos(orientation);
+        double y = Math.sin(orientation);
+
+        drawArrows(x, y, turn);
     }
 
-    public void drawArrows(double orientationRadians, double turn){
-        double orientation = Math.toDegrees(orientationRadians);
+    public void drawArrows(double x, double y, double turn){
+        double orientation = Math.toDegrees(Math.atan2(y, x));
         String text = "";
 
         // Orientation
-        double key = nearestKey(drawArrowsMap, orientation);
-        text += drawArrowsMap.get(key);
+        if ((x == 0 && y == 0) || Double.isNaN(x) || Double.isNaN(y)) {
+            text += "╳";
+        } else {
+            double key = nearestKey(drawArrowsMap, orientation);
+            text += drawArrowsMap.get(key);
+        }
 
         // Turn
         if (turn < 0){
@@ -165,7 +169,7 @@ public class MecanumDrive extends RobotPart{
             text += "╳";
         }
 
-        telemetry.setValue(orientation+"\n"+turn+"\n"+text);
+        telemetry.setValue(text);
     }
 
     private double nearestKey(Map<Double, String> map, Double target) {

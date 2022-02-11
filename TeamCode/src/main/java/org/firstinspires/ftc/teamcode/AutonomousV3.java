@@ -112,6 +112,7 @@ public class AutonomousV3 extends OpMode {
             locationRobot = new double[]{304.8, -1584.96, 90.0};
         }
         locationRobot = new double[]{-1100.0, 1584.96, -90.0};//{-914.4, -1584.96, 180};
+        locationRobot = new double[]{0.0, 1200.0, 0.0};
         location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
         slider.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
