@@ -174,30 +174,23 @@ public class Camera{
         double bestPointerAngle = 90;
         double bestIndex = -1;
         for (int index = 0; index < locations.length; index++) {
+            // Distance to target
             double dx = locations[index][0] - x;
             double dy = locations[index][1] - y;
 
+            // Calculate servo angle and target position
             double pointerAngle = (Math.toDegrees(Math.atan2(dy, dx)) - heading + 90);
-//            while (pointerAngle < -180) {
-//                pointerAngle += 360;
-//            }
-//            while (pointerAngle >= 180) {
-//                pointerAngle -= 360;
-//            }
+            double pointerTargetPosition = getPointerPosition(pointerAngle);
 
-            double pointerTargetPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - pointerAngle) + OFFSET;
-            if (index == 2) {
-                telemetryDucks.setValue(pointerTargetPosition);
-            }
-            double score;
-            if (pointerTargetPosition >= 0.0 && pointerTargetPosition <= 1.0) {
-                double distance = Math.hypot(dx, dy);
-                score = distance;
-            } else {
+            // Score is distance
+            double score = Math.hypot(dx, dy);
+
+            // Outside of turning area of sevo
+            if (pointerTargetPosition < 0.0 || pointerTargetPosition > 1.0) {
                 score = Double.MAX_VALUE;
             }
 
-
+            // Check if it is the best option
             if ((score < bestScore && !activeCamera) || (activeCamera && index == pointingAt)) {
                 bestScore = score;
                 bestPointerAngle = pointerAngle;
@@ -224,12 +217,24 @@ public class Camera{
 
     // Set angle of servo (angle in degrees)
     public void setPointerAngle(double angle, boolean activeCamera) {
-        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
+        double targetPointerPosition = getPointerPosition(angle);
         updateServoPosition();
         pointer.setPosition(targetPointerPosition);
         if (activeCamera) {
             setCameraPosition(0, 0, 222, (float) angle);
         }
+    }
+
+    // Get position of pointer for angle
+    public double getPointerPosition(double angle){
+        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
+        if (targetPointerPosition < 0){
+            targetPointerPosition += TOTAL_COUNTS_PER_ROUND;
+        } else if (targetPointerPosition > TOTAL_COUNTS_PER_ROUND){
+            targetPointerPosition -= TOTAL_COUNTS_PER_ROUND;
+        }
+
+        return targetPointerPosition;
     }
 
     // Called when stopping script

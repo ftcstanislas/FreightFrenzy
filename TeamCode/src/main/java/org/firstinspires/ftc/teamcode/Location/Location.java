@@ -224,8 +224,8 @@ public class Location {
 
         if (advanced) {
             telemetry.setValue(String.format(
-                    "\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b\n score cam 1,2 = (%.0f: %.1f) (%.0f: %.1f)",
-                    x, y, heading, camera.id, camera.targetVisible, scoreCamera1[2], scoreCamera1[0], scoreCamera2[2], scoreCamera2[0]));
+                    "\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b\n score cam 1,2 = (%.0f: %.1f, %.1f) (%.0f: %.1f, %.1f)",
+                    x, y, heading, camera.id, camera.targetVisible, scoreCamera1[2], scoreCamera1[0], scoreCamera1[1], scoreCamera2[2], scoreCamera2[0], scoreCamera2[1]));
         } else {
             telemetry.setValue(String.format("\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f",
                     x, y, heading));
@@ -353,7 +353,7 @@ public class Location {
             double turning = orientationDifference / 360;
 
 //            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
-            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
+            drivetrain.setPowerDirection(-robotMovementXComponent, robotMovementYComponent, turning, power);
             return false;
         } else {
             drivetrain.setPowerDirection(0,0,0,0);

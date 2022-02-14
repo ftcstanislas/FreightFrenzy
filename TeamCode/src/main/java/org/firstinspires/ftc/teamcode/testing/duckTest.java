@@ -29,9 +29,16 @@
 
 package org.firstinspires.ftc.teamcode.testing;
 
+import android.os.Environment;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.RobotLog;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -51,37 +58,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  */
 @TeleOp(name = "Duck Testing", group = "testing")
 public class duckTest extends LinearOpMode {
-  /* Note: This sample uses the all-objects Tensor Flow model (FreightFrenzy_BCDM.tflite), which contains
-   * the following 4 detectable objects
-   *  0: Ball,
-   *  1: Cube,
-   *  2: Duck,
-   *  3: Marker (duck location tape marker)
-   *
-   *  Two additional model assets are available which only contain a subset of the objects:
-   *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
-   *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
-   */
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
-    private static final String[] LABELS = {
-      "Ball",
-      "Cube",
-      "Duck",
-      "Marker"
-    };
+    private String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/goompa.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/labels.txt", Environment.getExternalStorageDirectory().getAbsolutePath());
+    private String[] labels;
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY =
             "AYijR7b/////AAABmQXodEBY4E1gjxKsoSygzWsm4RFjj/z+nzPa0q3oo3vJNz51j477KysEdl4h1YfezCokKxkUeK3ARNjE1tH80M5gZbubu2bkdF6Ja8gINhJTAY/ZJrFkPGiiLfausXsCWAygHW7ufeu3FLIDp1DN2NHj4rzDP4vRv5z/0T0deRLucpRcv36hqUkJ1N6Duumo0se+BCmdAh7ycUW2wteJ3T1e/LxuO5sI6qtwnJW64fe2n6cehk5su76c9t45AcBfod6f0txGezdzpqY5NoHjz0G/gLvah0vAYW+/0x3yaWy8thEd64OVMVb2q37TsJ1UDjl5qupztdG7nXkRGYF5oaR8CGkm2lqPyugJuRFNMRcM";
 
@@ -99,6 +79,9 @@ public class duckTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // read the label map text files.
+        readLabels();
+
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
@@ -176,9 +159,75 @@ public class duckTest extends LinearOpMode {
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
        tfodParameters.minResultConfidence = 0.8f;
-       tfodParameters.isModelTensorFlow2 = true;
-       tfodParameters.inputSize = 320;
+//       tfodParameters.isModelTensorFlow2 = true;
+//       tfodParameters.inputSize = 320;
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-       tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+       if (labels != null) {
+           tfod.loadModelFromAsset(TFOD_MODEL_FILE, labels);
+       }
     }
+
+
+    /**
+     * Read the labels for the object detection model from a file.
+     */
+    private void readLabels() {
+        ArrayList<String> labelList = new ArrayList<>();
+
+        telemetry.addData("path", TFOD_MODEL_LABELS);
+        telemetry.update();
+
+        // try to read in the the labels.
+        try (BufferedReader br = new BufferedReader(new FileReader(TFOD_MODEL_LABELS))) {
+            int index = 0;
+            while (br.ready()) {
+                // skip the first row of the labelmap.txt file.
+                // if you look at the TFOD Android example project (https://github.com/tensorflow/examples/tree/master/lite/examples/object_detection/android)
+                // you will see that the labels for the inference model are actually extracted (as metadata) from the .tflite model file
+                // instead of from the labelmap.txt file. if you build and run that example project, you'll see that
+                // the label list begins with the label "person" and does not include the first line of the labelmap.txt file ("???").
+                // i suspect that the first line of the labelmap.txt file might be reserved for some future metadata schema
+                // (or that the generated label map file is incorrect).
+                // for now, skip the first line of the label map text file so that your label list is in sync with the embedded label list in the .tflite model.
+                if(index == 0) {
+                    // skip first line.
+                    br.readLine();
+                } else {
+                    labelList.add(br.readLine());
+                }
+                index++;
+            }
+        } catch (Exception e) {
+            telemetry.addData("Exception", e.getLocalizedMessage());
+            telemetry.update();
+        }
+
+        if (labelList.size() > 0) {
+            labels = getStringArray(labelList);
+            RobotLog.vv("readLabels()", "%d labels read.", labels.length);
+            for (String label : labels) {
+                RobotLog.vv("readLabels()", " " + label);
+            }
+        } else {
+            RobotLog.vv("readLabels()", "No labels read!");
+        }
+    }
+
+    private String[] getStringArray(ArrayList<String> arr)
+    {
+        // declaration and initialize String Array
+        String str[] = new String[arr.size()];
+
+        // Convert ArrayList to object array
+        Object[] objArr = arr.toArray();
+
+        // Iterating and converting to String
+        int i = 0;
+        for (Object obj : objArr) {
+            str[i++] = (String)obj;
+        }
+
+        return str;
+    }
+
 }
