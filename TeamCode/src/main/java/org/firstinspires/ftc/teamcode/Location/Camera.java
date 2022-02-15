@@ -185,9 +185,14 @@ public class Camera{
             // Score is distance
             double score = Math.hypot(dx, dy);
 
-            // Outside of turning area of sevo
+            // Outside of turning area of servo
             if (pointerTargetPosition < 0.0 || pointerTargetPosition > 1.0) {
-                score = Double.MAX_VALUE;
+                score = Double.MAX_VALUE - 1;
+            }
+
+            // Debug
+            if (index == 3){
+                telemetryDucks.setValue(score);
             }
 
             // Check if it is the best option
@@ -228,9 +233,10 @@ public class Camera{
     // Get position of pointer for angle
     public double getPointerPosition(double angle){
         double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
-        if (targetPointerPosition < 0){
+        double outsideServoSize = (targetPointerPosition - 1)/2;
+        if (targetPointerPosition < -outsideServoSize){
             targetPointerPosition += TOTAL_COUNTS_PER_ROUND;
-        } else if (targetPointerPosition > TOTAL_COUNTS_PER_ROUND){
+        } else if (targetPointerPosition > 1+outsideServoSize){
             targetPointerPosition -= TOTAL_COUNTS_PER_ROUND;
         }
 

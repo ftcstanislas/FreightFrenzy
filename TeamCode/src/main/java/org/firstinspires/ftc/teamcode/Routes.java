@@ -86,11 +86,11 @@ public class Routes {
     };
 
     public Object[][] test2 = {
-            {true, "DRIVETRAIN", "toPosition", 0.0, 1200.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, 1200.0, 90.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, 600.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", 0.0, 600.0, -90.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", 0.0, 1200.0, 0.0, 0.3}
+            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 0.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", 0.0, -600.0, 0.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 0.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 0.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 0.0, 0.3}
     };
 
     // public Object[][] switchedRouteRight = switchRoute(routeRight);

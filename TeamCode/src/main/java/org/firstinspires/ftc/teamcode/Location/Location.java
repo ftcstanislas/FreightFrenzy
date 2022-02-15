@@ -103,7 +103,8 @@ public class Location {
             camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.41, telemetryInit, telemetryDucks); // , new float[]{170, 170, 230}
             camera2.setPointerPosition(x, y, heading, false);
 
-//            setActiveCamera(1);
+            // Active camera
+            updateActiveCamera();
         }
         
         telemetry = telemetryInit;
@@ -119,12 +120,10 @@ public class Location {
             heading -= 360;
         }
 
-        //Odometry
+        // Odometry
 //        odometry.globalCoordinatePositionUpdate();
 
         // Camera
-        double robotX = 0;
-        double robotY = 0;
         if (advanced) {
 
             camera1.updateServoPosition();
@@ -136,8 +135,8 @@ public class Location {
             // Calculate new position of robot
             double[] locationCamera = camera.getPosition();
             double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
-            robotX = robotCoordinates[0];
-            robotY = robotCoordinates[1];
+            double robotX = robotCoordinates[0];
+            double robotY = robotCoordinates[1];
 
             if (camera.targetVisible) {
                 historyX.add(locationCamera[0] + robotX);
@@ -162,70 +161,44 @@ public class Location {
         // Update position
         if (historyX.size() != 0) {
             x = historyX.stream().mapToDouble(a -> a).average().getAsDouble();
-//            x = (historyX.get(historyX.size()/2) + historyX.get(historyX.size()/2+1))/2;
-//            x = getMedian(historyX);
         }
         if (historyY.size() != 0) {
             y = historyY.stream().mapToDouble(a -> a).average().getAsDouble();
-//            y = (historyY.get(historyY.size()/2) + historyY.get(historyY.size()/2+1))/2;
-//            y = getMedian(historyY);
         }
-
-        double[] scoreCamera1 = {};
-        double[] scoreCamera2 = {};
 
         // Update pointers camera
         if (advanced) {
 
-            // Relative robot coordinates camera x
-//            double[] robotCoordinates = camera.calculateRobotCoordinates(positionCamera, heading);
-//            robotX = robotCoordinates[0];
-//            robotY = robotCoordinates[1];
+            // Update active camera
+            updateActiveCamera();
 
-            //Camera 1
+            // Camera 1
             double[] robotCoordinates1 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
             double camera1RobotX = robotCoordinates1[0];
             double camera1RobotY = robotCoordinates1[1];
 
-            //Camera 2
+            // Camera 2
             double[] robotCoordinates2 = camera2.calculateRobotCoordinates(positionCameras[1], heading);
             double camera2RobotX = robotCoordinates2[0];
             double camera2RobotY = robotCoordinates2[1];
-
-            // Switch camera to the best score
-            if (camera == camera1) {
-                scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, true);
-                scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading, false);
-            } else {
-                scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, true);
-                scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading,false);
-            }
-
-            double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-            double MIN_SCORE_TO_SWITCH = 1000;
-            double MIN_SCORE_DIFFERENCE = 100;
-            if (scoreDifference >= MIN_SCORE_DIFFERENCE) {
-                if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1 && scoreCamera1[0] < MIN_SCORE_TO_SWITCH) {
-                    setActiveCamera(1);
-                } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2  && scoreCamera2[0] < MIN_SCORE_TO_SWITCH){
-                    setActiveCamera(2);
-                }
-            }
 
             // Update pointer positions, keep this way because of pointing at variable
             if (camera == camera1) {
                 camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, true);
                 camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, false);
-            } else {
+            } else if (camera == camera2){
                 camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, false);
                 camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, true);
+            } else {
+                camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, false);
+                camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, false);
             }
         }
 
         if (advanced) {
             telemetry.setValue(String.format(
-                    "\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b\n score cam 1,2 = (%.0f: %.1f, %.1f) (%.0f: %.1f, %.1f)",
-                    x, y, heading, camera.id, camera.targetVisible, scoreCamera1[2], scoreCamera1[0], scoreCamera1[1], scoreCamera2[2], scoreCamera2[0], scoreCamera2[1]));
+                    "\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f\nActive cam %s visible %b",
+                    x, y, heading, camera.id, camera.targetVisible));
         } else {
             telemetry.setValue(String.format("\nPos robot (mm) {X, Y, heading} = %.1f, %.1f %.1f",
                     x, y, heading));
@@ -239,7 +212,45 @@ public class Location {
 //        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
     }
 
-    public void setActiveCamera(int number){
+    private void updateActiveCamera(){
+        // Camera 1
+        double[] robotCoordinates1 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
+        double camera1RobotX = robotCoordinates1[0];
+        double camera1RobotY = robotCoordinates1[1];
+
+        // Camera 2
+        double[] robotCoordinates2 = camera2.calculateRobotCoordinates(positionCameras[1], heading);
+        double camera2RobotX = robotCoordinates2[0];
+        double camera2RobotY = robotCoordinates2[1];
+
+        // Get score's
+        double[] scoreCamera1;
+        double[] scoreCamera2;
+        if (camera == camera1) {
+            scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, true);
+            scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading, false);
+        } else if (camera == camera2){
+            scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, false);
+            scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading,true);
+        } else {
+            scoreCamera1 = camera1.getBestScore(x-camera1RobotX, y-camera1RobotY, heading, false);
+            scoreCamera2 = camera2.getBestScore(x-camera2RobotX, y-camera2RobotY, heading,false);
+        }
+
+        // Switch camera to best score
+        double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
+        double MIN_SCORE_TO_SWITCH = 1000;
+        double MIN_SCORE_DIFFERENCE = 100;
+        if (scoreDifference >= MIN_SCORE_DIFFERENCE) {
+            if (scoreCamera1[0] < scoreCamera2[0] && camera != camera1 && scoreCamera1[0] < MIN_SCORE_TO_SWITCH) {
+                setActiveCamera(1);
+            } else if (scoreCamera1[0] > scoreCamera2[0] && camera != camera2  && scoreCamera2[0] < MIN_SCORE_TO_SWITCH){
+                setActiveCamera(2);
+            }
+        }
+    }
+
+    private void setActiveCamera(int number){
         drivetrain.pause();
 
         if (number == 1) {
