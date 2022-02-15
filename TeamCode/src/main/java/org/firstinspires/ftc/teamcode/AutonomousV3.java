@@ -24,7 +24,6 @@ public class AutonomousV3 extends OpMode {
     // Robot parts
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
-    Slider slider = new Slider();
     Intake intake = new Intake();
     Spinner spinner = new Spinner();
     // ColorDetector colorSensor = new ColorDetector();
@@ -114,7 +113,6 @@ public class AutonomousV3 extends OpMode {
         locationRobot = new double[]{-1100.0, 1584.96, -90.0};//{-914.4, -1584.96, 180};
         locationRobot = new double[]{0.0, 1200.0, 0.0};
         location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
-        slider.init(hardwareMap, telemetryArm);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
         // colorSensor.init(hardwareMap, telemetryColorSensor);
@@ -254,13 +252,13 @@ public class AutonomousV3 extends OpMode {
                 break;
 
             case "ARM":
-                if (function == "mode") {
-                    /*done =*/
-                    String mode = (String) instruction[3];
-                    done = slider.setMode((String) instruction[3]);
-                } else if (function == "switchServo") {
-                    slider.switchServo();
-                }
+//                if (function == "mode") {
+//                    /*done =*/
+//                    String mode = (String) instruction[3];
+//                    done = slider.setMode((String) instruction[3]);
+//                } else if (function == "switchServo") {
+//                    slider.switchServo();
+//                }
 
                 break;
 
