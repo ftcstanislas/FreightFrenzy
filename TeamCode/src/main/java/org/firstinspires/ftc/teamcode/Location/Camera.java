@@ -187,12 +187,7 @@ public class Camera{
 
             // Outside of turning area of servo
             if (pointerTargetPosition < 0.0 || pointerTargetPosition > 1.0) {
-                score = Double.MAX_VALUE - 1;
-            }
-
-            // Debug
-            if (index == 3){
-                telemetryDucks.setValue(score);
+                score *= 100000; // Very bad score
             }
 
             // Check if it is the best option
@@ -251,14 +246,9 @@ public class Camera{
     }
 
     public double[] getPosition() {
-        double[] position;
-        if (lastLocation != null) {
-            VectorF translation = lastLocation.getTranslation();
-            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            position = new double[]{translation.get(0), translation.get(1), rotation.thirdAngle};
-        } else {
-            position = new double[]{0, 0, 0};
-        }
+        VectorF translation = lastLocation.getTranslation();
+        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+        double[] position = new double[]{translation.get(0), translation.get(1), rotation.thirdAngle};
         return position;
     }
 

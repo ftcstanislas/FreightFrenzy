@@ -135,12 +135,12 @@ public class Location {
             activeCamera.update();
 
             // Calculate new position of robot
-            double[] locationCamera = activeCamera.getPosition();
-            double[] robotCoordinates = activeCamera.calculateRobotCoordinates(positionCamera, heading);
-            double robotX = robotCoordinates[0];
-            double robotY = robotCoordinates[1];
-
             if (activeCamera.targetVisible) {
+                double[] locationCamera = activeCamera.getPosition();
+                double[] robotCoordinates = activeCamera.calculateRobotCoordinates(positionCamera, heading);
+                double robotX = robotCoordinates[0];
+                double robotY = robotCoordinates[1];
+
                 historyX.add(locationCamera[0] + robotX);
                 historyY.add(locationCamera[1] + robotY);
                 historyHeading.add(locationCamera[2]);
@@ -175,15 +175,15 @@ public class Location {
         // Update pointers camera
         if (advanced) {
 
+            // Telemetry
+            text += String.format("\nActive cam %s visible %b",
+                    activeCamera.id, activeCamera.targetVisible);
+
             // Update active camera
             updateActiveCamera();
 
             // Update where the camera's are looking at
             updatePointerPositions();
-
-            // Telemetry
-            text += String.format("\nActive cam %s visible %b",
-                    activeCamera.id, activeCamera.targetVisible);
         }
 
 
@@ -255,12 +255,13 @@ public class Location {
 
         // Switch camera to best score
         double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
-        double MIN_SCORE_TO_SWITCH = 1000;
+        double MAX_SCORE_TO_SWITCH = 1000;
+        double MIN_SCORE_TO_SWITCH = 100;
         double MIN_SCORE_DIFFERENCE = 100;
         if (scoreDifference >= MIN_SCORE_DIFFERENCE) {
-            if (scoreCamera1[0] < scoreCamera2[0] && activeCamera != camera1 && scoreCamera1[0] < MIN_SCORE_TO_SWITCH) {
+            if (scoreCamera1[0] < scoreCamera2[0] && activeCamera != camera1 && scoreCamera1[0] < MAX_SCORE_TO_SWITCH && scoreCamera1[0] > MIN_SCORE_TO_SWITCH) {
                 setActiveCamera(1);
-            } else if (scoreCamera1[0] > scoreCamera2[0] && activeCamera != camera2  && scoreCamera2[0] < MIN_SCORE_TO_SWITCH){
+            } else if (scoreCamera1[0] > scoreCamera2[0] && activeCamera != camera2  && scoreCamera2[0] < MAX_SCORE_TO_SWITCH && scoreCamera2[0] > MIN_SCORE_TO_SWITCH){
                 setActiveCamera(2);
             }
         }
@@ -273,7 +274,7 @@ public class Location {
     }
 
     private void setActiveCamera(int number){
-        drivetrain.pause();
+        drivetrain.stopDriving();
 
         if (number == 1) {
             activeCamera = camera1;
@@ -287,6 +288,7 @@ public class Location {
             throw new java.lang.Error("Active camera number is not 1 or 2");
         }
         activeCamera.targetVisible = false;
+        updatePointerPositions();
     }
 
     public void initVuforia(HardwareMap hardwareMap){

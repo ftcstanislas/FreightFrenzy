@@ -118,7 +118,7 @@ public class MecanumDrive extends RobotPart{
         updateTelemetry();
     }
 
-    public void pause(){
+    public void stopDriving(){
         setPower(0);
     }
     

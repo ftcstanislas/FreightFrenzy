@@ -100,13 +100,12 @@ public class duckTest extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.5, 16.0/9.0);
+//            tfod.setZoom(2.5, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
-        waitForStart();
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -163,7 +162,7 @@ public class duckTest extends LinearOpMode {
 //       tfodParameters.inputSize = 320;
        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
        if (labels != null) {
-           tfod.loadModelFromAsset(TFOD_MODEL_FILE, labels);
+           tfod.loadModelFromFile(TFOD_MODEL_FILE, labels);
        }
     }
 

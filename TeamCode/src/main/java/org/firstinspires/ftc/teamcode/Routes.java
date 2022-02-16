@@ -3,11 +3,16 @@ package org.firstinspires.ftc.teamcode;
 import com.sun.tools.javac.util.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+
+// First item from route is start position
+
 
 public class Routes {
     
     /*
-    Stijns telefoon was hier
+    Routes:
     -----------------------------------------------------------------------------------------------
     WAIT UNTIL FINISHED   OBJECT                FUNCTIE             ARGUMENTEN (achter elkaar)
     -----------------------------------------------------------------------------------------------
@@ -18,46 +23,32 @@ public class Routes {
     false / true          ARM                   mode                drop / intake      (voor bakje)
     false / true          DRIVETRAIN            toPosition          x, y, rotation, speed
     false / true          DRIVETRAIN            toCircle            x, y, radius
+    false / true          DRIVETRAIN            setPower            x, y, turn, power
+
 
     -----------------------------------------------------------------------------------------------
     */
 
-
-    public Object[][] routeRight = {
-            {true, "SPINNER", "mode", "spinRight"},
-            {true, "WAIT", "wait", 1.0},
-            {true, "SPINNER", "mode", "stop"},
-            {true, "INTAKE", "mode", "intaking"},
-            {true, "WAIT", "wait", 1.0},
-            {true, "INTAKE", "mode", "stop"},
-            {true, "ARM", "mode", "high"},
-            {true, "ARM", "mode", "base"},
+    public Object[][] routeStorage = {
+            {true, "DRIVETRAIN", "toPosition", -1041.0, -1581.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -820.0, -824.0, 90.0, 0.3},
+//            {true, "ARM", "mode", "high"},
+//            {true, "ARM", "switchServo"},
+//            {true, "WAIT", "wait", 1.0},
+//            {true, "ARM", "switchServo"},
+//            {false, "ARM", "mode", "base"},
+            {true, "DRIVETRAIN", "toPosition", -1391.0, -1486.0, 90.0, 0.3},
+//            {true, "WAIT", "wait", 0.5},
+//            {true, "SPINNER", "mode", "spinLeft"},
+//            {true, "WAIT", "wait", 2.0},
+//            {true, "SPINNER", "mode", "stop"},
+            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "setPower", 0.0, -1.0, 0.0, 1.0},
+            {true, "WAIT", "wait", 3000.0},
+            {true, "DRIVETRAIN", "setPower", 0.0, 0.0, 0.0, 0.0}
     };
 
-    public Object[][] routeStorageOfficial = {
-            // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
-            {true, "ARM", "mode", "high"},
-            {true, "ARM", "switchServo"},
-            {true, "WAIT", "wait", 1.0},
-            {true, "ARM", "switchServo"},
-            {false, "ARM", "mode", "base"},
-            // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
-            {true, "WAIT", "wait", 0.5},
-            {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2.0},
-            {true, "SPINNER", "mode", "stop"},
-            // ,{true, "DRIVETRAIN", "toPosition", -1600, -1000}
-    };
-
-
-    public Object[][] warehouse = {
-            {true, "DRIVETRAIN", "timeBased", 1.0, 0.0, 0.0},
-            {true, "WAIT", "wait", 3.0},
-            {true, "DRIVETRAIN", "timeBased", 0.0, 0.0, 0.0}
-    };
-
-
-    public Object[][] routeWarehouseOfficial = {
+    public Object[][] routeWarehouse = {
             // {true, "DRIVETRAIN", "toCircle", -300, -600, 228.6},
             {true, "ARM", "mode", "high"},
             {true, "ARM", "switchServo"},
@@ -67,36 +58,17 @@ public class Routes {
             // {false, "DRIVETRAIN", "toPosition", -1600, -1600, 0, 0.5},
     };
 
-    public Object[][] spinner = {
-            {true, "DRIVETRAIN", "toPosition", -900.0, 900.0, -90.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1584.96, 1584.96, -90.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1584.96, 900.0, -90.0, 0.3}
-    };
-
     public Object[][] test = {
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -1200.0, 1200.0, 180.0, 0.3}
-    };
-
-    public Object[][] test2 = {
             {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", 0.0, -600.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 0.0, 0.3}
+            {true, "DRIVETRAIN", "toPosition", 0.0, -600.0, -90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -600.0, -90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, -90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 0.0, 0.3},
     };
 
-    // public Object[][] switchedRouteRight = switchRoute(routeRight);
-    
     public Object[][] getRoute(String team, String startPosition, String ducks){
-        return test2;
+        Object[][] route = routeStorage;
+        return route;
 //        if (startPosition=="storage") {
 //            if (team == "red") {
 //                return spinningRed;
@@ -108,7 +80,17 @@ public class Routes {
 //        }
     }
 
-    public Object[][] switchRoute(Object[][] route){
+    public double[] getStartPosition(String team, String startPosition){
+        Object[][] route = getRoute(team, startPosition, "right");
+        double x = (double) route[0][3];
+        double y = (double) route[0][4];
+        double rotation = (double) route[0][5];
+        double[] startPositionLocation = {x,y,rotation};
+        return startPositionLocation;
+    }
+
+
+    private Object[][] switchRoute(Object[][] route){
         Object[][] newRoute = route.clone();
         for (Object[] instruction : newRoute) {
             String object = (String) instruction[1];

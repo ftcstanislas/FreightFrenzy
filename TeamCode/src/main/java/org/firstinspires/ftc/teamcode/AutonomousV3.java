@@ -99,17 +99,12 @@ public class AutonomousV3 extends OpMode {
         telemetryDucks = telemetry.addData("\uD83D\uDD34Ducks", "X");
         telemetryTest = telemetry.addData("\uD83D\uDD34Test", "X");
 
+        // Location robot
+        double[] locationRobot = routes.getStartPosition(program[0], program[1]);
+
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-        double[] locationRobot = {0,0,0};
-        if (program[0].equals("red") && program[1].equals("spinner")){
-            locationRobot = new double[]{-914.4, -1584.96, 90.0};
-        } else if (program[0].equals("blue")){
-            locationRobot = new double[]{304.8, -1584.96, 90.0};
-        }
-        locationRobot = new double[]{-1100.0, 1584.96, -90.0};//{-914.4, -1584.96, 180};
-        locationRobot = new double[]{0.0, -1200.0, 0.0};
         location.init(hardwareMap, true, locationRobot, drivetrain, telemetryLocation, telemetryDucks);
         intake.init(hardwareMap, telemetryIntake);
         spinner.init(hardwareMap, telemetrySpinner);
@@ -197,18 +192,18 @@ public class AutonomousV3 extends OpMode {
         }
 
         // Execute unfinished instructions
-        if (unfinishedInstructions.size()>0){
-            telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
-            for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
-                boolean result = executeFunction(instructions[unfinishedInstructions.indexOf(nummer)]);
-                if (result==true){
-                    unfinishedInstructions.remove(unfinishedInstructions.get(nummer));
-                    nummer--;
-                }
-            }
-        } else {
-            telemetryUnfinishedInstructions.setValue("Done with unfinished instructions");
-        }
+//        if (unfinishedInstructions.size() > 0){
+//            telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
+//            for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
+//                boolean result = executeFunction(instructions[unfinishedInstructions.indexOf(nummer)]);
+//                if (result==true){
+//                    unfinishedInstructions.remove(unfinishedInstructions.get(nummer));
+//                    nummer--;
+//                }
+//            }
+//        } else {
+//            telemetryUnfinishedInstructions.setValue("Done with unfinished instructions");
+//        }
     }
 
     @Override
@@ -260,7 +255,7 @@ public class AutonomousV3 extends OpMode {
             case "WAIT":
                 //Calculate wait time
                 if (wakeUpTime == 0) {
-                    wakeUpTime = (double) runtime.seconds() + (double) instruction[3];
+                    wakeUpTime = (double) runtime.time() + (double) instruction[3];
                 }
 
                 //Check if time passed
@@ -281,9 +276,8 @@ public class AutonomousV3 extends OpMode {
                         done = location.goToCircle((double) instruction[3], (double) instruction[4], (double) instruction[5]); // x, y, radius
                         break;
 
-                    case "timeBased1":
-                    case "timeBased":
-                        drivetrain.setPowerDirection((double) instruction[3],(double) instruction[4],(double) instruction[5], 0.5);
+                    case "setPower":
+                        drivetrain.setPowerDirection((double) instruction[3], (double) instruction[4], (double) instruction[5], (double) instruction[6]);
                         break;
 
                     default: // if no match is found
