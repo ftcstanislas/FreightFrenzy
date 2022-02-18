@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Final Autonomous red warehouse 3.11", group="main")
-public class TeamRed1 extends AutonomousV3{
+public class TeamRedWarehouse extends AutonomousOpmode {
     @Override
     public void init() {
         super.setTeam("red");

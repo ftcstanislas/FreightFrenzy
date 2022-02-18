@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Final Autonomous red spinner 3.11", group="main")
-public class TeamRed extends AutonomousV3{
+public class TeamRedStorage extends AutonomousOpmode {
     @Override
     public void init() {
         super.setTeam("red");

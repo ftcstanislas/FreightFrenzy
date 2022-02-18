@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -73,15 +74,6 @@ public class Location {
         historyY.add(y);
         historyHeading.add(heading);
 
-        // Odometry
-//        odometry = new Odometry(
-//                hardwareMap.get(DcMotor.class, "leftFront"),
-//                hardwareMap.get(DcMotor.class, "rightFront"),
-//                hardwareMap.get(DcMotor.class, "leftBack"),
-////                hardwareMap.get(Servo.class, "encoder"),
-//                2048 * 9 * Math.PI);
-//        odometry.setPosition(0,0,0);
-
         //Drivetrain
         drivetrain = drivetrainInit;
 
@@ -122,9 +114,6 @@ public class Location {
             heading -= 360;
         }
 
-        // Odometry
-//        odometry.globalCoordinatePositionUpdate();
-
         // Camera
         if (advanced) {
 
@@ -144,8 +133,6 @@ public class Location {
                 historyX.add(locationCamera[0] + robotX);
                 historyY.add(locationCamera[1] + robotY);
                 historyHeading.add(locationCamera[2]);
-            } else {
-                drivetrain.setPowerDirection(0,0,0,0);
             }
         }
 
@@ -190,12 +177,27 @@ public class Location {
         // Flush text
         telemetry.setValue(text);
         text = "";
+    }
 
+    // Give feedback to user
+    public void debug(Gamepad gamepad1, Gamepad gamepad2){
+        if (advanced) {
+            if (activeCamera.targetVisible) {
+                gamepad1.stopRumble();
+            } else {
+                gamepad1.rumble(1000);
+            }
 
-        //Duck
-//        camera.setZoom(true);
-//        camera.detectDuck();
-//        telemetry.setValue(odometry.getDisplay()+"\n"+IMU.getDisplay());
+            if (gamepad1.a) {
+                drivetrain.stopDriving();
+            }
+
+            if (gamepad1.dpad_right) {
+                setActiveCamera(1);
+            } else if (gamepad1.dpad_left) {
+                setActiveCamera(2);
+            }
+        }
     }
 
     private void updatePointerPositions(){
@@ -330,9 +332,11 @@ public class Location {
     }
 
     public void stop(){
-        camera1.stop();
-        camera2.stop();
-        targets.deactivate();
+        if (advanced) {
+            camera1.stop();
+            camera2.stop();
+            targets.deactivate();
+        }
     }
 
     public double getXCoordinate() {
@@ -353,13 +357,12 @@ public class Location {
             return false;
         }
 
-        //Constants
+        // Constants
         double allowableDistanceError = 50;
 
-        //Coordinates
+        // Distances
         double distanceToXTarget = targetX - getXCoordinate();
         double distanceToYTarget = targetY - getYCoordinate();
-
         double orientationDifference = targetRotation - getOrientation();
 
         // (-180; 180]
@@ -385,11 +388,7 @@ public class Location {
             double robotMovementXComponent = calculateX(robotMovementAngle, power);
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
 
-//            telemetry.setValue(orientationDifference+"\n"+robotMovementAngle+"\n"+robotMovementXComponent+"\n"+robotMovementYComponent);
-
             double turning = orientationDifference / 360;
-
-//            drivetrain.setPowerDirection(robotMovementXComponent, robotMovementYComponent, turning, power);
             drivetrain.setPowerDirection(-robotMovementXComponent, robotMovementYComponent, turning, power);
             return false;
         } else {
@@ -413,6 +412,21 @@ public class Location {
         return targetReached;
     }
 
+    public void driveImu(double x, double y, double orientation, double power){
+
+        // Calculate orientation
+        double orientationDifference = orientation - getOrientation();
+        while (orientationDifference < -180){
+            orientationDifference += 360;
+        };
+        while (orientationDifference >= 180){
+            orientationDifference -= 360;
+        }
+
+        double turning = orientationDifference / 180;
+        drivetrain.setPowerDirection(x, y, turning, power);
+    }
+
     private double calculateX(double desiredAngle, double speed) {
         return Math.sin(Math.toRadians(desiredAngle)) * speed;
     }
@@ -420,23 +434,6 @@ public class Location {
     private double calculateY(double desiredAngle, double speed) {
         return Math.cos(Math.toRadians(desiredAngle)) * speed;
     }
-
-//    public void addZoomBox() {
-//        camera1.addZoomBox();
-//    }
-//
-//    public void removeZoomBox() {
-//        camera1.removeZoomBox();
-//    }
-//
-//    public String detectDuck() {
-//        camera1.setPointerAngle(90);//look right ahead
-//        String position = "none";
-//        while (position == "none") {
-//            position = camera1.detectDuck();
-//        }
-//        return position;
-//    }
 
     public double getMedian(ArrayList<Double> list){
         Collections.sort(list);
