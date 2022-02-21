@@ -68,9 +68,24 @@ public abstract class DefaultOpMode extends OpMode {
         File positionXFile = AppUtil.getInstance().getSettingsFile("positionX.txt");
         File positionYFile = AppUtil.getInstance().getSettingsFile("positionY.txt");
         File orientationFile = AppUtil.getInstance().getSettingsFile("positionOrientation.txt");
-        double x = Double.parseDouble(ReadWriteFile.readFile(positionXFile).trim());
-        double y = Double.parseDouble(ReadWriteFile.readFile(positionYFile).trim());
-        double o = Double.parseDouble(ReadWriteFile.readFile(orientationFile).trim());
+        double x;
+        try {
+            x = Double.parseDouble(ReadWriteFile.readFile(positionXFile).trim());
+        } catch (NumberFormatException e){
+            x = 0;
+        }
+        double y;
+        try {
+            y = Double.parseDouble(ReadWriteFile.readFile(positionYFile).trim());
+        } catch (NumberFormatException e){
+            y = 0;
+        }
+        double o;
+        try {
+            o = Double.parseDouble(ReadWriteFile.readFile(orientationFile).trim());
+        } catch (NumberFormatException e){
+            o = 0;
+        }
         return new double[]{x, y, o};
     }
 

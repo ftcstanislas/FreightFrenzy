@@ -167,7 +167,7 @@ public class Location {
                     activeCamera.id, activeCamera.targetVisible);
 
             // Update active camera
-            updateActiveCamera();
+//            updateActiveCamera();
 
             // Update where the camera's are looking at
             updatePointerPositions();
@@ -377,7 +377,7 @@ public class Location {
 
         // slow down
         double slowDownFrom = 1000;
-        double minPower = Math.min(0.3, power);
+        double minPower = Math.min(0.35, power);
 
         if (distance < slowDownFrom){
             power = minPower + (power-minPower) * distance/slowDownFrom;
@@ -388,7 +388,7 @@ public class Location {
             double robotMovementXComponent = calculateX(robotMovementAngle, power);
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
 
-            double turning = orientationDifference / 360;
+            double turning = orientationDifference / 180;
             drivetrain.setPowerDirection(-robotMovementXComponent, robotMovementYComponent, turning, power);
             return false;
         } else {

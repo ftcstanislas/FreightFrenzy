@@ -43,22 +43,22 @@ public class Routes {
             // Park
             {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 180.0, 0.3},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0},
-            {true, "WAIT", "wait", 2.0},
+            {true, "WAIT", "wait", 1.0},
             {true, "DRIVETRAIN", "setPower", 0.0, 0.0, 0.0, 0.0}
     };
 
     public Object[][] routeWarehouse = {
-            {true, "DRIVETRAIN", "toPosition", -50.0, -1581.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -86.4, -1609.0, 90.0, 0.3},
 
             // Deliver preloaded freight
             {true, "DRIVETRAIN", "toPosition", 0.0, -1051.0, 0.0, 0.3},
             {true, "ARM", "toAngle", 135.0},
-            {true, "WAIT", "wait", 2.0},
+            {true, "WAIT", "wait", 1.5},
 
             // Park
             {true, "DRIVETRAIN", "toPosition", 0.0, -1051.0, 0.0, 0.3},
             {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0},
-            {true, "WAIT", "wait", 2.0},
+            {true, "WAIT", "wait", 1.0},
             {true, "DRIVETRAIN", "setPower", 0.0, 0.0, 0.0, 0.0}
     };
 

@@ -25,12 +25,16 @@ public class MecanumDrive extends RobotPart{
         // get motors
         motors.put("leftFront", map.get(DcMotorEx.class, "leftFront"));
         motors.get("leftFront").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("leftFront").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.put("rightFront", map.get(DcMotorEx.class, "rightFront"));
         motors.get("rightFront").setDirection(DcMotor.Direction.FORWARD);
+        motors.get("rightFront").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.put("leftBack", map.get(DcMotorEx.class, "leftBack"));
         motors.get("leftBack").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("leftBack").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.put("rightBack", map.get(DcMotorEx.class, "rightBack"));
         motors.get("rightBack").setDirection(DcMotor.Direction.FORWARD);
+        motors.get("rightBack").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         
         // telemetry setup
         telemetry = telemetryInit;
