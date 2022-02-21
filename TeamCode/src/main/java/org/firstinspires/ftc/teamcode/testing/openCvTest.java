@@ -20,7 +20,7 @@ public class openCvTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
   
     private OpenCvCamera webcam;
-    private ContourPipeline pipeline;
+    private coneDetectionPipeline pipeline;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -32,6 +32,23 @@ public class openCvTest extends OpMode {
         // OpenCV webcam
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        
+        pipeline = new coneDetectionPipeline();
+        
+        webcam.setPipeline(pipeline);
+        
+        // Webcam Streaming
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
       
         telemetry.addData("Status", "Initialized");
     }
