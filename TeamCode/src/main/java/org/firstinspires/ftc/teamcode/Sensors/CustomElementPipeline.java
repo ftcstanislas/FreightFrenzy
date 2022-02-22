@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.Sensors;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -9,8 +9,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-public class StofferPipeline extends OpenCvPipeline {
-    Telemetry telemetry;
+public class CustomElementPipeline extends OpenCvPipeline {
+//    Telemetry telemetry;
     String cameraName;
     Mat mat = new Mat();
     public enum Location {
@@ -20,28 +20,18 @@ public class StofferPipeline extends OpenCvPipeline {
     }
 
     private Location location;
-    /* ===================================================== */
-    /* =============== UPDATE THESE VALUES!!!! ============= */
-    /* ===================================================== */
     static final Rect LEFT_ROI = new Rect(
             new Point(0, 100),
             new Point(120, 200)
     );
-//    static final Rect MID_ROI = new Rect(
-//            new Point(100, 100),
-//            new Point(200, 200)
-//    );
     static final Rect RIGHT_ROI = new Rect(
             new Point(200, 100),
             new Point(320, 200)
     );
     static double PERCENT_COLOR_THRESHOLD = 0.3;
-    /* ===================================================== */
-    /* =============== UPDATE THESE VALUES!!!! ============= */
-    /* ===================================================== */
 
-    public StofferPipeline(Telemetry t, String cn) {
-        telemetry = t;
+    public CustomElementPipeline(String cn) {
+//        telemetry = t;
         cameraName = cn;
     }
 
@@ -54,55 +44,46 @@ public class StofferPipeline extends OpenCvPipeline {
         Core.inRange(mat, lowHSV, highHSV, mat);
 
         Mat left = mat.submat(LEFT_ROI);
-//        Mat mid = mat.submat(MID_ROI);
         Mat right = mat.submat(RIGHT_ROI);
 
         double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;
-//        double midValue = Core.sumElems(mid).val[0] / MID_ROI.area() / 255;
         double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
 
         left.release();
-//        mid.release();
         right.release();
 
-        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
-//        telemetry.addData("Mid raw value", (int) Core.sumElems(mid).val[0]);
-        telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
-
-        telemetry.addData("Left percentage", Math.round(leftValue) * 100);
-//        telemetry.addData("Mid percentage", Math.round(midValue) * 100);
-        telemetry.addData("Right percentage", Math.round(rightValue) * 100);
+//        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
+//        telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
+//
+//        telemetry.addData("Left percentage", Math.round(leftValue) * 100);
+//        telemetry.addData("Right percentage", Math.round(rightValue) * 100);
 
         boolean elementLeft = leftValue > PERCENT_COLOR_THRESHOLD;
-//        boolean elementMid = midValue > PERCENT_COLOR_THRESHOLD;
         boolean elementRight = rightValue > PERCENT_COLOR_THRESHOLD;
 
         if (elementLeft) {
             if (cameraName == "Webcam 1") {
                 location = Location.MID;
-                telemetry.addData("Element location:", "Mid");
+//                telemetry.addData("Element location:", "Mid");
             } else {
                 location = Location.LEFT;
-                telemetry.addData("Element location:", "Left");
+//                telemetry.addData("Element location:", "Left");
             }
         }
-//        else if (elementMid) {
-//            location = Location.MID;
-//            telemetry.addData("Element location:", "Mid");
-//        }
+
         else if (elementRight) {
             if (cameraName == "Webcam 1") {
                 location = Location.RIGHT;
-                telemetry.addData("Element location:", "Right");
+//                telemetry.addData("Element location:", "Right");
             } else {
                 location = Location.MID;
-                telemetry.addData("Element location:", "Mid");
+//                telemetry.addData("Element location:", "Mid");
             }
         } else {
             location = Location.LEFT;
-            telemetry.addData("Element location:", "Left");
+//            telemetry.addData("Element location:", "Left");
         }
-        telemetry.update();
+//        telemetry.update();
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
@@ -110,7 +91,6 @@ public class StofferPipeline extends OpenCvPipeline {
         Scalar colorEmpty = new Scalar(255,0,0);
 
         Imgproc.rectangle(mat, LEFT_ROI, (location == Location.LEFT && cameraName == "Webcam 2") || (location == Location.MID && cameraName == "Webcam 1") ? colorElement : colorEmpty);
-//        Imgproc.rectangle(mat, MID_ROI, location == Location.MID ? colorElement : colorEmpty);
         Imgproc.rectangle(mat, RIGHT_ROI, (location == Location.RIGHT && cameraName == "Webcam 1") || (location == Location.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
 
         return mat;

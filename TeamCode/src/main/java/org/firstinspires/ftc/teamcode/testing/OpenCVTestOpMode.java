@@ -64,23 +64,38 @@ public class OpenCVTestOpMode extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
-    OpenCvCamera camera;
+    OpenCvCamera camera1;
+    OpenCvCamera camera2;
+
+    String camName1 = "Webcam 1";
+    String camName2 = "Webcam 2";
 
     @Override
     public void runOpMode() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
-        camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-        StofferPipeline pipeline = new StofferPipeline(telemetry);
+//        int[] viewportContainerIds = OpenCvCameraFactory.getInstance()
+//                .splitLayoutForMultipleViewports(
+//                        cameraMonitorViewId, //The container we're splitting
+//                        2, //The number of sub-containers to create
+//                        OpenCvCameraFactory.ViewportSplitMethod.HORIZONTALLY); //Whether to split the container vertically or horizontally
+        WebcamName webcam1 = hardwareMap.get(WebcamName.class, camName1);
+        WebcamName webcam2 = hardwareMap.get(WebcamName.class, camName2);
+        camera1 = OpenCvCameraFactory.getInstance().createWebcam(webcam1, cameraMonitorViewId);
+//        camera2 = OpenCvCameraFactory.getInstance().createWebcam(webcam2, cameraMonitorViewId);
+        StofferPipeline pipeline1 = new StofferPipeline(telemetry, camName1);
+//        StofferPipeline pipeline2 = new StofferPipeline(telemetry, camName2);
+
         RectangleTest rectangleTest = new RectangleTest();
 
-        camera.setPipeline(pipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        camera1.setPipeline(pipeline1);
+//        camera2.setPipeline(pipeline2);
+//        camera.setPipeline(rectangleTest);
+        camera1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera1.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode)
@@ -88,21 +103,35 @@ public class OpenCVTestOpMode extends LinearOpMode {
                 telemetry.addData("Camera error", errorCode);
             }
         });
+//        camera2.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+//        {
+//            @Override
+//            public void onOpened()
+//            {
+//                camera2.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+//            }
+//            @Override
+//            public void onError(int errorCode)
+//            {
+//                telemetry.addData("Camera error", errorCode);
+//            }
+//        });
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        switch (pipeline.getLocation()) {
-            case LEFT:
-                telemetry.addData("Have a letter", "A");
-            case MID:
-                telemetry.addData("Have a letter", "B");
-            case RIGHT:
-                telemetry.addData("Have a letter", "C");
-            case NOT_FOUND:
-                telemetry.addData("Have a letter", "No element = no letter for u lol");
-        }
-        camera.stopStreaming();
+//        switch (pipeline.getLocation()) {
+//            case LEFT:
+//                telemetry.addData("Have a letter", "A");
+//            case MID:
+//                telemetry.addData("Have a letter", "B");
+//            case RIGHT:
+//                telemetry.addData("Have a letter", "C");
+//            case NOT_FOUND:
+//                telemetry.addData("Have a letter", "No element = no letter for u lol");
+//        }
+        camera1.stopStreaming();
+//        camera2.stopStreaming();
         telemetry.update();
         runtime.reset();
 
