@@ -66,17 +66,6 @@ public class Camera{
     double pointingAt = 0;
     String id = "";
 
-    // Game element detection
-    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
-    private static final String[] LABELS = {
-      "Ball",
-      "Cube",
-      "Duck",
-      "Marker"
-    };
-
-    private boolean checkDuck = false;
-
     public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
         // Telemetry
         telemetry = telemetryInit;
@@ -92,23 +81,6 @@ public class Camera{
         vuforia = vuforiaInit;
         parameters = parametersInit;
         allTrackables = allTrackablesInit;
-
-        //Duck
-        if (false) {
-            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-            tfodParameters.minResultConfidence = 0.8f;
-            tfodParameters.isModelTensorFlow2 = true;
-            tfodParameters.inputSize = 320;
-            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-
-            if (tfod != null) {
-                tfod.activate();
-
-            }
-        }
     }
 
     public void setCameraPosition(float forward, float left, float height, float heading){
@@ -238,54 +210,11 @@ public class Camera{
         return targetPointerPosition;
     }
 
-    // Called when stopping script
-    public void stop(){
-        // Disable Tracking when we are done;
-//        targets.deactivate();
-//        stopDuckDetection();
-    }
-
     public double[] getPosition() {
         VectorF translation = lastLocation.getTranslation();
         Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
         double[] position = new double[]{translation.get(0), translation.get(1), rotation.thirdAngle};
         return position;
     }
-
-    public void addZoomBox() {
-        tfod.setZoom(2.5, 16.0/9.0);
-    }
-
-    public void removeZoomBox() {
-        tfod.setZoom(1, 16.0/9.0);
-    }
-
-    public String detectDuck() {
-        if (tfod != null) {
-            String text = "";
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                text = "# Object Detected " + updatedRecognitions.size();
-                // step through the list of recognitions and display boundary info.
-                int i = 0;
-                for (Recognition recognition : updatedRecognitions) {
-                    text += String.format("label (%d)", i) + recognition.getLabel();
-                    text += String.format("  left,top (%d)", i) + 
-                        // "%.03f , %.03f" + 
-                        recognition.getLeft() + recognition.getTop();
-                    text += String.format("  right,bottom (%d)", i) + 
-                        // "%.03f , %.03f" +
-                        recognition.getRight() + recognition.getBottom();
-                    i++;
-                }
-            } else {
-                text = "No Objects Detected";
-            }
-            telemetryDucks.setValue(text);
-        }
-        return "none";//Need to be removed
-    } 
 }
 

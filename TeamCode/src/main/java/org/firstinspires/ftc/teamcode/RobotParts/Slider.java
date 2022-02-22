@@ -34,28 +34,28 @@ public class Slider extends RobotPart{
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // setup
         telemetry = telemetryInit;
-        motors.put("arm", map.get(DcMotorEx.class, "arm"));
-        motors.get("arm").setDirection(DcMotor.Direction.REVERSE);
-        motors.get("arm").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motors.put("slider", map.get(DcMotorEx.class, "slider"));
+        motors.get("slider").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("slider").setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motors.get("slider").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         setBrake(true);
         servos.put("fork", map.get(Servo.class, "fork"));
 
         // not final
         modes.put("base", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 0.0});
+            put("slider", new Object[]{"position", 0.0});
         }});
 
         modes.put("low", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 1770.0});
+            put("slider", new Object[]{"position", 1770.0});
         }});
 
         modes.put("mid", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3025.0});
+            put("slider", new Object[]{"position", 3025.0});
         }});
 
         modes.put("high", new HashMap<String, Object[]>() {{
-            put("arm", new Object[]{"position", 3264.0});
+            put("slider", new Object[]{"position", 3264.0});
         }});
 
         servos.get("fork").setPosition(0.8);
@@ -103,32 +103,32 @@ public class Slider extends RobotPart{
     }
 
     public boolean calibrate() {
-        DcMotorEx armMotor = motors.get("arm");
-        //Set arm position to -100 (previous encoder 0 position - 100);
+        DcMotorEx sliderMotor = motors.get("slider");
+        //Set slider position to -100 (previous encoder 0 position - 100);
         if (goUp == false) {
-            if (armMotor.getTargetPosition() != -100) {
-                armMotor.setTargetPosition(-100);
-                armMotor.setVelocity(80);
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (sliderMotor.getTargetPosition() != -100) {
+                sliderMotor.setTargetPosition(-100);
+                sliderMotor.setVelocity(80);
+                sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            if (inMargin(armMotor.getCurrentPosition(), armMotor.getTargetPosition(), 50)) {
+            if (inMargin(sliderMotor.getCurrentPosition(), sliderMotor.getTargetPosition(), 50)) {
             goUp = true;
             }
         } else {
             //Go up slowly
-            if (armMotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
-                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                armMotor.setPower(0.1);
+            if (sliderMotor.getMode() != DcMotor.RunMode.RUN_USING_ENCODER) {
+                sliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                sliderMotor.setPower(0.1);
             }
             //Check stuck
-            if (armMotor.getVelocity() <= 10) {
+            if (sliderMotor.getVelocity() <= 10) {
                 stuck += 1;
             }
             if (stuck >= 30) {
                 stuck = 0;
                 goUp = false;
-                armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                sliderMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 return true;
             }
         }
