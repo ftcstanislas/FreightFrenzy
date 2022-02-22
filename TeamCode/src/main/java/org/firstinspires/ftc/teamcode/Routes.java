@@ -35,7 +35,10 @@ public class Routes {
             // Deliver preloaded freight
             {true, "DRIVETRAIN", "toPosition", -820.0, -824.0, 90.0, 0.3},
             {true, "ARM", "toAngle", 45.0},
+            {true, "ARM", "toHeight", 890},
+            {true, "ARM", "setIntake", "intaking"},
             {true, "WAIT", "wait", 2.0},
+            {true, "ARM", "setIntake", "stop"},
 
             // Duck
             {true, "DRIVETRAIN", "toPosition", -1391.0, -1486.0, 90.0, 0.3},
@@ -53,7 +56,10 @@ public class Routes {
             // Deliver preloaded freight
             {true, "DRIVETRAIN", "toPosition", 0.0, -1051.0, 0.0, 0.3},
             {true, "ARM", "toAngle", 135.0},
-            {true, "WAIT", "wait", 1.5},
+            {true, "ARM", "toHeight", 890},
+            {true, "ARM", "setIntake", "intaking"},
+            {true, "WAIT", "wait", 2.0},
+            {true, "ARM", "setIntake", "stop"},
 
             // Park
             {true, "DRIVETRAIN", "toPosition", 0.0, -1051.0, 0.0, 0.3},

@@ -333,8 +333,6 @@ public class Location {
 
     public void stop(){
         if (advanced) {
-            camera1.stop();
-            camera2.stop();
             targets.deactivate();
         }
     }
@@ -388,7 +386,7 @@ public class Location {
             double robotMovementXComponent = calculateX(robotMovementAngle, power);
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
 
-            double turning = orientationDifference / 180;
+            double turning = 2 * orientationDifference / distance;
             drivetrain.setPowerDirection(-robotMovementXComponent, robotMovementYComponent, turning, power);
             return false;
         } else {
@@ -423,7 +421,7 @@ public class Location {
             orientationDifference -= 360;
         }
 
-        double turning = orientationDifference / 180;
+        double turning = orientationDifference / 5;
         drivetrain.setPowerDirection(x, y, turning, power);
     }
 

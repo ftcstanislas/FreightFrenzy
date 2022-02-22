@@ -112,10 +112,10 @@ public class BallOrCube extends LinearOpMode {
             Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
             //HSV Range (Hue, saturation, value)
-            Scalar lowHSV = new Scalar(0, 255, 255);
+            Scalar lowHSV = new Scalar(100, 100, 100);
             Scalar highHSV = new Scalar(255, 255, 255);
 
-            //Create threshholding to greyscale
+            //Create thresholding to greyscale
             Core.inRange(mat, lowHSV, highHSV, mat);
 
             // Remove Noise
@@ -144,7 +144,10 @@ public class BallOrCube extends LinearOpMode {
         }
 
         public String getContours() {
-            return contours.toString();
+            if (contours.isEmpty()) {
+                return "Is empty";
+            }
+            return String.valueOf(contours.size());
         }
 
         public enum TYPE {

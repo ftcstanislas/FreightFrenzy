@@ -110,15 +110,13 @@ public class AutonomousOpmode extends DefaultOpMode {
                 }
                 break;
 
-            case "INTAKE":
-                if (function == "mode") {
-                    intake.setMode((String) instruction[3]);
-                }
-                break;
-
             case "ARM":
                 if (function == "toAngle"){
-                    arm.setSpinnerAngle((double) instruction[3]);
+                    done = arm.setSpinnerAngle((double) instruction[3]);
+                } else if (function == "toHeight") {
+                    done = arm.setHeight((int) instruction[3]);
+                } else if (function == "setIntake") {
+                    arm.setIntake((String) instruction[3]);
                 }
                 break;
 
