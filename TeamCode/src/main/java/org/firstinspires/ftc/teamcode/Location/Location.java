@@ -88,12 +88,12 @@ public class Location {
 
             // Camera 1
             camera1 = new Camera();
-            camera1.init(allTrackables, vuforia, parameters, hardwareMap, "1", 1.32, -0.01, telemetryInit);
+            camera1.init(allTrackables, vuforia, parameters, hardwareMap, "1", 1.32, 0.449, telemetryInit);
             camera1.setPointerPosition(x, y, heading, false);
 
             // Camera 2
             camera2 = new Camera();
-            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 0.41, telemetryInit);
+            camera2.init(allTrackables, vuforia, parameters, hardwareMap, "2", 1.32, 1.291, telemetryInit);
             camera2.setPointerPosition(x, y, heading, false);
 
             // Activate active camera
@@ -375,7 +375,7 @@ public class Location {
         }
 
         // Constants
-        double allowableDistanceError = 30;
+        double allowableDistanceError = 40;
 
         // Distances
         double distanceToXTarget = targetX - getXCoordinate();
@@ -395,7 +395,7 @@ public class Location {
 
         // slow down
         double slowDownFrom = 100;
-        double minPower = Math.min(0.1, power);
+        double minPower = Math.min(0.05, power);
 
         if (distance < slowDownFrom) {
             power = minPower + (power - minPower) / slowDownFrom * distance;
@@ -441,8 +441,7 @@ public class Location {
             orientationDifference -= 360;
         }
 
-        double turning = Math.min(1, Math.max(-1, orientationDifference));
-        text += "\nturning" + turning + "\nx"+x+"\ny"+ y;
+        double turning = 0.025 * orientationDifference;
         drivetrain.setPowerDirection(x, y, turning, power);
     }
 

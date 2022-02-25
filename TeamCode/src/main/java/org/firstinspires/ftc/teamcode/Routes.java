@@ -12,7 +12,7 @@ import java.util.Map;
 
 
 public class Routes {
-    
+
     /*
     Routes:
     -----------------------------------------------------------------------------------------------
@@ -35,38 +35,40 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1581.0, 90.0, 0.3},
 
             // Deliver preloaded freight
+            {false, "ARM", "toAngle", -100.0},
+            {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", -820.0, -824.0, 90.0, 0.3},
-            {true, "ARM", "toAngle", 45.0},
             {true, "ARM", "toHeight", "{customElementHeight}"},
+            {true, "ARM", "toAngle", 45.0},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 2.0},
             {true, "ARM", "setIntake", "stop"},
-            {false, "ARM", "toAngle", 0.0},
 
             // Duck
             {true, "DRIVETRAIN", "toPosition", -1391.0, -1486.0, 90.0, 0.3},
 
             // Park
-            {true, "DRIVETRAIN", "toPosition", 0.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 1.1},
+            {false, "ARM", "toAngle", 0.0},
+            {true, "DRIVETRAIN", "toPosition", -100.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.0},
     };
 
     public Object[][] routeWarehouse = {
             {true, "DRIVETRAIN", "toPosition", -86.4, -1609.0, 90.0, 0.3},
 
             // Deliver preloaded freight
+            {false, "ARM", "toAngle", 90.0},
             {true, "DRIVETRAIN", "toPosition", 8.0, -1180.0, 0.0, 0.3},
-            {true, "ARM", "toAngle", 45.0},
             {true, "ARM", "toHeight", "{customElementHeight}"},
-            {true, "ARM", "toAngle", 110.0},
+            {true, "ARM", "toAngle", 130.0},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 2.0},
             {true, "ARM", "setIntake", "stop"},
-            {false, "ARM", "toAngle", 0.0},
 
             // Park
-            {true, "DRIVETRAIN", "toPosition", 0.0, -1250.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0, 1.1},
+            {false, "ARM", "toAngle", 0.0},
+            {true, "DRIVETRAIN", "toPosition", -100.0, -1200.0, 0.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0, 2.0},
     };
 
     public Object[][] test = {
@@ -74,47 +76,59 @@ public class Routes {
             {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 0.1, 30.0},
     };
 
-    public Object[][] getRoute(Start.TeamColor team, Start.StartLocation startPosition, Start.CustomElement customElement){
+    public Object[][] getRoute(Start.TeamColor teamColor, Start.StartLocation startPosition, Start.CustomElement customElement){
+        // Get route based on startPosition
         Object[][] route;
         if (startPosition == Start.StartLocation.SPINNER) {
-            route = routeSpinner;
+            route = Routes.deepCopy(routeSpinner);
         } else if (startPosition == Start.StartLocation.WAREHOUSE){
-            route = routeWarehouse;
+            route = Routes.deepCopy(routeWarehouse);
         } else {
             throw new java.lang.Error(startPosition + " is not a starting position.");
         }
+
+        // Update route for team color
+        if (teamColor == Start.TeamColor.RED){
+            // route is made for red team
+        } else if (teamColor == Start.TeamColor.BLUE){
+            route = switchRoute(route);
+        } else {
+            throw new java.lang.Error(teamColor + " is not a team color.");
+        }
+
+        // Update route for custom element
         route = replaceTemplates(route, customElement);
         return route;
     }
 
+    public double[] getStartPosition(Start.TeamColor team, Start.StartLocation startPosition){
+        Object[][] routeTest = getRoute(team, startPosition, Start.CustomElement.LEFT);
+        double x = (double) routeTest[0][3];
+        double y = (double) routeTest[0][4];
+        double rotation = (double) routeTest[0][5];
+        return new double[]{x,y,rotation};
+    }
+
     private Object[][] replaceTemplates(Object[][] route, Start.CustomElement customElement){
-        for (int i =0; i < route.length; i++){
-            for (int j =0; j < route[i].length; j++){
-                if (route[i][j] == "{customElementHeight}"){
+        Object[][] newRoute = Routes.deepCopy(route);
+        for (int i =0; i < newRoute.length; i++){
+            for (int j =0; j < newRoute[i].length; j++){
+                if (newRoute[i][j] == "{customElementHeight}"){
                     if (customElement == Start.CustomElement.RIGHT){
-                        route[i][j] = 940;
+                        newRoute[i][j] = 940;
                     } else if (customElement == Start.CustomElement.MID){
-                        route[i][j] = 600;
+                        newRoute[i][j] = 600;
                     } if (customElement == Start.CustomElement.LEFT){
-                        route[i][j] = 280;
+                        newRoute[i][j] = 280;
                     }
                 }
             }
         }
-        return route;
+        return newRoute;
     }
-
-    public double[] getStartPosition(Start.TeamColor team, Start.StartLocation startPosition){
-        Object[][] route = getRoute(team, startPosition, Start.CustomElement.MID);
-        double x = (double) route[0][3];
-        double y = (double) route[0][4];
-        double rotation = (double) route[0][5];
-        return new double[]{x,y,rotation};
-    }
-
 
     private Object[][] switchRoute(Object[][] route){
-        Object[][] newRoute = route.clone();
+        Object[][] newRoute = Routes.deepCopy(route);
         for (Object[] instruction : newRoute) {
             String object = (String) instruction[1];
             String function = (String) instruction[2];
@@ -156,5 +170,19 @@ public class Routes {
             }
         }
         return newRoute;
+    }
+
+    public static Object[][] deepCopy(Object[][] original) {
+        if (original == null) {
+            return null;
+        }
+
+        final Object[][] result = new Object[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            result[i] = Arrays.copyOf(original[i], original[i].length);
+            // For Java versions prior to Java 6 use the next:
+            // System.arraycopy(original[i], 0, result[i], 0, original[i].length);
+        }
+        return result;
     }
 }

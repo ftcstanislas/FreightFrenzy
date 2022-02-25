@@ -197,11 +197,12 @@ public class Camera{
 
     // Get position of pointer for angle
     public double getPointerPosition(double angle){
-        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
-        double outsideServoSize = (targetPointerPosition - 1)/2;
-        if (targetPointerPosition < -outsideServoSize){
+        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
+        double outsideServoSize = (targetPointerPosition - 1) / 2;
+        while (targetPointerPosition < -outsideServoSize) {
             targetPointerPosition += TOTAL_COUNTS_PER_ROUND;
-        } else if (targetPointerPosition > 1+outsideServoSize){
+        }
+        while (targetPointerPosition > 1 + outsideServoSize) {
             targetPointerPosition -= TOTAL_COUNTS_PER_ROUND;
         }
 

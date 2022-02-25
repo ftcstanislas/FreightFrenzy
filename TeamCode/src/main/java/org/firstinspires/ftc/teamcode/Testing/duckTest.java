@@ -27,11 +27,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.Testing;
 
 import android.os.Environment;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -56,7 +55,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Duck Testing", group = "testing")
+@TeleOp(name = "Duck test", group = "testing")
 public class duckTest extends LinearOpMode {
     private String TFOD_MODEL_FILE = String.format("%s/FIRST/tflitemodels/goompa.tflite", Environment.getExternalStorageDirectory().getAbsolutePath());
     private String TFOD_MODEL_LABELS = String.format("%s/FIRST/tflitemodels/labels.txt", Environment.getExternalStorageDirectory().getAbsolutePath());

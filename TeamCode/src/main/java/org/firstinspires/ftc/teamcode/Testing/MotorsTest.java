@@ -1,20 +1,19 @@
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@TeleOp(name="Servos test", group="testing")
-public class ServosTest extends OpMode {
+@TeleOp(name="Motors test", group="testing")
+public class MotorsTest extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    Map<String, Servo> servos = new HashMap<String, Servo>();
+    Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -23,11 +22,11 @@ public class ServosTest extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initializing");
 
-        List<Servo> allServos = null;
-        allServos = hardwareMap.getAll(Servo.class);
-        for (Servo servo : allServos) {
-            String name = hardwareMap.getNamesOf(servo).iterator().next();
-            servos.put(name, servo);
+        List<DcMotor> allMotors = null;
+        allMotors = hardwareMap.getAll(DcMotor.class);
+        for (DcMotor motor : allMotors) {
+            String name = hardwareMap.getNamesOf(motor).iterator().next();
+            motors.put(name, motor);
 //            telemetry.addData("motor",name);
         }
 //        motor = hardwareMap.get(DcMotor.class, "arm");
@@ -53,17 +52,16 @@ public class ServosTest extends OpMode {
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     *
      */
     @Override
     public void loop() {
 
-        double position = gamepad1.right_stick_y/2+0.5;
-        for (Map.Entry<String, Servo> entry : servos.entrySet()) {
-            Servo motor = entry.getValue();
+        double power = gamepad1.right_stick_y;
+        for (Map.Entry<String, DcMotor> entry : motors.entrySet()) {
+            DcMotor motor = entry.getValue();
             String name = entry.getKey();
-            motor.setPosition(position);
-            telemetry.addData(name, position);
+            motor.setPower(power);
+            telemetry.addData(name, power);
         }
 
         // Show the elapsed game time and wheel power.

@@ -27,14 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.Testing;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -52,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
 
 // Commit test
 // Testing if the control hub does not simply crash without any accessible motors
-@TeleOp(name="Control Hub Test", group="testing")
+@TeleOp(name="Control Hub test", group="testing")
 //@Disabled
 public class ControlHubTest extends OpMode
 {
