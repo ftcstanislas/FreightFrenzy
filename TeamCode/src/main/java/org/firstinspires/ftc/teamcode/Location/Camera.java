@@ -47,7 +47,6 @@ public class Camera{
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
-    protected Telemetry.Item telemetryDucks = null;
 
     // Trackables
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -66,10 +65,9 @@ public class Camera{
     double pointingAt = 0;
     String id = "";
 
-    public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit) {
         // Telemetry
         telemetry = telemetryInit;
-        telemetryDucks = telemetryDucksInit;
 
         // Servo pointer
         id = number;

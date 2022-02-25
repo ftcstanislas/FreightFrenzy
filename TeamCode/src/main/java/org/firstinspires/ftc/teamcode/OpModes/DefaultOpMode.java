@@ -93,11 +93,21 @@ public abstract class DefaultOpMode extends OpMode {
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
+//        if (useCameras) {
+//            customElementDetection.init(hardwareMap, telemetryCustomElement, "Webcam 2",false);
+//            customElementDetection.startStream();
+//        }
+        location.init(hardwareMap, useCameras, locationRobot, drivetrain, telemetryLocation, telemetryCustomElement);
         if (useCameras) {
-            customElementDetection.init(hardwareMap, telemetryCustomElement, "Webcam 2",true);
+            if (location.getNotActiveWebcamName() == "Webcam 2") {
+                location.getNotActiveWebcam().setPointerAngle(50, false);
+            } else {
+                location.getNotActiveWebcam().setPointerAngle(60, false);
+            }
+
+            customElementDetection.init(hardwareMap, telemetryCustomElement, location.getNotActiveWebcamName(), false);
             customElementDetection.startStream();
         }
-        location.init(hardwareMap, useCameras, locationRobot, drivetrain, telemetryLocation, telemetryCustomElement);
         spinner.init(hardwareMap, telemetrySpinner);
         arm.init(hardwareMap, telemetryArm, location);
 
@@ -112,15 +122,11 @@ public abstract class DefaultOpMode extends OpMode {
         status.setValue(String.format("Init looping for %.1fs in %.1fms",
                 runtime.seconds(), loopTime));
 
-        globalUpdate();
+//        globalUpdate(); // TEST
 
         if (useCameras) {
             customElementDetection.getLocation();
         }
-
-        // Location
-        location.update();
-        location.debug(gamepad1, gamepad2);
     }
 
     @Override
