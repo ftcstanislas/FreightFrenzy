@@ -35,9 +35,9 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1581.0, 90.0, 0.3},
 
             // Deliver preloaded freight
-            {false, "ARM", "toAngle", -100.0},
+            {false, "ARM", "toAngle", -45.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -820.0, -824.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -820.0, -924.0, 90.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 45.0},
             {true, "ARM", "setIntake", "outtaking"},
@@ -45,12 +45,19 @@ public class Routes {
             {true, "ARM", "setIntake", "stop"},
 
             // Duck
-            {true, "DRIVETRAIN", "toPosition", -1391.0, -1486.0, 90.0, 0.3},
+            {false, "ARM", "toAngle", 90.0},
+            {false, "ARM", "toHeight", 900},
+            {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1400.0, -1496.0, 90.0, 0.3},
+            {true, "SPINNER", "mode", "spinLeft"},
+            {true, "WAIT", "wait", 2.0},
+            {true, "SPINNER", "mode", "stop"},
 
             // Park
+            {false, "ARM", "toHeight", 900},
             {false, "ARM", "toAngle", 0.0},
-            {true, "DRIVETRAIN", "toPosition", -100.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.0},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.5},
     };
 
     public Object[][] routeWarehouse = {
@@ -58,6 +65,7 @@ public class Routes {
 
             // Deliver preloaded freight
             {false, "ARM", "toAngle", 90.0},
+            {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", 8.0, -1180.0, 0.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 130.0},
@@ -66,9 +74,10 @@ public class Routes {
             {true, "ARM", "setIntake", "stop"},
 
             // Park
+            {false, "ARM", "toHeight", 900},
             {false, "ARM", "toAngle", 0.0},
             {true, "DRIVETRAIN", "toPosition", -100.0, -1200.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0, 2.0},
+            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0, 1.7},
     };
 
     public Object[][] test = {

@@ -93,16 +93,12 @@ public abstract class DefaultOpMode extends OpMode {
         // Initialize objects
         drivetrain.init(hardwareMap, telemetryDrivetrain, location);
         drivetrain.setBrake(true);
-//        if (useCameras) {
-//            customElementDetection.init(hardwareMap, telemetryCustomElement, "Webcam 2",false);
-//            customElementDetection.startStream();
-//        }
         location.init(hardwareMap, useCameras, locationRobot, drivetrain, telemetryLocation, telemetryCustomElement);
         if (useCameras) {
             if (location.getNotActiveWebcamName() == "Webcam 2") {
                 location.getNotActiveWebcam().setPointerAngle(50, false);
             } else {
-                location.getNotActiveWebcam().setPointerAngle(90, false); //60
+                location.getNotActiveWebcam().setPointerAngle(80, false);
             }
 
             customElementDetection.init(hardwareMap, telemetryCustomElement, location.getNotActiveWebcamName(), false);
@@ -110,6 +106,7 @@ public abstract class DefaultOpMode extends OpMode {
         }
         spinner.init(hardwareMap, telemetrySpinner);
         arm.init(hardwareMap, telemetryArm, location);
+        arm.setSpinnerAngle(locationRobot[2]);
 
         status.setValue("Initialized");
     }

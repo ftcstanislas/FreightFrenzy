@@ -395,7 +395,7 @@ public class Location {
 
         // slow down
         double slowDownFrom = 100;
-        double minPower = Math.min(0.05, power);
+        double minPower = Math.min(0.1, power);
 
         if (distance < slowDownFrom) {
             power = minPower + (power - minPower) / slowDownFrom * distance;
