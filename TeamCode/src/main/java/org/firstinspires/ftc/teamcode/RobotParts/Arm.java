@@ -70,6 +70,7 @@ public class Arm extends RobotPart {
         // Update spinner
         if (gamepad2.right_stick_y != 0 || gamepad2.right_stick_x != 0) {
             double angle = Math.toDegrees(Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x));
+//            double angle = gamepad2.right_stick_x * 100;
             setSpinnerAngle(angle);
         }
 
@@ -133,6 +134,7 @@ public class Arm extends RobotPart {
 
         // Update arm
         double targetArmPosition = armPosition + difference / 360 * ENCODER_TICK_PER_ROUND;
+//        double targetArmPosition = armPosition + spinnerAngle;
         motors.get("armSpinner").setTargetPosition((int) Math.round(targetArmPosition));
 
     }
