@@ -29,14 +29,13 @@ public class Arm extends RobotPart {
         motors.get("armSpinner").setTargetPositionTolerance(10); //5
         updateSpinnerAngle();
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setSpinnerAngle(0);
 
         // Setup arm
         motors.put("arm", map.get(DcMotorEx.class, "arm"));
         motors.get("arm").setDirection(DcMotor.Direction.FORWARD);
         motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.get("arm").setPower(1);
-        setHeight(890);
+        setHeight(10);
         motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Setup intake
@@ -47,6 +46,7 @@ public class Arm extends RobotPart {
         setBrake(true);
 
         // set modes
+        currentMode = "stop";
         modes.put("stop", new HashMap<String, Object[]>() {{
             put("intake", new Object[]{"power", 0.0});
         }});
@@ -68,22 +68,25 @@ public class Arm extends RobotPart {
     @Override
     public void checkController(Gamepad gamepad1, Gamepad gamepad2) {
         // Update spinner
-        if (gamepad2.right_stick_y != 0 || gamepad2.right_stick_x != 0) {
+        if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.1) {
             double angle = Math.toDegrees(Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x));
 //            double angle = gamepad2.right_stick_x * 100;
             setSpinnerAngle(angle);
         }
 
+        // Update intake
         switchMode(gamepad2.a, "stop","intaking");
         switchMode(gamepad2.y, "stop","outtaking");
+
+        // Update arm height
         if (gamepad2.left_stick_y != 0) {
-            setHeight((int) (motors.get("arm").getCurrentPosition() + 120 * gamepad2.left_stick_y));
+            setHeight((int) (motors.get("arm").getCurrentPosition() + 120 * -gamepad2.left_stick_y));
         }
     }
 
     public boolean setHeight(int height){
         motors.get("arm").setTargetPosition(height);
-        if (motors.get("arm").getTargetPosition() == motors.get("arm").getCurrentPosition()){
+        if (Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 5){
             return true;
         } else {
             return false;
@@ -92,7 +95,7 @@ public class Arm extends RobotPart {
 
     public boolean setSpinnerAngle(double angle) {
         spinnerAngle = angle;
-        return motors.get("armSpinner").isBusy();
+        return updateSpinnerAngle();
     }
 
     public void setIntake(String mode){
@@ -115,7 +118,7 @@ public class Arm extends RobotPart {
                 + "\nArm height:" + motors.get("arm").getCurrentPosition());
     }
 
-    public void updateSpinnerAngle() {
+    public boolean updateSpinnerAngle() {
         // Get relative heading
         double targetHeading = spinnerAngle - location.getOrientation();
 
@@ -136,6 +139,10 @@ public class Arm extends RobotPart {
         double targetArmPosition = armPosition + difference / 360 * ENCODER_TICK_PER_ROUND;
 //        double targetArmPosition = armPosition + spinnerAngle;
         motors.get("armSpinner").setTargetPosition((int) Math.round(targetArmPosition));
-
+        if (difference < 4){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

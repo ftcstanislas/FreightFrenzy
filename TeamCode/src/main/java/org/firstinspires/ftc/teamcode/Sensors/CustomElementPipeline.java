@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Sensors;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Location.Start;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -19,16 +20,16 @@ public class CustomElementPipeline extends OpenCvPipeline {
         RIGHT,
     }
 
-    private Location location;
+    private Start.CustomElement location;
     static final Rect LEFT_ROI = new Rect(
-            new Point(0, 100),
-            new Point(120, 200)
+            new Point(20, 50),
+            new Point(140, 150)
     );
     static final Rect RIGHT_ROI = new Rect(
-            new Point(200, 100),
-            new Point(320, 200)
+            new Point(160, 50),
+            new Point(240, 150)
     );
-    static double PERCENT_COLOR_THRESHOLD = 0.3;
+    static double PERCENT_COLOR_THRESHOLD = 0.2;
 
     public CustomElementPipeline(String cn) {
 //        telemetry = t;
@@ -63,26 +64,31 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
         if (elementLeft) {
             if (cameraName == "Webcam 1") {
-                location = Location.MID;
+                location = Start.CustomElement.MID;
 //                telemetry.addData("Element location:", "Mid");
             } else {
-                location = Location.LEFT;
+                location = Start.CustomElement.LEFT;
 //                telemetry.addData("Element location:", "Left");
             }
         }
 
         else if (elementRight) {
             if (cameraName == "Webcam 1") {
-                location = Location.RIGHT;
+                location = Start.CustomElement.RIGHT;
 //                telemetry.addData("Element location:", "Right");
             } else {
-                location = Location.MID;
+                location = Start.CustomElement.MID;
 //                telemetry.addData("Element location:", "Mid");
             }
         } else {
-            location = Location.LEFT;
+            if (cameraName == "Webcam 1") {
+                location = Start.CustomElement.LEFT;
+            } else {
+                location = Start.CustomElement.RIGHT;
+            }
 //            telemetry.addData("Element location:", "Left");
         }
+
 //        telemetry.update();
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
@@ -90,13 +96,13 @@ public class CustomElementPipeline extends OpenCvPipeline {
         Scalar colorElement = new Scalar(0,255,0);
         Scalar colorEmpty = new Scalar(255,0,0);
 
-        Imgproc.rectangle(mat, LEFT_ROI, (location == Location.LEFT && cameraName == "Webcam 2") || (location == Location.MID && cameraName == "Webcam 1") ? colorElement : colorEmpty);
-        Imgproc.rectangle(mat, RIGHT_ROI, (location == Location.RIGHT && cameraName == "Webcam 1") || (location == Location.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
+        Imgproc.rectangle(mat, LEFT_ROI, (location == Start.CustomElement.LEFT && cameraName == "Webcam 2") || (location == Start.CustomElement.MID && cameraName == "Webcam 1") ? colorElement : colorEmpty);
+        Imgproc.rectangle(mat, RIGHT_ROI, (location == Start.CustomElement.RIGHT && cameraName == "Webcam 1") || (location == Start.CustomElement.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
 
         return mat;
     }
 
-    public Location getLocation() {
+    public Start.CustomElement getLocation() {
         return location;
     }
 }

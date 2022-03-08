@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Sensors;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Location.Start;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -44,8 +45,8 @@ public class CustomElementDetection {
         });
     }
 
-    public CustomElementPipeline.Location getLocation() {
-        CustomElementPipeline.Location location = pipeline.getLocation();
+    public Start.CustomElement getLocation() {
+        Start.CustomElement location = pipeline.getLocation();
         telemetry.setValue("Element position: " + location);
         return location;
     }

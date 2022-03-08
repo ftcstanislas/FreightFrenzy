@@ -47,7 +47,6 @@ public class Camera{
 
     // Telemetry
     protected Telemetry.Item telemetry = null;
-    protected Telemetry.Item telemetryDucks = null;
 
     // Trackables
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -66,10 +65,9 @@ public class Camera{
     double pointingAt = 0;
     String id = "";
 
-    public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucksInit) {
+    public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit) {
         // Telemetry
         telemetry = telemetryInit;
-        telemetryDucks = telemetryDucksInit;
 
         // Servo pointer
         id = number;
@@ -199,11 +197,12 @@ public class Camera{
 
     // Get position of pointer for angle
     public double getPointerPosition(double angle){
-        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * (180 - angle) + OFFSET;
-        double outsideServoSize = (targetPointerPosition - 1)/2;
-        if (targetPointerPosition < -outsideServoSize){
+        double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
+        double outsideServoSize = (targetPointerPosition - 1) / 2;
+        while (targetPointerPosition < -outsideServoSize) {
             targetPointerPosition += TOTAL_COUNTS_PER_ROUND;
-        } else if (targetPointerPosition > 1+outsideServoSize){
+        }
+        while (targetPointerPosition > 1 + outsideServoSize) {
             targetPointerPosition -= TOTAL_COUNTS_PER_ROUND;
         }
 

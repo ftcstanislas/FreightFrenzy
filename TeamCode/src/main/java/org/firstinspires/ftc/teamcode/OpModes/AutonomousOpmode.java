@@ -5,18 +5,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.firstinspires.ftc.teamcode.Location.Start;
 import org.firstinspires.ftc.teamcode.OpModes.DefaultOpMode;
 import org.firstinspires.ftc.teamcode.Routes;
+import org.firstinspires.ftc.teamcode.Sensors.CustomElementPipeline;
 
 public class AutonomousOpmode extends DefaultOpMode {
     // Instructions
     Routes routes = new Routes();
 
     int instruction = 0;
-    List<Object[]> unfinishedInstructions = new ArrayList<Object[]>();
 
     // Wich program to follow
-    public String[] program = {"unknown", "unknown", "unknown"};
+    public Start.StartLocation startLocation;
+    public Start.CustomElement customElement;
+    public Start.TeamColor teamColor;
     Object[][] instructions = null;
 
     // sleeping
@@ -25,12 +28,12 @@ public class AutonomousOpmode extends DefaultOpMode {
     // make runtime
     ElapsedTime runtime = new ElapsedTime();
 
-    public void setTeam(String team){
-        program[0] = team;
+    public void setTeam(Start.TeamColor team){
+        teamColor = team;
     }
 
-    public void setStart(String startPosition){
-        program[1] = startPosition;
+    public void setStart(Start.StartLocation startPosition){
+        startLocation = startPosition;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class AutonomousOpmode extends DefaultOpMode {
         super.setUseInstructions(true);
 
         // Location robot
-        double[] locationRobot = routes.getStartPosition(program[0], program[1]);
+        double[] locationRobot = routes.getStartPosition(teamColor, startLocation);
         super.setLocationRobot(locationRobot);
 
         super.init();
@@ -47,8 +50,10 @@ public class AutonomousOpmode extends DefaultOpMode {
 
     @Override
     public void start() {
+        customElement = customElementDetection.getLocation();
+
         // Correct instruction
-        instructions = routes.getRoute(program[0], program[1], program[2]);
+        instructions = routes.getRoute(teamColor, startLocation, customElement);
 
         super.start();
     }
@@ -57,8 +62,8 @@ public class AutonomousOpmode extends DefaultOpMode {
     public void loop() {
         // Telemetry update
         double loopTime = getLoopTime();
-        status.setValue(String.format("Following program %s from %s with %s for %.1fs in %.1fms",
-                program[0], program[1], program[2], runtime.seconds(),  loopTime));
+        status.setValue(String.format("Following %s program %s with %s for %.1fs in %.1fms",
+                teamColor, startLocation, customElement, runtime.seconds(),  loopTime));
 
         // Updates
         globalUpdate();
@@ -73,29 +78,12 @@ public class AutonomousOpmode extends DefaultOpMode {
             boolean result = executeFunction(instructions[instruction]);
 
             // Check if done
-            if (result == true){
-                instruction += 1;
-            } else if (instructions[instruction][0].equals(false)){
-                unfinishedInstructions.add(instructions[instruction]);
+            if (result == true ||  (boolean) instructions[instruction][0] == false){
                 instruction += 1;
             }
         } else {
             telemetryInstruction.setValue("Done with instructions");
         }
-
-        // Execute unfinished instructions
-//        if (unfinishedInstructions.size() > 0){
-//            telemetryUnfinishedInstructions.setValue(unfinishedInstructions.toString());
-//            for (int nummer=0; nummer<unfinishedInstructions.size();nummer++){
-//                boolean result = executeFunction(instructions[unfinishedInstructions.indexOf(nummer)]);
-//                if (result==true){
-//                    unfinishedInstructions.remove(unfinishedInstructions.get(nummer));
-//                    nummer--;
-//                }
-//            }
-//        } else {
-//            telemetryUnfinishedInstructions.setValue("Done with unfinished instructions");
-//        }
     }
 
     public boolean executeFunction(Object[] instruction){
@@ -150,6 +138,19 @@ public class AutonomousOpmode extends DefaultOpMode {
 
                     case "driveImu":
                         location.driveImu((double) instruction[3], (double) instruction[4], (double) instruction[5],  (double) instruction[6]);
+                        //Calculate wait time
+                        if (wakeUpTime == 0) {
+                            wakeUpTime = (double) runtime.time() + (double) instruction[7];
+                        }
+
+                        //Check if time passed
+                        if (wakeUpTime < runtime.time()) {
+                            wakeUpTime = 0;
+                            drivetrain.setPowerDirection(0,0,0,0);
+                            done = true;
+                        } else {
+                            done = false;
+                        }
                         break;
 
                     default: // if no match is found
