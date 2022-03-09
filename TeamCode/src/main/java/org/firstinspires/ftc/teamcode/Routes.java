@@ -45,9 +45,9 @@ public class Routes {
             {true, "ARM", "setIntake", "stop"},
 
             // Duck
-            {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
+            {false, "ARM", "toAngle", 100.0},
             {true, "DRIVETRAIN", "toPosition", -1400.0, -1496.0, 90.0, 0.3},
             {true, "SPINNER", "mode", "spinLeft"},
             {true, "WAIT", "wait", 2.0},
@@ -55,7 +55,7 @@ public class Routes {
 
             // Park
             {false, "ARM", "toHeight", 900},
-            {false, "ARM", "toAngle", 0.0},
+            {false, "ARM", "toAngle", 180.0},
             {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.5},
     };

@@ -31,11 +31,11 @@ public class Spinner extends RobotPart{
         }});
 
         modes.put("spinLeft", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", 0.5});
+            put("spinner", new Object[]{"power", 0.4});
         }});
 
         modes.put("spinRight", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", -0.5});
+            put("spinner", new Object[]{"power", -0.4});
         }});
         
         // setup telemetry
