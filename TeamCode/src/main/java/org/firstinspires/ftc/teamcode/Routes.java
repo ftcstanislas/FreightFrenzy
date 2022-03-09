@@ -32,32 +32,34 @@ public class Routes {
     */
 
     public Object[][] routeSpinner = {
-            {true, "DRIVETRAIN", "toPosition", -1041.0, -1581.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1100.0, -1609.0, 90.0, 0.3},
 
             // Deliver preloaded freight
             {false, "ARM", "toAngle", -45.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -820.0, -924.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -890.0, -990.0, 90.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
-            {true, "ARM", "toAngle", 45.0},
+            {true, "ARM", "toAngle", 43.0},
             {true, "ARM", "setIntake", "outtaking"},
-            {true, "WAIT", "wait", 2.0},
+            {true, "WAIT", "wait", 1.5},
             {true, "ARM", "setIntake", "stop"},
 
             // Duck
+            {true, "ARM", "toAngle", -45.0},
             {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
-            {false, "ARM", "toAngle", 100.0},
+            {false, "ARM", "toAngle", 90.0},
             {true, "DRIVETRAIN", "toPosition", -1400.0, -1496.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 90.0, 0.2, 0.4},
             {true, "SPINNER", "mode", "spinLeft"},
-            {true, "WAIT", "wait", 2.0},
+            {true, "WAIT", "wait", 3.5},
             {true, "SPINNER", "mode", "stop"},
 
             // Park
             {false, "ARM", "toHeight", 900},
             {false, "ARM", "toAngle", 180.0},
             {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.5},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.6},
     };
 
     public Object[][] routeWarehouse = {
@@ -128,7 +130,7 @@ public class Routes {
                     } else if (customElement == Start.CustomElement.MID){
                         newRoute[i][j] = 600;
                     } if (customElement == Start.CustomElement.LEFT){
-                        newRoute[i][j] = 280;
+                        newRoute[i][j] = 464;
                     }
                 }
             }

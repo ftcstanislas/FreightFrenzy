@@ -111,13 +111,13 @@ public abstract class DefaultOpMode extends OpMode {
                 if (location.getNotActiveWebcamName() == "Webcam 2") {
                     location.getNotActiveWebcam().setPointerAngle(50, false);
                 } else {
-                    location.getNotActiveWebcam().setPointerAngle(80, false);
+                    location.getNotActiveWebcam().setPointerAngle(82, false);
                 }
             } else if (teamColor == Start.TeamColor.BLUE){
                 if (location.getNotActiveWebcamName() == "Webcam 2") {
                     location.getNotActiveWebcam().setPointerAngle(50, false);
                 } else {
-                    location.getNotActiveWebcam().setPointerAngle(80, false);
+                    location.getNotActiveWebcam().setPointerAngle(82, false);
                 }
             }
 

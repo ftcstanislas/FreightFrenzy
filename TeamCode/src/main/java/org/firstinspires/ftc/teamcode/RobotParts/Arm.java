@@ -80,11 +80,11 @@ public class Arm extends RobotPart {
                 setHeight(10);
             }
         } else if (gamepad2.dpad_left && teamColor == Start.TeamColor.RED) {
-            setHeight(300);
-            setSpinnerAngle(130);
+            setHeight(330);
+            setSpinnerAngle(157);
         } else if (gamepad2.dpad_right && teamColor == Start.TeamColor.BLUE) {
-            setHeight(300);
-            setSpinnerAngle(-130);
+            setHeight(330);
+            setSpinnerAngle(-157);
         } if (gamepad2.dpad_up) {
             setHeight(980);
             if (teamColor == Start.TeamColor.RED) {
@@ -105,11 +105,18 @@ public class Arm extends RobotPart {
 
         // Update arm height
         if (gamepad2.left_stick_y != 0) {
-            setHeight((int) (motors.get("arm").getCurrentPosition() + 120 * -gamepad2.left_stick_y));
+            int newHeight = (int) (motors.get("arm").getCurrentPosition() + 120 * -gamepad2.left_stick_y);
+            if (newHeight < 0){
+                newHeight = 0;
+            }
+            setHeight(newHeight);
         }
     }
 
     public boolean setHeight(int height){
+        if (height < 0){
+            height = 0;
+        }
         motors.get("arm").setTargetPosition(height);
         return Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 5;
     }
