@@ -41,7 +41,6 @@ public class Camera{
     private OpenGLMatrix lastLocation   = null;
     private VuforiaLocalizer vuforia    = null;
     private TFObjectDetector tfod       = null;
-//    private VuforiaTrackables targets   = null;
 
     public boolean targetVisible       = false;
 
@@ -179,8 +178,6 @@ public class Camera{
         } else if (movement < 0){
             pointerPosition += Math.max(-POINTER_SPEED * timePassed, movement);
         }
-
-//        telemetryDucks.setValue(pointerPosition+" = "+pointer.getPosition());
 
         pointerLastUpdate = currentTime;
     }

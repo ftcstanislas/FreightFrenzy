@@ -20,10 +20,8 @@ public abstract class RobotPart {
     protected Map<String, DcMotorEx> motors = new HashMap<String, DcMotorEx>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
     private Map<String, Boolean> switchPressed = new HashMap<String, Boolean>();
-//    protected HashMap<String, double[]> modes = new HashMap<String, double[]>();
     protected HashMap<String, HashMap<String, Object[]>> modes = new HashMap<String, HashMap<String, Object[]>>();
     protected String currentMode = "";
-    protected String additionalTelemetry = "";
     abstract void updateTelemetry();
     
 
@@ -35,27 +33,22 @@ public abstract class RobotPart {
         for (Map.Entry<String, DcMotorEx> entry : motors.entrySet()){
             DcMotorEx motor = entry.getValue();
             DcMotor.RunMode mode = motor.getMode();
-            if (mode == DcMotor.RunMode.RUN_TO_POSITION || mode == DcMotor.RunMode.RUN_USING_ENCODER){
-//                text += "\n" + entry.getKey() + " | encoder " + motor.getCurrentPosition() + "/" + motor.getTargetPosition() + " with " + motor.getPower();
+            if (mode == DcMotor.RunMode.RUN_TO_POSITION || mode == DcMotor.RunMode.RUN_USING_ENCODER) {
                 text += String.format("\n%s | encoder %d to %d with %.1f",
                         entry.getKey(), motor.getCurrentPosition(), motor.getTargetPosition(),  motor.getPower());
             } else if (mode == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
-//                text += "\n" + entry.getKey() + " | power " + motor.getPower();
                 text += String.format("\n%s | %.1f power",
                         entry.getKey(), motor.getPower());
             } else {
-//                text += "\n" + entry.getKey() + " | "+ motor.getMode() + " " + motor.getPower();
                 text += String.format("\n%s | %s with %.1f power",
                         entry.getKey(), mode,  motor.getPower());
             }
         };
         for (Map.Entry<String, Servo> entry : servos.entrySet()){
             Servo servo = entry.getValue();
-//            text += "\n" + entry.getKey() + " | servo " + servo.getPosition();
             text += String.format("\n%s | servo at %.1f",
                     entry.getKey(),  servo.getPosition());
         };
-//        text += additionalTelemetry;
         telemetry.setValue(text);
     }
     

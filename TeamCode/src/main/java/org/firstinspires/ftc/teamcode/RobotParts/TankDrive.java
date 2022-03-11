@@ -18,11 +18,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 public class TankDrive extends RobotPart{
-    
-    // private Telemetry.Item telemetry = null;
-    // public Servo pointer = null;
-    // Map<String, DcMotor> motors = new HashMap<String, DcMotor>();
-    // Map<String, Servo> servos = new HashMap<String, Servo>();
     String state = "forward";
     double oldTime = 0;
     ElapsedTime runtime = null;

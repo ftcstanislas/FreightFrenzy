@@ -115,9 +115,9 @@ public abstract class DefaultOpMode extends OpMode {
                 }
             } else if (teamColor == Start.TeamColor.BLUE){
                 if (location.getNotActiveWebcamName() == "Webcam 2") {
-                    location.getNotActiveWebcam().setPointerAngle(50, false);
+                    location.getNotActiveWebcam().setPointerAngle(90, false);
                 } else {
-                    location.getNotActiveWebcam().setPointerAngle(82, false);
+                    location.getNotActiveWebcam().setPointerAngle(102, false);
                 }
             }
 
@@ -138,8 +138,6 @@ public abstract class DefaultOpMode extends OpMode {
         double loopTime = getLoopTime();
         status.setValue(String.format("Init looping for %.1fs in %.1fms",
                 runtime.seconds(), loopTime));
-
-//        globalUpdate(); // TEST
 
         if (useCameras) {
             customElementDetection.getLocation();

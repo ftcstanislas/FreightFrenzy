@@ -46,9 +46,9 @@ public class Routes {
 
             // Duck
             {true, "ARM", "toAngle", -45.0},
-            {false, "ARM", "toHeight", 900},
+            {false, "ARM", "toHeight", 1200},
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
-            {false, "ARM", "toAngle", 90.0},
+            {false, "ARM", "toAngle", "{spinnerAngle}"},
             {true, "DRIVETRAIN", "toPosition", -1400.0, -1496.0, 90.0, 0.3},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 90.0, 0.2, 0.4},
             {true, "SPINNER", "mode", "spinLeft"},
@@ -108,7 +108,7 @@ public class Routes {
         }
 
         // Update route for custom element
-        route = replaceTemplates(route, customElement);
+        route = replaceTemplates(route, customElement, teamColor);
         return route;
     }
 
@@ -120,7 +120,7 @@ public class Routes {
         return new double[]{x,y,rotation};
     }
 
-    private Object[][] replaceTemplates(Object[][] route, Start.CustomElement customElement){
+    private Object[][] replaceTemplates(Object[][] route, Start.CustomElement customElement, Start.TeamColor teamColor){
         Object[][] newRoute = Routes.deepCopy(route);
         for (int i =0; i < newRoute.length; i++){
             for (int j =0; j < newRoute[i].length; j++){
@@ -131,6 +131,12 @@ public class Routes {
                         newRoute[i][j] = 600;
                     } if (customElement == Start.CustomElement.LEFT){
                         newRoute[i][j] = 464;
+                    }
+                } else if (newRoute[i][j] == "{spinnerAngle}") {
+                    if (teamColor == Start.TeamColor.RED) {
+                        newRoute[i][j] = 90;
+                    } else if (teamColor == Start.TeamColor.BLUE) {
+                        newRoute[i][j] = -90;
                     }
                 }
             }
@@ -152,7 +158,9 @@ public class Routes {
                     break;
 
                 case "ARM":
-                    break;
+                    if (function == "toAngle") {
+                        instruction[3] = (double) instruction[3] * -1;
+                    }
 
                 case "SPINNER": 
                     if (function == "mode"){
@@ -164,16 +172,15 @@ public class Routes {
                     }
                     break;
 
-                case "DRIVETRAIN": 
-                    if (function == "toPosition" || function == "toCircle") {
-                        instruction[3] = (double) instruction[3] * -1; //x
-                    }
+                case "DRIVETRAIN":
                     if (function == "toPosition") {
+                        instruction[4] = (double) instruction[4] * -1; //y
                         instruction[5] = (double) instruction[5] * -1; //rotation
                     }
-                    if (function == "timeBased") {
-                        instruction[4] = (double) instruction[4] * -1;
+                    if (function == "driveImu") {
+                        instruction[5] = (double) instruction[5] * -1; //rotation
                     }
+
                     break;
                 
                 default: // if no match is found
@@ -191,8 +198,6 @@ public class Routes {
         final Object[][] result = new Object[original.length][];
         for (int i = 0; i < original.length; i++) {
             result[i] = Arrays.copyOf(original[i], original[i].length);
-            // For Java versions prior to Java 6 use the next:
-            // System.arraycopy(original[i], 0, result[i], 0, original[i].length);
         }
         return result;
     }
