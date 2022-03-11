@@ -12,6 +12,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class CustomElementPipeline extends OpenCvPipeline {
 //    Telemetry telemetry;
+
+    // Initialize values
     String cameraName;
     Mat mat = new Mat();
     public enum Location {
@@ -38,6 +40,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        // Create a monochrome image with orange areas white and non-orange areas black
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
         Scalar lowHSV = new Scalar(10, 100, 20);
         Scalar highHSV = new Scalar(25, 255, 255);
