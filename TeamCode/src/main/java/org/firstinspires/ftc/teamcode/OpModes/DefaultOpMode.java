@@ -169,6 +169,11 @@ public abstract class DefaultOpMode extends OpMode {
         // Telemetry update
         status.setValue("Stopping");
 
+        if (useCameras){
+            location.camera1.setPointerAngle(90, false);
+            location.camera2.setPointerAngle(90, false);
+        }
+
         location.stop();
 
         // Save location

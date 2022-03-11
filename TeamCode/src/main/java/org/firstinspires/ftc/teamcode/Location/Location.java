@@ -26,8 +26,8 @@ import java.util.List;
 public class Location {
     //    private Odometry odometry = null;
     private IMU IMU = null;
-    private Camera camera1 = null;
-    private Camera camera2 = null;
+    public Camera camera1 = null;
+    public Camera camera2 = null;
     private Telemetry.Item telemetry = null;
     private MecanumDrive drivetrain = null;
     private boolean advanced = false;
