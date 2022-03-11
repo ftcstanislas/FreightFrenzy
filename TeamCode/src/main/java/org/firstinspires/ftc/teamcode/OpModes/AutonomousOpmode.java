@@ -17,9 +17,6 @@ public class AutonomousOpmode extends DefaultOpMode {
     int instruction = 0;
 
     // Wich program to follow
-    public Start.StartLocation startLocation;
-    public Start.CustomElement customElement;
-    public Start.TeamColor teamColor;
     Object[][] instructions = null;
 
     // sleeping
@@ -27,14 +24,6 @@ public class AutonomousOpmode extends DefaultOpMode {
 
     // make runtime
     ElapsedTime runtime = new ElapsedTime();
-
-    public void setTeam(Start.TeamColor team){
-        teamColor = team;
-    }
-
-    public void setStart(Start.StartLocation startPosition){
-        startLocation = startPosition;
-    }
 
     @Override
     public void init() {
@@ -104,7 +93,7 @@ public class AutonomousOpmode extends DefaultOpMode {
                 } else if (function == "toHeight") {
                     done = arm.setHeight((int) instruction[3]);
                 } else if (function == "setIntake") {
-                    arm.setIntake((String) instruction[3]);
+                    arm.setMode((String) instruction[3]);
                 }
                 break;
 

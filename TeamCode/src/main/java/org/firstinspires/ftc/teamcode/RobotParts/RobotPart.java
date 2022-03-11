@@ -10,6 +10,7 @@ import java.util.HashMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Location.Start;
 
 
 public abstract class RobotPart {
@@ -25,8 +26,7 @@ public abstract class RobotPart {
     protected String additionalTelemetry = "";
     abstract void updateTelemetry();
     
-    abstract public void checkController(Gamepad gamepad1, Gamepad gamepad2);
-    
+
     protected void debug(){
         String text = "";
         if (!currentMode.equals("")){

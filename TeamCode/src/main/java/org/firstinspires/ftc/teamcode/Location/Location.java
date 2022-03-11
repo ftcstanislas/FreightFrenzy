@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -99,6 +100,9 @@ public class Location {
             // Activate active camera
             updatePointerPositions();
             updateActiveCamera();
+        } else {
+            hardwareMap.get(Servo.class, "cameraPointer1").setPosition(1);
+            hardwareMap.get(Servo.class, "cameraPointer2").setPosition(0);
         }
 
         telemetry = telemetryInit;
@@ -441,7 +445,7 @@ public class Location {
             orientationDifference -= 360;
         }
 
-        double turning = 0.025 * orientationDifference;
+        double turning = 0.05 * orientationDifference;
         drivetrain.setPowerDirection(x, y, turning, power);
     }
 

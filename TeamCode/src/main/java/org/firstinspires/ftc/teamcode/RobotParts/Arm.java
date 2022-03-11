@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Location.Location;
+import org.firstinspires.ftc.teamcode.Location.Start;
 
 import java.util.HashMap;
 
@@ -56,7 +57,7 @@ public class Arm extends RobotPart {
         }});
 
         modes.put("outtaking", new HashMap<String, Object[]>() {{
-            put("intake", new Object[]{"power", -1.0});
+            put("intake", new Object[]{"power", -0.5});
         }});
     }
 
@@ -65,14 +66,38 @@ public class Arm extends RobotPart {
         debug();
     }
 
-    @Override
-    public void checkController(Gamepad gamepad1, Gamepad gamepad2) {
+    public void checkController(Gamepad gamepad1, Gamepad gamepad2, Start.TeamColor teamColor) {
         // Update spinner
-        if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.1) {
+        if (gamepad2.dpad_down) {
+            double target = 0;
+            if (teamColor == Start.TeamColor.RED) {
+                target = -90;
+            } else if (teamColor == Start.TeamColor.BLUE) {
+                target = 90;
+            }
+            boolean result = setSpinnerAngle(target);
+            if (result){
+                setHeight(10);
+            }
+        } else if (gamepad2.dpad_left && teamColor == Start.TeamColor.RED) {
+            setHeight(330);
+            setSpinnerAngle(157);
+        } else if (gamepad2.dpad_right && teamColor == Start.TeamColor.BLUE) {
+            setHeight(330);
+            setSpinnerAngle(-157);
+        } if (gamepad2.dpad_up) {
+            setHeight(980);
+            if (teamColor == Start.TeamColor.RED) {
+                setSpinnerAngle(105);
+            } else if (teamColor == Start.TeamColor.BLUE) {
+                setSpinnerAngle(-105);
+            }
+        } else if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.5) {
             double angle = Math.toDegrees(Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x));
-//            double angle = gamepad2.right_stick_x * 100;
             setSpinnerAngle(angle);
         }
+        double moveArm = gamepad2.right_trigger - gamepad2.left_trigger;
+        setSpinnerAngle(getSpinnerTargetAngle() + 5 * moveArm);
 
         // Update intake
         switchMode(gamepad2.a, "stop","intaking");
@@ -80,17 +105,20 @@ public class Arm extends RobotPart {
 
         // Update arm height
         if (gamepad2.left_stick_y != 0) {
-            setHeight((int) (motors.get("arm").getCurrentPosition() + 120 * -gamepad2.left_stick_y));
+            int newHeight = (int) (motors.get("arm").getCurrentPosition() + 120 * -gamepad2.left_stick_y);
+            if (newHeight < 0){
+                newHeight = 0;
+            }
+            setHeight(newHeight);
         }
     }
 
     public boolean setHeight(int height){
-        motors.get("arm").setTargetPosition(height);
-        if (Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 5){
-            return true;
-        } else {
-            return false;
+        if (height < 0){
+            height = 0;
         }
+        motors.get("arm").setTargetPosition(height);
+        return Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 5;
     }
 
     public boolean setSpinnerAngle(double angle) {
@@ -98,16 +126,8 @@ public class Arm extends RobotPart {
         return updateSpinnerAngle();
     }
 
-    public void setIntake(String mode){
-        if (mode == "stop"){
-            motors.get("intake").setPower(0);
-        } else if (mode == "intaking") {
-            motors.get("intake").setPower(1);
-        } else if (mode == "outtaking"){
-            motors.get("intake").setPower(-1);
-        } else {
-            throw new java.lang.Error(mode + " is not an mode");
-        }
+    public double getSpinnerTargetAngle(){
+        return spinnerAngle;
     }
 
     public void update() {
@@ -126,7 +146,7 @@ public class Arm extends RobotPart {
         double armPosition = motors.get("armSpinner").getCurrentPosition();
         double currentHeading = armPosition % ENCODER_TICK_PER_ROUND / ENCODER_TICK_PER_ROUND * 360;
 
-        // Find faster path to target heading
+        // Find fastest path to target heading
         double difference = targetHeading - currentHeading;
         while (difference < -180) {
             difference += 360;
@@ -137,12 +157,9 @@ public class Arm extends RobotPart {
 
         // Update arm
         double targetArmPosition = armPosition + difference / 360 * ENCODER_TICK_PER_ROUND;
-//        double targetArmPosition = armPosition + spinnerAngle;
         motors.get("armSpinner").setTargetPosition((int) Math.round(targetArmPosition));
-        if (difference < 4){
-            return true;
-        } else {
-            return false;
-        }
+
+        // Close to correct position
+        return difference < 4;
     }
 }

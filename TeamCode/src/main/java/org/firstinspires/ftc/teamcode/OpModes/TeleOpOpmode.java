@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.OpModes.DefaultOpMode;
 
-@TeleOp(name = "OpMode Iterative", group = "main")
 public class TeleOpOpmode extends DefaultOpMode {
 
     @Override
@@ -12,6 +11,7 @@ public class TeleOpOpmode extends DefaultOpMode {
         super.setUseCameras(false);
         super.setUseInstructions(false);
         super.init();
+        arm.setHeight(890);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class TeleOpOpmode extends DefaultOpMode {
 
         drivetrain.checkController(gamepad1, gamepad2);
         spinner.checkController(gamepad1, gamepad2);
-        arm.checkController(gamepad1, gamepad2);
+        arm.checkController(gamepad1, gamepad2, teamColor);
 
         // Updates
         globalUpdate();

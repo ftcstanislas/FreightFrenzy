@@ -77,7 +77,7 @@ public class PointerCalibrator extends OpMode {
     public void setServoAngle(double angle) {
 
         double pointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
-        double outsideServoSize = (pointerPosition - 1) / 2;
+        double outsideServoSize = (TOTAL_COUNTS_PER_ROUND - 1) / 2;
         while (pointerPosition < -outsideServoSize) {
             pointerPosition += TOTAL_COUNTS_PER_ROUND;
         }
