@@ -17,6 +17,8 @@ public class Arm extends RobotPart {
     private double spinnerAngle = 90;
     Location location = null;
 
+    private double PICK_UP_ORIENTATION = 90;
+
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit) {
         // setup variables
         telemetry = telemetryInit;
@@ -67,37 +69,61 @@ public class Arm extends RobotPart {
     }
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2, Start.TeamColor teamColor) {
-        // Update spinner
-        if (gamepad2.dpad_down) {
-            double target = 0;
-            if (teamColor == Start.TeamColor.RED) {
-                target = -90;
-            } else if (teamColor == Start.TeamColor.BLUE) {
-                target = 90;
-            }
-            boolean result = setSpinnerAngle(target);
-            if (result){
-                setHeight(10);
-            }
-        } else if (gamepad2.dpad_left && teamColor == Start.TeamColor.RED) {
-            setHeight(330);
-            setSpinnerAngle(157);
-        } else if (gamepad2.dpad_right && teamColor == Start.TeamColor.BLUE) {
-            setHeight(330);
-            setSpinnerAngle(-157);
-        } if (gamepad2.dpad_up) {
-            setHeight(980);
-            if (teamColor == Start.TeamColor.RED) {
+        // Shortcut spinner positions
+        if (teamColor  == Start.TeamColor.RED){
+            if (gamepad2.dpad_down) {
+                boolean result = setSpinnerAngle(-90);
+                if (result) {
+                    setHeight(50);
+                    setMode("intaking");
+                }
+            } else if (gamepad2.dpad_up){
+                setSpinnerAngle(141);
+                setMode("stop");
+                setHeight(330);
+            } else if (gamepad2.dpad_right){
+                boolean result = setSpinnerAngle(0);
+                if (result) {
+                    setHeight(50);
+                    setMode("intaking");
+                }
+            } else if (gamepad2.dpad_left){
                 setSpinnerAngle(105);
-            } else if (teamColor == Start.TeamColor.BLUE) {
-                setSpinnerAngle(-105);
+                setMode("stop");
+                setHeight(980);
             }
-        } else if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.5) {
+        }
+        if (teamColor  == Start.TeamColor.BLUE){
+            if (gamepad2.dpad_down) {
+                boolean result = setSpinnerAngle(90);
+                if (result) {
+                    setHeight(50);
+                    setMode("intaking");
+                }
+            } else if (gamepad2.dpad_up){
+                setSpinnerAngle(-141);
+                setMode("stop");
+                setHeight(330);
+            } else if (gamepad2.dpad_left){
+                boolean result = setSpinnerAngle(0);
+                if (result) {
+                    setHeight(50);
+                    setMode("intaking");
+                }
+            } else if (gamepad2.dpad_right){
+                setSpinnerAngle(-105);
+                setMode("stop");
+                setHeight(980);
+            }
+        }
+
+        // Move arm
+        if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.5) {
             double angle = Math.toDegrees(Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x));
             setSpinnerAngle(angle);
         }
-        double moveArm = gamepad2.right_trigger - gamepad2.left_trigger;
-        setSpinnerAngle(getSpinnerTargetAngle() + 5 * moveArm);
+        double moveArm = gamepad2.left_trigger - gamepad2.right_trigger;
+        setSpinnerAngle(getSpinnerTargetAngle() + 3 * moveArm);
 
         // Update intake
         switchMode(gamepad2.a, "stop","intaking");
@@ -160,6 +186,6 @@ public class Arm extends RobotPart {
         motors.get("armSpinner").setTargetPosition((int) Math.round(targetArmPosition));
 
         // Close to correct position
-        return difference < 4;
+        return Math.abs(difference) < 4;
     }
 }

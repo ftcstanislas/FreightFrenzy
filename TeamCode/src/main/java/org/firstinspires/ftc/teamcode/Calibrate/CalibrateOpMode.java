@@ -3,6 +3,11 @@ package org.firstinspires.ftc.teamcode.Calibrate;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ReadWriteFile;
+
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
+
+import java.io.File;
 
 @TeleOp(name = "Calibrate", group = "calibrating")
 public class CalibrateOpMode extends OpMode {
@@ -34,11 +39,11 @@ public class CalibrateOpMode extends OpMode {
         if (state == State.STARTING){
             telemetry.addLine("Press x to start");
             if (gamepad1.x) {
-                state = State.CALIBRATE_HEIGHT_ARM_START;
+                state = State.CALIBRATE_HEIGHT_ARM;
             }
         }
 
-        if (state == State.CALIBRATE_HEIGHT_ARM_START) {
+        if (state == State.CALIBRATE_HEIGHT_ARM) {
             telemetry.addLine("Let the arm of the robot touch to floor.");
             telemetry.addLine("Press y to continue");
             if (gamepad1.y) {
@@ -60,6 +65,15 @@ public class CalibrateOpMode extends OpMode {
                 armSpinner.setTargetPosition(0);
                 armSpinner.setPower(0.1);
                 armSpinner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                state = State.CALIBRATE_POSITION;
+            }
+        }
+
+        if (state == State.CALIBRATE_POSITION){
+            if (gamepad1.x){
+                saveValue("positionX.txt", 0.0);
+                saveValue("positionY.txt", 0.0);
+                saveValue("positionOrientation.txt", 0.0);
                 state = State.END;
             }
         }
@@ -67,15 +81,21 @@ public class CalibrateOpMode extends OpMode {
         if (state == State.END){
             telemetry.addLine("You are done!");
         }
+
+
+    }
+
+    private void saveValue(String filename, double value){
+        File file = AppUtil.getInstance().getSettingsFile(filename);
+        ReadWriteFile.writeFile(file, String.valueOf(value));
     }
 }
 
 
 enum State{
     STARTING,
-    CALIBRATE_HEIGHT_ARM_START,
     CALIBRATE_HEIGHT_ARM,
-    CALIBRATE_SPINNER_ARM_START,
     CALIBRATE_SPINNER_ARM,
+    CALIBRATE_POSITION,
     END
 }

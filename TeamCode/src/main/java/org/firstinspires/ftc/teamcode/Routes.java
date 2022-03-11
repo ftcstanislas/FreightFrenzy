@@ -50,7 +50,8 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
             {true, "DRIVETRAIN", "toPosition", -1400.0, -1496.0, 90.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 90.0, 0.2, 0.4},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 90.0, 0.2, 0.3},
+//            {false, "ARM", "toAngle", 85.0},
             {true, "SPINNER", "mode", "spinLeft"},
             {true, "WAIT", "wait", 3.5},
             {true, "SPINNER", "mode", "stop"},
@@ -59,7 +60,7 @@ public class Routes {
             {false, "ARM", "toHeight", 900},
             {false, "ARM", "toAngle", 180.0},
             {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.6},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.4},
     };
 
     public Object[][] routeWarehouse = {
