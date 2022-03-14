@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -14,6 +15,10 @@ public class Presentation extends OpMode {
     State state = State.START;
     DcMotor arm;
     DcMotor armSpinner;
+
+    Servo pointer1;
+    Servo pointer2;
+
     boolean xPressed = false;
 
     @Override
@@ -26,6 +31,9 @@ public class Presentation extends OpMode {
         armSpinner = hardwareMap.get(DcMotor.class, "armSpinner");
         armSpinner.setDirection(DcMotor.Direction.REVERSE);
         armSpinner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        pointer1 = hardwareMap.get(Servo.class, "cameraPointer1");
+        pointer2 = hardwareMap.get(Servo.class, "cameraPointer2");
     }
 
     @Override
@@ -47,7 +55,9 @@ public class Presentation extends OpMode {
         if (state == State.CAMERAS) {
             if (gamepad1.x && !xPressed) {
                 xPressed = true;
-                state = State.CAMERAS;
+                pointer1.setPosition(0.6);
+                pointer2.setPosition(0.6);
+                state = State.END;
             } else if (!gamepad1.x){
                 xPressed = false;
             }
