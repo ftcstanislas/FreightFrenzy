@@ -37,7 +37,7 @@ public class Routes {
             // Deliver preloaded freight
             {false, "ARM", "toAngle", -45.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -890.0, -990.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -880.0, -990.0, 90.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 43.0},
             {true, "ARM", "setIntake", "outtaking"},
@@ -46,11 +46,11 @@ public class Routes {
 
             // Duck
             {true, "ARM", "toAngle", -45.0},
-            {false, "ARM", "toHeight", 1200},
+            {false, "ARM", "toHeight", 1800},
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
-            {true, "DRIVETRAIN", "toPosition", -1400.0, -1496.0, 90.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 90.0, 0.2, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1410.0, -1496.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", -1.0, -1.0, 90.0, 0.3, 0.3},
             {true, "SPINNER", "mode", "spinLeft"},
             {true, "WAIT", "wait", 3.5},
             {true, "SPINNER", "mode", "stop"},
@@ -126,7 +126,7 @@ public class Routes {
             for (int j =0; j < newRoute[i].length; j++){
                 if (newRoute[i][j] == "{customElementHeight}"){
                     if (customElement == Start.CustomElement.RIGHT){
-                        newRoute[i][j] = 940;
+                        newRoute[i][j] = 950;
                     } else if (customElement == Start.CustomElement.MID){
                         newRoute[i][j] = 600;
                     } if (customElement == Start.CustomElement.LEFT){
@@ -134,9 +134,9 @@ public class Routes {
                     }
                 } else if (newRoute[i][j] == "{spinnerAngle}") {
                     if (teamColor == Start.TeamColor.RED) {
-                        newRoute[i][j] = 90;
+                        newRoute[i][j] = 90.0;
                     } else if (teamColor == Start.TeamColor.BLUE) {
-                        newRoute[i][j] = -90;
+                        newRoute[i][j] = -90.0;
                     }
                 }
             }

@@ -57,12 +57,23 @@ public class MecanumDrive extends RobotPart{
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
         // xy
-        double x = gamepad1.left_stick_x;
-        double y = -gamepad1.left_stick_y;
+        double x;
+        double y;
+        if (Math.abs(gamepad1.left_stick_x) > 0 || Math.abs(gamepad1.left_stick_y) > 0){
+            x = gamepad1.left_stick_x;
+            y = -gamepad1.left_stick_y;
+        } else if (Math.abs(gamepad1.right_stick_x) > 0 || Math.abs(gamepad1.right_stick_y) > 0) {
+            double robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
+            telemetry.setValue(Math.toDegrees(robotAngle));
+            x = Math.cos(robotAngle);
+            y = Math.sin(robotAngle);
+        } else {
+            x = 0;
+            y = 0;
+        }
 
         // turning
         double turning = gamepad1.left_trigger - gamepad1.right_trigger;
-        //turning = turning*Math.abs(turning); //experimental
         if (gamepad1.x){
             turning *= 0.45;
         }
@@ -173,7 +184,7 @@ public class MecanumDrive extends RobotPart{
             text += "╳";
         }
 
-        telemetry.setValue(text);
+//        telemetry.setValue(text);
     }
 
     private double nearestKey(Map<Double, String> map, Double target) {
