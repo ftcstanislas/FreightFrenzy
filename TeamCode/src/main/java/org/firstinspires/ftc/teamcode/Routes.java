@@ -39,7 +39,7 @@ public class Routes {
             {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", -880.0, -990.0, 90.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
-            {true, "ARM", "toAngle", 43.0},
+            {true, "ARM", "toAngle", 30.0},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 1.5},
             {true, "ARM", "setIntake", "stop"},
