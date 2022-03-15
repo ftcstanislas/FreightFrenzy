@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 // First item from route is start position
+//Jaron
 
 
 public class Routes {
@@ -50,7 +51,7 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
             {true, "DRIVETRAIN", "toPosition", -1410.0, -1496.0, 90.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", -1.0, -1.0, 90.0, 0.3, 0.3},
+            {true, "DRIVETRAIN", "driveImu", -1.0, -1.0, 90.0, 0.5, 0.5},
             {true, "SPINNER", "mode", "spinLeft"},
             {true, "WAIT", "wait", 3.5},
             {true, "SPINNER", "mode", "stop"},
