@@ -46,6 +46,19 @@ public class Presentation extends OpMode {
         if (state == State.START){
             if (gamepad1.x && !xPressed) {
                 xPressed = true;
+                state = State.ARM_ROTATE;
+            } else if (!gamepad1.x){
+                xPressed = false;
+            }
+        }
+
+        if (state == State.ARM_ROTATE) {
+            if (gamepad1.x && !xPressed) {
+                xPressed = true;
+                armSpinner.setTargetPosition(100);
+                armSpinner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armSpinner.setTargetPosition(-100);
+                armSpinner.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 state = State.CAMERAS;
             } else if (!gamepad1.x){
                 xPressed = false;
@@ -77,7 +90,7 @@ public class Presentation extends OpMode {
 
 enum State{
     START,
-    POINTS_1,
+    ARM_ROTATE,
     POINTS_2,
     POINTS_3,
     CAMERAS,
