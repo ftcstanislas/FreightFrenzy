@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 // First item from route is start position
-//Jaron
 
 
 public class Routes {
@@ -36,17 +35,9 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1100.0, -1609.0, 90.0, 0.3},
 
             // Deliver preloaded freight
-//            {false, "ARM", "toAngle", -45.0},
-//            {false, "ARM", "toHeight", 900},
-//            {true, "DRIVETRAIN", "toPosition", -880.0, -990.0, 90.0, 0.3},
-//            {true, "ARM", "toHeight", "{customElementHeight}"},
-//            {true, "ARM", "toAngle", 30.0},
-//            {true, "ARM", "setIntake", "outtaking"},
-//            {true, "WAIT", "wait", 1.5},
-//            {true, "ARM", "setIntake", "stop"},
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", 600.0, -1180.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -780.0, -1100.0, 180.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 50.0},
             {true, "ARM", "setIntake", "outtaking"},
@@ -57,20 +48,22 @@ public class Routes {
             {true, "ARM", "setIntake", "intaking"},
             {true, "ARM", "toAngle", -45.0},
             {true, "ARM", "setIntake", "stop"},
-            {false, "ARM", "toHeight", 1800},
-            {true, "DRIVETRAIN", "toPosition", -1041.0, -1496.0, 90.0, 0.3},
+            {true, "ARM", "toHeight", 1900},
+            {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.3},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
-            {true, "DRIVETRAIN", "toPosition", -1410.0, -1496.0, 90.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", -1.0, -1.0, 90.0, 0.5, 0.5},
+            {true, "DRIVETRAIN", "toPosition", -1450.0, -1300.0, 45.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.4, 0.5},
             {true, "SPINNER", "mode", "spinLeft"},
             {true, "WAIT", "wait", 3.5},
             {true, "SPINNER", "mode", "stop"},
 
             // Park
-            {false, "ARM", "toHeight", 900},
             {false, "ARM", "toAngle", 180.0},
             {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.4},
+            {true, "ARM", "toAngle", -10.0},
+            {true, "ARM", "toAngle", 70.0},
+            {true, "ARM", "toAngle", 180.0},
     };
 
     public Object[][] routeWarehouse = {
@@ -137,17 +130,17 @@ public class Routes {
             for (int j =0; j < newRoute[i].length; j++){
                 if (newRoute[i][j] == "{customElementHeight}"){
                     if (customElement == Start.CustomElement.RIGHT){
-                        newRoute[i][j] = 950;
+                        newRoute[i][j] = 980;
                     } else if (customElement == Start.CustomElement.MID){
-                        newRoute[i][j] = 600;
+                        newRoute[i][j] = 640;
                     } if (customElement == Start.CustomElement.LEFT){
                         newRoute[i][j] = 464;
                     }
                 } else if (newRoute[i][j] == "{spinnerAngle}") {
                     if (teamColor == Start.TeamColor.RED) {
-                        newRoute[i][j] = 90.0;
+                        newRoute[i][j] = 180.0;
                     } else if (teamColor == Start.TeamColor.BLUE) {
-                        newRoute[i][j] = -90.0;
+                        newRoute[i][j] = 0.0;
                     }
                 }
             }

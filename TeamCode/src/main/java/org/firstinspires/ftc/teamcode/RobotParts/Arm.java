@@ -82,7 +82,7 @@ public class Arm extends RobotPart {
                 setMode("stop");
                 setHeight(494);
             } else if (gamepad2.dpad_right){
-                boolean result = setSpinnerAngle(0);
+                boolean result = setSpinnerAngle(20);
                 if (result) {
                     setHeight(50);
                     setMode("intaking");
@@ -105,7 +105,7 @@ public class Arm extends RobotPart {
                 setMode("stop");
                 setHeight(494);
             } else if (gamepad2.dpad_left){
-                boolean result = setSpinnerAngle(0);
+                boolean result = setSpinnerAngle(-20);
                 if (result) {
                     setHeight(50);
                     setMode("intaking");
