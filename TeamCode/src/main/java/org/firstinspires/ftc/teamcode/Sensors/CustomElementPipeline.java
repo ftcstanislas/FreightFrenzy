@@ -40,13 +40,13 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     static Rect RIGHT_RECTANGLE;
 
-    public CustomElementPipeline(String cn) {
+    public CustomElementPipeline(String cn, Start.StartLocation location) {
 //        telemetry = t;
         cameraName = cn;
-        if (cameraName == "Webcam 1"){
+        if (location == Start.StartLocation.SPINNER){
             LEFT_RECTANGLE = LEFT_ROI_SPINNER;
             RIGHT_RECTANGLE = RIGHT_ROI_SPINNER;
-        } else if (cameraName == "Webcam 2"){
+        } else if (location == Start.StartLocation.WAREHOUSE){
             LEFT_RECTANGLE = LEFT_ROI_WAREHOUSE;
             RIGHT_RECTANGLE = RIGHT_ROI_WAREHOUSE;
         }

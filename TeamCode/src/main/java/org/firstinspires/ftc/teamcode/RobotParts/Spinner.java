@@ -19,34 +19,49 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Spinner extends RobotPart{
+    SpinMode currentMode = SpinMode.STOP;
+    long startSpinnerTime;
     
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // get motors
         motors.put("spinner", map.get(DcMotorEx.class, "spinner"));
         setBrake(true);
-
-        // set modes
-        modes.put("stop", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", 0.0});
-        }});
-
-        modes.put("spinLeft", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", 0.45});
-        }});
-
-        modes.put("spinRight", new HashMap<String, Object[]>() {{
-            put("spinner", new Object[]{"power", -0.45});
-        }});
         
         // setup telemetry
         telemetry = telemetryInit;
-
-        setMode("stop");
     }
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
-        switchMode(gamepad2.left_bumper, "stop","spinLeft");
-        switchMode(gamepad2.right_bumper, "stop","spinRight");
+        if (gamepad2.left_bumper){
+            currentMode = SpinMode.SPIN_LEFT;
+            startSpinnerTime = System.currentTimeMillis();
+        } else if (gamepad2.right_bumper){
+            currentMode = SpinMode.SPIN_RIGHT;
+            startSpinnerTime = System.currentTimeMillis();
+        } else if (gamepad2.touchpad){
+            currentMode = SpinMode.STOP;
+        }
+    }
+
+    public void update(){
+        if (currentMode == SpinMode.STOP){
+            motors.get("spinner").setVelocity(0);
+        } else {
+            double speed = 2800;
+            if (startSpinnerTime + 1400 < System.currentTimeMillis()){
+                speed = 3200;
+            }
+            if (currentMode == SpinMode.SPIN_LEFT){
+                motors.get("spinner").setVelocity(speed);
+            } else if (currentMode == SpinMode.SPIN_RIGHT) {
+                motors.get("spinner").setVelocity(-speed);
+            }
+
+            if (startSpinnerTime + 1600 < System.currentTimeMillis()){
+                currentMode = SpinMode.STOP;
+            }
+        }
+        telemetry.setValue(motors.get("spinner").getVelocity());
     }
     
     public void updateTelemetry(){
@@ -54,7 +69,11 @@ public class Spinner extends RobotPart{
     }
 }
 
-
+enum SpinMode {
+    STOP,
+    SPIN_LEFT,
+    SPIN_RIGHT
+}
 
 
 

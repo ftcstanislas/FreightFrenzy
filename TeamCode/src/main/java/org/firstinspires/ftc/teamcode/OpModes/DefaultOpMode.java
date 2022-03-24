@@ -117,16 +117,15 @@ public abstract class DefaultOpMode extends OpMode {
                 if (location.getNotActiveWebcamName() == "Webcam 2") {
                     location.getNotActiveWebcam().setPointerAngle(90, false);
                 } else {
-                    location.getNotActiveWebcam().setPointerAngle(102, false);
+                    location.getNotActiveWebcam().setPointerAngle(130, false);//102
                 }
             }
 
-            customElementDetection.init(hardwareMap, telemetryCustomElement, location.getNotActiveWebcamName(), false);
+            customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false);
             customElementDetection.startStream();
         }
         spinner.init(hardwareMap, telemetrySpinner);
         arm.init(hardwareMap, telemetryArm, location);
-        arm.setSpinnerAngle(locationRobot[2]);
 
         status.setValue("Initialized");
     }
@@ -188,6 +187,7 @@ public abstract class DefaultOpMode extends OpMode {
     public void globalUpdate() {
         location.update();
         arm.update();
+        spinner.update();
     }
 
     public double getLoopTime() {

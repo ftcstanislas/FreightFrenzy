@@ -35,6 +35,10 @@ public class AutonomousOpmode extends DefaultOpMode {
         super.setLocationRobot(locationRobot);
 
         super.init();
+
+        // Arm
+        arm.setHeight(10);
+        arm.setSpinnerAngle(locationRobot[2]);
     }
 
     @Override

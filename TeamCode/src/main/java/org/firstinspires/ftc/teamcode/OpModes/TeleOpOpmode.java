@@ -11,7 +11,7 @@ public class TeleOpOpmode extends DefaultOpMode {
         super.setUseCameras(false);
         super.setUseInstructions(false);
         super.init();
-        arm.setHeight(890);
+//        arm.setHeight(890);
     }
 
     @Override

@@ -74,7 +74,7 @@ public class Routes {
             {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", 8.0, -1180.0, 0.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
-            {true, "ARM", "toAngle", 130.0},
+            {true, "ARM", "toAngle", 125.0},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 2.0},
             {true, "ARM", "setIntake", "stop"},
@@ -162,9 +162,15 @@ public class Routes {
                     break;
 
                 case "ARM":
+                    // Template
+                    if (instruction[3] instanceof String){
+                        break;
+                    }
+
                     if (function == "toAngle") {
                         instruction[3] = (double) instruction[3] * -1;
                     }
+                    break;
 
                 case "SPINNER": 
                     if (function == "mode"){
@@ -184,7 +190,6 @@ public class Routes {
                     if (function == "driveImu") {
                         instruction[5] = (double) instruction[5] * -1; //rotation
                     }
-
                     break;
                 
                 default: // if no match is found

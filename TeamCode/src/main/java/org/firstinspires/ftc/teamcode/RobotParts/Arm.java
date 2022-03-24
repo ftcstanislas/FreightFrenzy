@@ -30,7 +30,7 @@ public class Arm extends RobotPart {
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.get("armSpinner").setPower(1);
         motors.get("armSpinner").setTargetPositionTolerance(10); //5
-        updateSpinnerAngle();
+        motors.get("armSpinner").setTargetPosition(motors.get("armSpinner").getCurrentPosition());
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Setup arm
@@ -38,7 +38,7 @@ public class Arm extends RobotPart {
         motors.get("arm").setDirection(DcMotor.Direction.FORWARD);
         motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motors.get("arm").setPower(1);
-        setHeight(10);
+        setHeight(motors.get("arm").getCurrentPosition());
         motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Setup intake

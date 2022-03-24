@@ -16,9 +16,9 @@ public class CustomElementDetection {
     public CustomElementPipeline pipeline;
     OpenCvCamera camera;
 
-    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, String webcamName, boolean useCameraStream) {
+    public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Start.StartLocation startLocation, String webcamName, boolean useCameraStream) {
         telemetry = telemetryInit;
-        pipeline = new CustomElementPipeline(webcamName);
+        pipeline = new CustomElementPipeline(webcamName, startLocation);
         WebcamName webcam = hardwareMap.get(WebcamName.class, webcamName);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         if (useCameraStream) {
