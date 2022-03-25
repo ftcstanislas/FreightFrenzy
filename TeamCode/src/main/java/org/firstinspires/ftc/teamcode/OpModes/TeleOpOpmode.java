@@ -15,6 +15,11 @@ public class TeleOpOpmode extends DefaultOpMode {
     }
 
     @Override
+    public void start() {
+        arm.setHeight(890);
+    }
+
+    @Override
     public void loop() {
         // Telemetry
         double loopTime = getLoopTime();
