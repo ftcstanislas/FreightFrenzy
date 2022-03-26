@@ -32,9 +32,10 @@ public class Routes {
     */
 
     public Object[][] routeSpinner = {
-            {true, "DRIVETRAIN", "toPosition", -1100.0, -1609.0, 90.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1101.0, -1109.0, 90.0, 0.3},
 
             // Deliver preloaded freight
+            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.5},
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
             {true, "DRIVETRAIN", "toPosition", -780.0, -1100.0, 180.0, 0.3},
@@ -52,7 +53,7 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.3},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
             {true, "DRIVETRAIN", "toPosition", -1450.0, -1300.0, 45.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.4, 0.5},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.7},
             {true, "SPINNER", "mode", "spinLeft"},
             {true, "WAIT", "wait", 3.5},
             {true, "SPINNER", "mode", "stop"},
@@ -179,6 +180,8 @@ public class Routes {
                         } else if (instruction[3] == "spinRight"){
                             instruction[3] = "spinLeft";
                         }
+                    } else if (function == "setVelocity") {
+                        instruction[3] = (int)  instruction[3] * -1;
                     }
                     break;
 
@@ -188,6 +191,9 @@ public class Routes {
                         instruction[5] = (double) instruction[5] * -1; //rotation
                     }
                     if (function == "driveImu") {
+                        instruction[5] = (double) instruction[5] * -1; //rotation
+                    }
+                    if (function == "driveImu1") {
                         instruction[5] = (double) instruction[5] * -1; //rotation
                     }
                     break;

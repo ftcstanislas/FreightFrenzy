@@ -13,15 +13,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Location.IMU;
 import org.firstinspires.ftc.teamcode.Location.Location;
+import org.firstinspires.ftc.teamcode.Location.Start;
 
 
 public class MecanumDrive extends RobotPart{
     Location location = null;
     double lastPower = 0;
     double lastAngle = 0;
+    Start.TeamColor teamColor;
     HashMap<Double, String> drawArrowsMap = new HashMap<>();
 
-    public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit){
+    public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit, Start.TeamColor teamColorInit){
+        teamColor = teamColorInit;
         // get motors
         motors.put("leftFront", map.get(DcMotorEx.class, "leftFront"));
         motors.get("leftFront").setDirection(DcMotor.Direction.REVERSE);
@@ -63,7 +66,12 @@ public class MecanumDrive extends RobotPart{
             x = gamepad1.left_stick_x;
             y = -gamepad1.left_stick_y;
         } else if (Math.abs(gamepad1.right_stick_x) > 0 || Math.abs(gamepad1.right_stick_y) > 0) {
-            double robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
+            double robotAngle;
+            if (teamColor == Start.TeamColor.RED) {
+                robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
+            } else {
+                robotAngle = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
+            }
             telemetry.setValue(Math.toDegrees(robotAngle));
             x = Math.cos(robotAngle);
             y = Math.sin(robotAngle);

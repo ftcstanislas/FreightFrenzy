@@ -103,7 +103,7 @@ public abstract class DefaultOpMode extends OpMode {
         }
 
         // Initialize objects
-        drivetrain.init(hardwareMap, telemetryDrivetrain, location);
+        drivetrain.init(hardwareMap, telemetryDrivetrain, location, teamColor);
         drivetrain.setBrake(true);
         location.init(hardwareMap, useCameras, locationRobot, drivetrain, telemetryLocation, telemetryCustomElement);
         if (useCameras) {
@@ -121,11 +121,11 @@ public abstract class DefaultOpMode extends OpMode {
                 }
             }
 
-            customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false);
+            customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false, teamColor);
             customElementDetection.startStream();
         }
         spinner.init(hardwareMap, telemetrySpinner);
-        arm.init(hardwareMap, telemetryArm, location);
+        arm.init(hardwareMap, telemetryArm, location, teamColor);
 
         status.setValue("Initialized");
     }

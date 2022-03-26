@@ -52,9 +52,9 @@ public class Spinner extends RobotPart{
                 speed = 2500;
             }
             if (currentMode == SpinMode.SPIN_LEFT){
-                motors.get("spinner").setVelocity(speed);
-            } else if (currentMode == SpinMode.SPIN_RIGHT) {
                 motors.get("spinner").setVelocity(-speed);
+            } else if (currentMode == SpinMode.SPIN_RIGHT) {
+                motors.get("spinner").setVelocity(speed);
             }
 
             if (startSpinnerTime + 1800 < System.currentTimeMillis()){
@@ -62,6 +62,19 @@ public class Spinner extends RobotPart{
             }
         }
         telemetry.setValue(motors.get("spinner").getVelocity());
+    }
+
+    public boolean setMode(String mode){
+        if (mode == "spinLeft"){
+            currentMode = SpinMode.SPIN_LEFT;
+            startSpinnerTime = System.currentTimeMillis();
+        } else if (mode == "spinRight"){
+            currentMode = SpinMode.SPIN_RIGHT;
+            startSpinnerTime = System.currentTimeMillis();
+        } else if (mode == "stop"){
+            currentMode = SpinMode.STOP;
+        }
+        return true;
     }
     
     public void updateTelemetry(){

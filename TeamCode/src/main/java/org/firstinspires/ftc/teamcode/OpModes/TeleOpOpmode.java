@@ -17,6 +17,7 @@ public class TeleOpOpmode extends DefaultOpMode {
     @Override
     public void start() {
         arm.setHeight(890);
+        arm.setSpinnerAngle(180);
     }
 
     @Override

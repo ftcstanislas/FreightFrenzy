@@ -373,10 +373,6 @@ public class Location {
     }
 
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
-        if (activeCamera.targetVisible == false) {
-            drivetrain.setPowerDirection(0, 0, 0, 0);
-            return false;
-        }
 
         // Constants
         double allowableDistanceError = 40;
@@ -411,6 +407,10 @@ public class Location {
             double robotMovementYComponent = calculateY(robotMovementAngle, power);
 
             double turning = 2 * orientationDifference / distance;
+            if (!activeCamera.targetVisible) {
+                drivetrain.setPowerDirection(0, 0, 0, 0);
+                return false;
+            }
             drivetrain.setPowerDirection(-robotMovementXComponent, robotMovementYComponent, turning, power);
             return false;
         } else {

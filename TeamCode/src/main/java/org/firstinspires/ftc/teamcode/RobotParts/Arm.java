@@ -16,13 +16,15 @@ public class Arm extends RobotPart {
     private final double ENCODER_TICK_PER_ROUND = 2786.2;
     private double spinnerAngle = 90;
     Location location = null;
+    Start.TeamColor teamColor;
 
     private double PICK_UP_ORIENTATION = 90;
 
-    public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit) {
+    public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit, Start.TeamColor teamColorInit) {
         // setup variables
         telemetry = telemetryInit;
         location = locationInit;
+        teamColor = teamColorInit;
 
         // Setup armSpinner
         motors.put("armSpinner", map.get(DcMotorEx.class, "armSpinner"));
@@ -119,7 +121,12 @@ public class Arm extends RobotPart {
 
         // Move arm
         if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.5) {
-            double angle = Math.toDegrees(Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x));
+            double angle;
+            if (teamColor == Start.TeamColor.RED) {
+                angle = Math.toDegrees(Math.atan2(-gamepad2.right_stick_y, gamepad2.right_stick_x));
+            } else {
+                angle = Math.toDegrees(Math.atan2(gamepad2.right_stick_y, -gamepad2.right_stick_x));
+            }
             setSpinnerAngle(angle);
         }
         double moveArm = gamepad2.left_trigger - gamepad2.right_trigger;

@@ -129,6 +129,7 @@ public class AutonomousOpmode extends DefaultOpMode {
                         drivetrain.setPowerDirection((double) instruction[3], (double) instruction[4], (double) instruction[5], (double) instruction[6]);
                         break;
 
+                    case "driveImu1":
                     case "driveImu":
                         location.driveImu((double) instruction[3], (double) instruction[4], (double) instruction[5],  (double) instruction[6]);
                         //Calculate wait time
