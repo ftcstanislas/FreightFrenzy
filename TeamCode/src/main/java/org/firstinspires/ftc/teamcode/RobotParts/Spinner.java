@@ -48,7 +48,7 @@ public class Spinner extends RobotPart{
             motors.get("spinner").setVelocity(0);
         } else {
             double speed = 2000;
-            if (startSpinnerTime + 1400 < System.currentTimeMillis()){
+            if (startSpinnerTime + 800 < System.currentTimeMillis()){
                 speed = 2500;
             }
             if (currentMode == SpinMode.SPIN_LEFT){
@@ -57,7 +57,7 @@ public class Spinner extends RobotPart{
                 motors.get("spinner").setVelocity(speed);
             }
 
-            if (startSpinnerTime + 1800 < System.currentTimeMillis()){
+            if (startSpinnerTime + 1500 < System.currentTimeMillis()){
                 currentMode = SpinMode.STOP;
             }
         }

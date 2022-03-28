@@ -92,6 +92,8 @@ public class MecanumDrive extends RobotPart{
             power *= 0.45;
         } else if (gamepad1.b){
             power *= 0.3;
+        } else if (gamepad1.dpad_down){
+            power *= 0.3;
         }
 
         // set power
@@ -108,8 +110,8 @@ public class MecanumDrive extends RobotPart{
     }
     
     public void setPowerDirection(double x, double y, double turn, double power){
+        power = Math.min(Math.max(power, -1), 1);
         double straal = Math.hypot(x, y);
-//        double robotAngle = Math.atan2(-y, -x) - Math.PI / 4 - location.getRotation();
         double robotAngle = Math.atan2(y, x);
 //        drawArrows(x, y, turn);
         

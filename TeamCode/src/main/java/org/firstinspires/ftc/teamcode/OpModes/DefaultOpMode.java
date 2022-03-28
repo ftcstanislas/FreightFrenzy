@@ -117,7 +117,7 @@ public abstract class DefaultOpMode extends OpMode {
                 if (location.getNotActiveWebcamName() == "Webcam 2") {
                     location.getNotActiveWebcam().setPointerAngle(90, false);
                 } else {
-                    location.getNotActiveWebcam().setPointerAngle(130, false);//102
+                    location.getNotActiveWebcam().setPointerAngle(138, false);//102
                 }
             }
 

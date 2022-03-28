@@ -20,7 +20,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
     private Start.CustomElement location;
     private Start.TeamColor teamColor;
     static final Rect LEFT_ROI_WAREHOUSE = new Rect(
-            new Point(20, 140),
+            new Point(40, 140),
             new Point(120, 220)
     );
     static final Rect RIGHT_ROI_WAREHOUSE = new Rect(
@@ -141,8 +141,8 @@ public class CustomElementPipeline extends OpenCvPipeline {
         Scalar colorElement = new Scalar(0,255,0);
         Scalar colorEmpty = new Scalar(255,0,0);
 
-        Imgproc.rectangle(mat, LEFT_RECTANGLE, (location == Start.CustomElement.LEFT && cameraName == "Webcam 2") || (location == Start.CustomElement.MID && cameraName == "Webcam 1") ? colorElement : colorEmpty);
-        Imgproc.rectangle(mat, RIGHT_RECTANGLE, (location == Start.CustomElement.RIGHT && cameraName == "Webcam 1") || (location == Start.CustomElement.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
+        Imgproc.rectangle(mat, LEFT_RECTANGLE, (location == Start.CustomElement.LEFT && cameraName == "Webcam 2") || (location == Start.CustomElement.LEFT && cameraName == "Webcam 1") ? colorElement : colorEmpty);
+        Imgproc.rectangle(mat, RIGHT_RECTANGLE, (location == Start.CustomElement.MID && cameraName == "Webcam 1") || (location == Start.CustomElement.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
 
         return mat;
     }
