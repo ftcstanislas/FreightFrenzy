@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 // debug, setBrake, setPower,
-// Nathalie wasn't here
+
 
 public class Slider extends RobotPart{
 

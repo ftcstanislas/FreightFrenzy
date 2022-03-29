@@ -60,24 +60,23 @@ public class MecanumDrive extends RobotPart{
     
     public void checkController(Gamepad gamepad1, Gamepad gamepad2){
         // xy
-        double x;
-        double y;
+        double x = 0;
+        double y = 0;
+
         if (Math.abs(gamepad1.left_stick_x) > 0 || Math.abs(gamepad1.left_stick_y) > 0){
+            // Normal
             x = gamepad1.left_stick_x;
             y = -gamepad1.left_stick_y;
         } else if (Math.abs(gamepad1.right_stick_x) > 0 || Math.abs(gamepad1.right_stick_y) > 0) {
+            // Headless
             double robotAngle;
             if (teamColor == Start.TeamColor.RED) {
                 robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
             } else {
                 robotAngle = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
             }
-            telemetry.setValue(Math.toDegrees(robotAngle));
             x = Math.cos(robotAngle);
             y = Math.sin(robotAngle);
-        } else {
-            x = 0;
-            y = 0;
         }
 
         // turning
@@ -96,24 +95,14 @@ public class MecanumDrive extends RobotPart{
             power *= 0.3;
         }
 
-        // set power
-        double MAX_DIFFERENCE = 0.025;
-        double difference = Math.max(Math.min(lastPower - power, MAX_DIFFERENCE), MAX_DIFFERENCE);
-        double newPower = lastPower+difference;
-        double newAngle = Math.atan2(x,y);
-        double angleDifference = Math.abs(newAngle-lastAngle);
-        newPower *= 1-angleDifference/(Math.PI);
-        newPower = power;
-        setPowerDirection(x, y, turning, newPower);
-        lastAngle = newAngle;
-        lastPower = newPower;
+        setPowerDirection(x, y, turning, power);
     }
     
     public void setPowerDirection(double x, double y, double turn, double power){
         power = Math.min(Math.max(power, -1), 1);
         double straal = Math.hypot(x, y);
         double robotAngle = Math.atan2(y, x);
-//        drawArrows(x, y, turn);
+        drawArrows(x, y, turn);
         
         // Calculate power wheels
         double calcRobotAngle = robotAngle - 0.25 * Math.PI;
@@ -148,29 +137,29 @@ public class MecanumDrive extends RobotPart{
     }
     
     public void updateTelemetry(){
-        double powerLeftFront = motors.get("leftFront").getPower();
-        double powerRightFront = motors.get("rightFront").getPower();
-        double powerRightBack = motors.get("rightBack").getPower();
-
-        double turn = (powerRightBack - powerLeftFront) / 2;
-
-        // powers without turning
-        powerLeftFront += turn;
-        powerRightFront -= turn;
-        powerRightBack -= turn;
-
-        double orientation = Math.toDegrees(Math.atan2(powerRightFront, powerLeftFront)) + 45;
-        if (orientation <= -180) {
-            orientation += 360;
-        } else if (orientation > 180){
-            orientation -= 360;
-        }
-
-        orientation = Math.toRadians(orientation);
-        double x = Math.cos(orientation);
-        double y = Math.sin(orientation);
-
-        drawArrows(x, y, turn);
+//        double powerLeftFront = motors.get("leftFront").getPower();
+//        double powerRightFront = motors.get("rightFront").getPower();
+//        double powerRightBack = motors.get("rightBack").getPower();
+//
+//        double turn = (powerRightBack - powerLeftFront) / 2;
+//
+//        // powers without turning
+//        powerLeftFront += turn;
+//        powerRightFront -= turn;
+//        powerRightBack -= turn;
+//
+//        double orientation = Math.toDegrees(Math.atan2(powerRightFront, powerLeftFront)) + 45;
+//        if (orientation <= -180) {
+//            orientation += 360;
+//        } else if (orientation > 180){
+//            orientation -= 360;
+//        }
+//
+//        orientation = Math.toRadians(orientation);
+//        double x = Math.cos(orientation);
+//        double y = Math.sin(orientation);
+//
+//        drawArrows(x, y, turn);
     }
 
     public void drawArrows(double x, double y, double turn){
@@ -194,7 +183,7 @@ public class MecanumDrive extends RobotPart{
             text += "╳";
         }
 
-//        telemetry.setValue(text);
+        telemetry.setValue(text);
     }
 
     private double nearestKey(Map<Double, String> map, Double target) {

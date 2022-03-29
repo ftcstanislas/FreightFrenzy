@@ -2,13 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.firstinspires.ftc.teamcode.Location.Start;
-import org.firstinspires.ftc.teamcode.OpModes.DefaultOpMode;
 import org.firstinspires.ftc.teamcode.Routes;
-import org.firstinspires.ftc.teamcode.Sensors.CustomElementPipeline;
 
 public class AutonomousOpmode extends DefaultOpMode {
     // Instructions
@@ -71,7 +65,7 @@ public class AutonomousOpmode extends DefaultOpMode {
             boolean result = executeFunction(instructions[instruction]);
 
             // Check if done
-            if (result == true ||  (boolean) instructions[instruction][0] == false){
+            if (result || !((boolean) instructions[instruction][0])){
                 instruction += 1;
             }
         } else {
@@ -88,6 +82,10 @@ public class AutonomousOpmode extends DefaultOpMode {
             case "SPINNER":
                 if (function == "mode") {
                     spinner.setMode((String) instruction[3]);
+                    instruction[2] = "waitOnMode";
+                    done = spinner.isNotSpinning();
+                } else if (function == "waitOnMode") {
+                    done = spinner.isNotSpinning();
                 }
                 break;
 

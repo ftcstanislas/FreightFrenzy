@@ -1,21 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.robot.Robot;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import java.util.Map;
-import java.util.HashMap;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Spinner extends RobotPart{
@@ -75,6 +63,10 @@ public class Spinner extends RobotPart{
             currentMode = SpinMode.STOP;
         }
         return true;
+    }
+
+    public boolean isNotSpinning(){
+        return currentMode != SpinMode.SPIN_LEFT && currentMode != SpinMode.SPIN_RIGHT;
     }
     
     public void updateTelemetry(){

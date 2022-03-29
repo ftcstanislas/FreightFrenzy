@@ -31,6 +31,7 @@ public class TeleOpOpmode extends DefaultOpMode {
         spinner.checkController(gamepad1, gamepad2);
         arm.checkController(gamepad1, gamepad2, teamColor);
 
+
         // Updates
         globalUpdate();
     }

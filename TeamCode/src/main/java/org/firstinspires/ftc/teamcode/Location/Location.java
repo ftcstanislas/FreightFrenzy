@@ -33,7 +33,7 @@ public class Location {
     private boolean advanced = false;
 
     //Location
-    final int HISTORY_LENGTH = 20;
+    final int HISTORY_LENGTH = 1;
     ArrayList<Double> historyX = new ArrayList<Double>();
     ArrayList<Double> historyY = new ArrayList<Double>();
     ArrayList<Double> historyHeading = new ArrayList<Double>();
@@ -375,7 +375,7 @@ public class Location {
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
 
         // Constants
-        double allowableDistanceError = 40;
+        double allowableDistanceError = 10;
 
         // Distances
         double distanceToXTarget = targetX - getXCoordinate();

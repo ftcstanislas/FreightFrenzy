@@ -18,8 +18,6 @@ public class Arm extends RobotPart {
     Location location = null;
     Start.TeamColor teamColor;
 
-    private double PICK_UP_ORIENTATION = 90;
-
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit, Start.TeamColor teamColorInit) {
         // setup variables
         telemetry = telemetryInit;
@@ -151,7 +149,7 @@ public class Arm extends RobotPart {
             height = 0;
         }
         motors.get("arm").setTargetPosition(height);
-        return Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 5;
+        return Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 10;
     }
 
     public boolean setSpinnerAngle(double angle) {
@@ -167,8 +165,7 @@ public class Arm extends RobotPart {
         updateSpinnerAngle();
 
         // Telemetry
-        telemetry.setValue("Absolute angle spinner: " + spinnerAngle
-                + "\nArm height:" + motors.get("arm").getCurrentPosition());
+
     }
 
     public boolean updateSpinnerAngle() {
@@ -188,11 +185,23 @@ public class Arm extends RobotPart {
             difference -= 360;
         }
 
-        // Update arm
-        double targetArmPosition = armPosition + difference / 360 * ENCODER_TICK_PER_ROUND;
-        motors.get("armSpinner").setTargetPosition((int) Math.round(targetArmPosition));
+        // Calculate arm position
+        int targetArmPosition = (int) Math.round(armPosition + difference / 360 * ENCODER_TICK_PER_ROUND);
+
+        // Fail safe for turning to much
+        if (targetArmPosition > ENCODER_TICK_PER_ROUND){
+            targetArmPosition -= ENCODER_TICK_PER_ROUND;
+        } else if (targetArmPosition < -ENCODER_TICK_PER_ROUND){
+            targetArmPosition += ENCODER_TICK_PER_ROUND;
+        }
+
+        // Update arm position
+        motors.get("armSpinner").setTargetPosition(targetArmPosition);
+
+        telemetry.setValue("Absolute angle spinner: " + Math.round(spinnerAngle) + " Encoder ticks" + targetArmPosition
+                + "\nArm height:" + motors.get("arm").getCurrentPosition());
 
         // Close to correct position
-        return Math.abs(difference) < 4;
+        return Math.abs(difference) < 5;
     }
 }
