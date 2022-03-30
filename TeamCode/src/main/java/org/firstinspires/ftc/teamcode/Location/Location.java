@@ -375,7 +375,7 @@ public class Location {
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
 
         // Constants
-        double allowableDistanceError = 10;
+        double allowableDistanceError = 15;
 
         // Distances
         double distanceToXTarget = targetX - getXCoordinate();
@@ -395,11 +395,13 @@ public class Location {
 
         // slow down
         double slowDownFrom = 100;
-        double minPower = Math.min(0.1, power);
+        double minPower = Math.min(0.05, power);
 
         if (distance < slowDownFrom) {
             power = minPower + (power - minPower) / slowDownFrom * distance;
         }
+
+        text += power;
 
         if (distance > allowableDistanceError) {
             double robotMovementAngle = Math.toDegrees(Math.atan2(distanceToYTarget, distanceToXTarget)) - getOrientation();

@@ -16,13 +16,13 @@ public class Routes {
     /*
     Routes:
     -----------------------------------------------------------------------------------------------
-    WAIT UNTIL FINISHED   OBJECT                FUNCTIE             ARGUMENTEN (achter elkaar)
+    WAIT UNTIL FINISHED   OBJECT                FUNCTION            ARGUMENT (behind each other)
     -----------------------------------------------------------------------------------------------
     false / true          WAIT                  wait                seconds
     false / true          INTAKE                mode                stop / intaking
     false / true          SPINNER               mode                stop / spinLeft / spinRight
     false / true          ARM                   mode                base / low / mid / high
-    false / true          ARM                   mode                drop / intake      (voor bakje)
+    false / true          ARM                   mode                outtaking / intake
     false / true          DRIVETRAIN            toPosition          x, y, rotation, speed
     false / true          DRIVETRAIN            toCircle            x, y, radius
     false / true          DRIVETRAIN            setPower            x, y, turn, power
@@ -35,34 +35,33 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1101.0, -1109.0, 90.0, 0.3},
 
             // Deliver preloaded freight
-            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.5},
+            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.4},
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -780.0, -1100.0, 180.0, 0.5},
+            {true, "DRIVETRAIN", "toPosition", -740.0, -1060.0, 180.0, 0.4},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 50.0},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 2.0},
             {true, "ARM", "setIntake", "stop"},
 
-            // Duck
+            // Move arm out
             {true, "ARM", "setIntake", "intaking"},
-            {true, "ARM", "toAngle", -45.0},
+            {true, "ARM", "toAngle", 90.0},
             {true, "ARM", "setIntake", "stop"},
             {true, "ARM", "toHeight", 1900},
-            {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.5},
+
+            // Duck
+            {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.4},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
-            {true, "DRIVETRAIN", "toPosition", -1450.0, -1300.0, 45.0, 0.5},
+            {true, "DRIVETRAIN", "toPosition", -1400.0, -1300.0, 45.0, 0.4},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.7},
-            {true, "SPINNER", "mode", "spinLeft"},
+            {true, "SPINNER", "mode", "spinRed"},
 
             // Park
             {false, "ARM", "toAngle", 180.0},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.5},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.4},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.4},
-            {true, "ARM", "toAngle", -10.0},
-            {true, "ARM", "toAngle", 70.0},
-            {true, "ARM", "toAngle", 180.0},
     };
 
     public Object[][] routeWarehouse = {
@@ -173,10 +172,10 @@ public class Routes {
 
                 case "SPINNER": 
                     if (function == "mode"){
-                        if (instruction[3] == "spinLeft"){
-                            instruction[3] = "spinRight";
-                        } else if (instruction[3] == "spinRight"){
-                            instruction[3] = "spinLeft";
+                        if (instruction[3] == "spinRed"){
+                            instruction[3] = "spinBlue";
+                        } else if (instruction[3] == "spinBlue"){
+                            instruction[3] = "spinRed";
                         }
                     } else if (function == "setVelocity") {
                         instruction[3] = (int)  instruction[3] * -1;

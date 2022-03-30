@@ -28,7 +28,7 @@ public class TeleOpOpmode extends DefaultOpMode {
                 runtime.seconds(), loopTime));
 
         drivetrain.checkController(gamepad1, gamepad2);
-        spinner.checkController(gamepad1, gamepad2);
+        spinner.checkController(gamepad1, gamepad2, teamColor);
         arm.checkController(gamepad1, gamepad2, teamColor);
 
 

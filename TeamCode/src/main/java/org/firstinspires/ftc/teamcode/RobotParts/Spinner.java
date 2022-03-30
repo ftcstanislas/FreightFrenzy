@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Location.Start;
 
 public class Spinner extends RobotPart{
     SpinMode currentMode = SpinMode.STOP;
@@ -19,12 +20,15 @@ public class Spinner extends RobotPart{
         telemetry = telemetryInit;
     }
     
-    public void checkController(Gamepad gamepad1, Gamepad gamepad2){
+    public void checkController(Gamepad gamepad1, Gamepad gamepad2, Start.TeamColor teamColor){
         if (gamepad2.left_bumper){
-            currentMode = SpinMode.SPIN_LEFT;
-            startSpinnerTime = System.currentTimeMillis();
+            currentMode = SpinMode.STOP;
         } else if (gamepad2.right_bumper){
-            currentMode = SpinMode.SPIN_RIGHT;
+            if (teamColor == Start.TeamColor.BLUE) {
+                currentMode = SpinMode.SPIN_BLUE;
+            } else if (teamColor == Start.TeamColor.RED) {
+                currentMode = SpinMode.SPIN_RED;
+            }
             startSpinnerTime = System.currentTimeMillis();
         } else if (gamepad2.touchpad){
             currentMode = SpinMode.STOP;
@@ -39,9 +43,9 @@ public class Spinner extends RobotPart{
             if (startSpinnerTime + 800 < System.currentTimeMillis()){
                 speed = 2500;
             }
-            if (currentMode == SpinMode.SPIN_LEFT){
+            if (currentMode == SpinMode.SPIN_RED){
                 motors.get("spinner").setVelocity(-speed);
-            } else if (currentMode == SpinMode.SPIN_RIGHT) {
+            } else if (currentMode == SpinMode.SPIN_BLUE) {
                 motors.get("spinner").setVelocity(speed);
             }
 
@@ -53,11 +57,11 @@ public class Spinner extends RobotPart{
     }
 
     public boolean setMode(String mode){
-        if (mode == "spinLeft"){
-            currentMode = SpinMode.SPIN_LEFT;
+        if (mode == "spinRed"){
+            currentMode = SpinMode.SPIN_RED;
             startSpinnerTime = System.currentTimeMillis();
-        } else if (mode == "spinRight"){
-            currentMode = SpinMode.SPIN_RIGHT;
+        } else if (mode == "spinBlue"){
+            currentMode = SpinMode.SPIN_BLUE;
             startSpinnerTime = System.currentTimeMillis();
         } else if (mode == "stop"){
             currentMode = SpinMode.STOP;
@@ -66,7 +70,7 @@ public class Spinner extends RobotPart{
     }
 
     public boolean isNotSpinning(){
-        return currentMode != SpinMode.SPIN_LEFT && currentMode != SpinMode.SPIN_RIGHT;
+        return currentMode == SpinMode.STOP;
     }
     
     public void updateTelemetry(){
@@ -76,8 +80,8 @@ public class Spinner extends RobotPart{
 
 enum SpinMode {
     STOP,
-    SPIN_LEFT,
-    SPIN_RIGHT
+    SPIN_RED,
+    SPIN_BLUE
 }
 
 

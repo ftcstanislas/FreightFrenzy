@@ -117,6 +117,16 @@ public class Arm extends RobotPart {
             }
         }
 
+        // Ducks
+        if (gamepad2.b){
+            setHeight(1885);
+            if (teamColor == Start.TeamColor.RED){
+                setSpinnerAngle(180);
+            } else if (teamColor == Start.TeamColor.BLUE) {
+                setSpinnerAngle(0);
+            }
+        }
+
         // Move arm
         if (Math.hypot(gamepad2.right_stick_y, gamepad2.right_stick_x) > 0.5) {
             double angle;
@@ -190,9 +200,9 @@ public class Arm extends RobotPart {
 
         // Fail safe for turning to much
         if (targetArmPosition > ENCODER_TICK_PER_ROUND){
-            targetArmPosition -= ENCODER_TICK_PER_ROUND;
+            targetArmPosition = (int) ENCODER_TICK_PER_ROUND;
         } else if (targetArmPosition < -ENCODER_TICK_PER_ROUND){
-            targetArmPosition += ENCODER_TICK_PER_ROUND;
+            targetArmPosition = (int) -ENCODER_TICK_PER_ROUND;
         }
 
         // Update arm position
@@ -202,6 +212,6 @@ public class Arm extends RobotPart {
                 + "\nArm height:" + motors.get("arm").getCurrentPosition());
 
         // Close to correct position
-        return Math.abs(difference) < 5;
+        return Math.abs(difference) < 4;
     }
 }

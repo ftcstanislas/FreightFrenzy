@@ -87,11 +87,9 @@ public class MecanumDrive extends RobotPart{
         
         // calculate power
         double power = Math.max(Math.max(Math.abs(x), Math.abs(y)), Math.abs(turning));
-        if (gamepad1.y) {
+        if (gamepad1.a || gamepad1.dpad_down) {
             power *= 0.45;
-        } else if (gamepad1.b){
-            power *= 0.3;
-        } else if (gamepad1.dpad_down){
+        } else if (gamepad1.x || gamepad1.dpad_right){
             power *= 0.3;
         }
 
