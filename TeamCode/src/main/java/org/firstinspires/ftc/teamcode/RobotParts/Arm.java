@@ -72,7 +72,7 @@ public class Arm extends RobotPart {
         // Shortcut spinner positions
         if (teamColor  == Start.TeamColor.RED){
             if (gamepad2.dpad_down) {
-                boolean result = setSpinnerAngle(-90);
+                boolean result = setSpinnerAngle(-100);
                 if (result) {
                     setHeight(50);
                     setMode("intaking");
@@ -95,7 +95,7 @@ public class Arm extends RobotPart {
         }
         if (teamColor  == Start.TeamColor.BLUE){
             if (gamepad2.dpad_down) {
-                boolean result = setSpinnerAngle(90);
+                boolean result = setSpinnerAngle(100);
                 if (result) {
                     setHeight(50);
                     setMode("intaking");

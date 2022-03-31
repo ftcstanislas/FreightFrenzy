@@ -31,6 +31,35 @@ public class TeleOpOpmode extends DefaultOpMode {
         spinner.checkController(gamepad1, gamepad2, teamColor);
         arm.checkController(gamepad1, gamepad2, teamColor);
 
+        // Party mode
+        if (gamepad1.touchpad_finger_1 && gamepad1.touchpad_finger_2 && gamepad1.right_bumper && gamepad1.left_bumper){
+            if (Math.round(runtime.seconds()/5) % 2 == 1) {
+                drivetrain.setPowerDirection(0, 0, 1, 1);
+            } else {
+                drivetrain.setPowerDirection(0, 0, -1, 1);
+            }
+            if (Math.round(runtime.seconds()/4) % 2 == 1) {
+                arm.setSpinnerAngle(0);
+            } else {
+                arm.setSpinnerAngle(180);
+            }
+            if (Math.round(runtime.seconds()/6) % 2 == 1) {
+                arm.setHeight(500);
+            } else {
+                arm.setSpinnerAngle(800);
+            }
+            if (Math.round(runtime.seconds()/8) % 2 == 1) {
+                spinner.setMode("spinRed");
+            } else {
+                spinner.setMode("spinBlue");
+            }
+            if (Math.round(runtime.seconds()/3) % 2 == 1) {
+                arm.setMode("intaking");
+            } else {
+                arm.setMode("stop");
+            }
+        }
+
 
         // Updates
         globalUpdate();

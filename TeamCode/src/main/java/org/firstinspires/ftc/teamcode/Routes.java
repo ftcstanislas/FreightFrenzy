@@ -35,10 +35,10 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1101.0, -1109.0, 90.0, 0.3},
 
             // Deliver preloaded freight
-            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.4},
+            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.5},
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -740.0, -1060.0, 180.0, 0.4},
+            {true, "DRIVETRAIN", "toPosition", -740.0, -1060.0, 180.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 50.0},
             {true, "ARM", "setIntake", "outtaking"},
@@ -52,16 +52,16 @@ public class Routes {
             {true, "ARM", "toHeight", 1900},
 
             // Duck
-            {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.4},
+            {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.3},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
-            {true, "DRIVETRAIN", "toPosition", -1400.0, -1300.0, 45.0, 0.4},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.7},
+            {true, "DRIVETRAIN", "toPosition", -1400.0, -1300.0, 45.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.8},
             {true, "SPINNER", "mode", "spinRed"},
 
             // Park
             {false, "ARM", "toAngle", 180.0},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.4},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.4},
+            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.3},
     };
 
     public Object[][] routeWarehouse = {

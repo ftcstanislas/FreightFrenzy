@@ -459,13 +459,6 @@ public class Location {
         return Math.cos(Math.toRadians(desiredAngle)) * speed;
     }
 
-    public double getMedian(ArrayList<Double> list) {
-        Collections.sort(list);
-        int middle = list.size() / 2;
-        middle = middle > 0 && middle % 2 == 0 ? middle - 1 : middle;
-        return list.get(middle);
-    }
-
     /***
      * Identify a target by naming it, and setting its position and orientation on the field
      * @param targetIndex
