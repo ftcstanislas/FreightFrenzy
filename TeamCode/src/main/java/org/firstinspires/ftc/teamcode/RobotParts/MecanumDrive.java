@@ -62,11 +62,13 @@ public class MecanumDrive extends RobotPart{
         // xy
         double x = 0;
         double y = 0;
+        double power = 0;
 
         if (Math.abs(gamepad1.left_stick_x) > 0 || Math.abs(gamepad1.left_stick_y) > 0){
             // Normal
             x = gamepad1.left_stick_x;
             y = -gamepad1.left_stick_y;
+            power = Math.max(Math.abs(x), Math.abs(y));
         } else if (Math.abs(gamepad1.right_stick_x) > 0 || Math.abs(gamepad1.right_stick_y) > 0) {
             // Headless
             double robotAngle;
@@ -77,6 +79,7 @@ public class MecanumDrive extends RobotPart{
             }
             x = Math.cos(robotAngle);
             y = Math.sin(robotAngle);
+            power = Math.max(Math.abs(gamepad1.right_stick_x), Math.abs(gamepad1.right_stick_y));
         }
 
         // turning
@@ -84,9 +87,9 @@ public class MecanumDrive extends RobotPart{
         if (gamepad1.x){
             turning *= 0.45;
         }
+        power = Math.max(power, Math.abs(turning));
         
-        // calculate power
-        double power = Math.max(Math.max(Math.abs(x), Math.abs(y)), Math.abs(turning));
+        // calculate slow down
         if (gamepad1.a || gamepad1.dpad_down) {
             power *= 0.45;
         } else if (gamepad1.x || gamepad1.dpad_right){

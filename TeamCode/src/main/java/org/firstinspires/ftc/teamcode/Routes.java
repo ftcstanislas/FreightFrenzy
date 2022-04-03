@@ -60,8 +60,9 @@ public class Routes {
 
             // Park
             {false, "ARM", "toAngle", 180.0},
-            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.3},
+            {true, "DRIVETRAIN", "toPosition", -1480.0, -900.0, 180.0, 0.3},
+//            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
+//            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.3},
     };
 
     public Object[][] routeWarehouse = {
@@ -138,7 +139,7 @@ public class Routes {
                     if (teamColor == Start.TeamColor.RED) {
                         newRoute[i][j] = 180.0;
                     } else if (teamColor == Start.TeamColor.BLUE) {
-                        newRoute[i][j] = 0.0;
+                        newRoute[i][j] = 39.0;
                     }
                 }
             }
