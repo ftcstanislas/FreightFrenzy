@@ -34,11 +34,20 @@ public class Routes {
     public Object[][] routeSpinner = {
             {true, "DRIVETRAIN", "toPosition", -1101.0, -1109.0, 90.0, 0.3},
 
-            // Deliver preloaded freight
+            // Camera lock
             {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.5},
+
+            // Duck
+            {false, "ARM", "toHeight", 1900},
+            {false, "ARM", "toAngle", "{spinnerAngle}"},
+            {true, "DRIVETRAIN", "toPosition", -1400.0, -1300.0, 45.0, 0.3},
+            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.8},
+            {true, "SPINNER", "mode", "spinRed"},
+
+            // Deliver preloaded freight
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -740.0, -1060.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -740.0, -1080.0, -160.0, 0.5},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 50.0},
             {true, "ARM", "setIntake", "outtaking"},
@@ -49,18 +58,11 @@ public class Routes {
             {true, "ARM", "setIntake", "intaking"},
             {true, "ARM", "toAngle", 90.0},
             {true, "ARM", "setIntake", "stop"},
-            {true, "ARM", "toHeight", 1900},
-
-            // Duck
-            {true, "DRIVETRAIN", "toPosition", -1041.0, -1430.0, 90.0, 0.3},
-            {false, "ARM", "toAngle", "{spinnerAngle}"},
-            {true, "DRIVETRAIN", "toPosition", -1400.0, -1300.0, 45.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.8},
-            {true, "SPINNER", "mode", "spinRed"},
+            {false, "ARM", "toHeight", 1900},
 
             // Park
             {false, "ARM", "toAngle", 180.0},
-            {true, "DRIVETRAIN", "toPosition", -1480.0, -900.0, 180.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", -1480.0, -900.0, 180.0, 0.5},
 //            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
 //            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.3},
     };
@@ -133,13 +135,13 @@ public class Routes {
                     } else if (customElement == Start.CustomElement.MID){
                         newRoute[i][j] = 640;
                     } if (customElement == Start.CustomElement.LEFT){
-                        newRoute[i][j] = 464;
+                        newRoute[i][j] = 316;
                     }
                 } else if (newRoute[i][j] == "{spinnerAngle}") {
                     if (teamColor == Start.TeamColor.RED) {
-                        newRoute[i][j] = 180.0;
+                        newRoute[i][j] = 150.0;
                     } else if (teamColor == Start.TeamColor.BLUE) {
-                        newRoute[i][j] = 39.0;
+                        newRoute[i][j] = 40.0;
                     }
                 }
             }

@@ -60,12 +60,11 @@ public class TeleOpOpmode extends DefaultOpMode {
             }
         }
 
-        // Virtual nathalie
+        // Tell drivers the time
         if (runtime.seconds() == 83) {
             gamepad1.rumble(1,1,1000);
             gamepad2.rumble(1,1,1000);
         }
-
 
         // Updates
         globalUpdate();

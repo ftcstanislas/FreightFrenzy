@@ -28,8 +28,8 @@ public class Arm extends RobotPart {
         motors.put("armSpinner", map.get(DcMotorEx.class, "armSpinner"));
         motors.get("armSpinner").setDirection(DcMotor.Direction.REVERSE);
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motors.get("armSpinner").setPower(1);
-        motors.get("armSpinner").setTargetPositionTolerance(10); //5
+        motors.get("armSpinner").setPower(0.7);
+        motors.get("armSpinner").setTargetPositionTolerance(5); //5
         motors.get("armSpinner").setTargetPosition(motors.get("armSpinner").getCurrentPosition());
         motors.get("armSpinner").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -118,7 +118,7 @@ public class Arm extends RobotPart {
         }
 
         // Ducks
-        if (gamepad2.b){
+        if (gamepad2.x){
             setHeight(1885);
             if (teamColor == Start.TeamColor.RED){
                 setSpinnerAngle(180);
