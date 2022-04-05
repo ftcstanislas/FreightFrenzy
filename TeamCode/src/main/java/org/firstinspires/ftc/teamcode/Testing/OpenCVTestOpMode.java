@@ -27,13 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.Testing;
+package org.firstinspires.ftc.teamcode.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.testing.StofferPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -79,7 +80,7 @@ public class OpenCVTestOpMode extends LinearOpMode {
         StofferPipeline pipeline1 = new StofferPipeline(telemetry, camName1);
 //        StofferPipeline pipeline2 = new StofferPipeline(telemetry, camName2);
 
-        RectangleTest rectangleTest = new RectangleTest();
+//        RectangleTest rectangleTest = new RectangleTest();
 
         camera1.setPipeline(pipeline1);
 //        camera2.setPipeline(pipeline2);
@@ -124,7 +125,7 @@ public class OpenCVTestOpMode extends LinearOpMode {
 //            case NOT_FOUND:
 //                telemetry.addData("Have a letter", "No element = no letter for u lol");
 //        }
-        camera1.stopStreaming();
+//        camera1.stopStreaming();
 //        camera2.stopStreaming();
         telemetry.update();
         runtime.reset();
@@ -134,6 +135,7 @@ public class OpenCVTestOpMode extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Element is in", pipeline1.getRectWithElement());
             telemetry.update();
         }
     }

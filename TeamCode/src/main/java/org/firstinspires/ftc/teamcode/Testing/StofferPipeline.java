@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Testing;
+package org.firstinspires.ftc.teamcode.testing;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -13,36 +13,66 @@ public class StofferPipeline extends OpenCvPipeline {
     Telemetry telemetry;
     String cameraName;
     Mat mat = new Mat();
-    public enum Location {
-        LEFT,
-        MID,
-        RIGHT,
-    }
 
-    private Location location;
-    /* ===================================================== */
-    /* =============== UPDATE THESE VALUES!!!! ============= */
-    /* ===================================================== */
-    static final Rect LEFT_ROI = new Rect(
-            new Point(0, 100),
-            new Point(120, 200)
+    static Rect[][] ROIS = {
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
+            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()}
+    };
+    static Mat[][] subs = {
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
+            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()}
+    };
+    static double[][] subValues = {
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0}
+    };
+    static boolean[][] doesSubContainElement = {
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false},
+            {false, false, false, false, false, false, false, false}
+    };
+
+    static Rect ROI = new Rect(
+            new Point(80,80),
+            new Point(160, 240)
     );
-//    static final Rect MID_ROI = new Rect(
-//            new Point(100, 100),
-//            new Point(200, 200)
-//    );
-    static final Rect RIGHT_ROI = new Rect(
-            new Point(200, 100),
-            new Point(320, 200)
-    );
+
     static double PERCENT_COLOR_THRESHOLD = 0.3;
-    /* ===================================================== */
-    /* =============== UPDATE THESE VALUES!!!! ============= */
-    /* ===================================================== */
 
     public StofferPipeline(Telemetry t, String cn) {
         telemetry = t;
         cameraName = cn;
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                ROIS[x][y] = new Rect(
+                        new Point(x*40, y*30),
+                        new Point(x*40+40, y*30+30)
+                );
+            }
+        }
     }
 
     @Override
@@ -53,70 +83,58 @@ public class StofferPipeline extends OpenCvPipeline {
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 
-        Mat left = mat.submat(LEFT_ROI);
-//        Mat mid = mat.submat(MID_ROI);
-        Mat right = mat.submat(RIGHT_ROI);
-
-        double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;
-//        double midValue = Core.sumElems(mid).val[0] / MID_ROI.area() / 255;
-        double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
-
-        left.release();
-//        mid.release();
-        right.release();
-
-        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
-//        telemetry.addData("Mid raw value", (int) Core.sumElems(mid).val[0]);
-        telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
-
-        telemetry.addData("Left percentage", Math.round(leftValue) * 100);
-//        telemetry.addData("Mid percentage", Math.round(midValue) * 100);
-        telemetry.addData("Right percentage", Math.round(rightValue) * 100);
-
-        boolean elementLeft = leftValue > PERCENT_COLOR_THRESHOLD;
-//        boolean elementMid = midValue > PERCENT_COLOR_THRESHOLD;
-        boolean elementRight = rightValue > PERCENT_COLOR_THRESHOLD;
-
-        if (elementLeft) {
-            if (cameraName == "Webcam 1") {
-                location = Location.MID;
-                telemetry.addData("Element location:", "Mid");
-            } else {
-                location = Location.LEFT;
-                telemetry.addData("Element location:", "Left");
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                subs[x][y] = mat.submat(ROIS[x][y]);
             }
         }
-//        else if (elementMid) {
-//            location = Location.MID;
-//            telemetry.addData("Element location:", "Mid");
-//        }
-        else if (elementRight) {
-            if (cameraName == "Webcam 1") {
-                location = Location.RIGHT;
-                telemetry.addData("Element location:", "Right");
-            } else {
-                location = Location.MID;
-                telemetry.addData("Element location:", "Mid");
+//        Mat sub = mat.submat(ROI);
+
+//        double subValue = Core.sumElems(sub).val[0] / ROI.area() / 255;
+//        sub.release();
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                subValues[x][y] = Core.sumElems(subs[x][y]).val[0] / ROIS[x][y].area() / 255;
+                subs[x][y].release();
             }
-        } else {
-            location = Location.LEFT;
-            telemetry.addData("Element location:", "Left");
+    }
+
+//        telemetry.addData("Left raw value", (int) Core.sumElems(sub).val[0]);
+//
+//        telemetry.addData("Left percentage", Math.round(subValue) * 100);
+
+//        boolean element = subValue < PERCENT_COLOR_THRESHOLD;
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                doesSubContainElement[x][y] = subValues[x][y] < PERCENT_COLOR_THRESHOLD;
+            }
         }
+
         telemetry.update();
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
-        Scalar colorElement = new Scalar(0,255,0);
-        Scalar colorEmpty = new Scalar(255,0,0);
+        Scalar colorElement = new Scalar(0, 255, 0);
+        Scalar colorEmpty = new Scalar(255, 0, 0);
 
-        Imgproc.rectangle(mat, LEFT_ROI, (location == Location.LEFT && cameraName == "Webcam 2") || (location == Location.MID && cameraName == "Webcam 1") ? colorElement : colorEmpty);
-//        Imgproc.rectangle(mat, MID_ROI, location == Location.MID ? colorElement : colorEmpty);
-        Imgproc.rectangle(mat, RIGHT_ROI, (location == Location.RIGHT && cameraName == "Webcam 1") || (location == Location.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
+//        Imgproc.rectangle(mat, ROI, (element ? colorElement : colorEmpty));
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                Imgproc.rectangle(mat, ROIS[x][y], (doesSubContainElement[x][y] ? colorElement : colorEmpty));
+            }
+        }
 
         return mat;
     }
-
-    public Location getLocation() {
-        return location;
+    public String getRectWithElement() {
+        String locations = "";
+        for (int x=0; x<8; x++) {
+            for (int y=0; y<8; y++) {
+                if (doesSubContainElement[x][y]) {
+                    locations += "(" + x + "," + y + ") ";
+                }
+            }
+        }
+        return locations;
     }
 }
