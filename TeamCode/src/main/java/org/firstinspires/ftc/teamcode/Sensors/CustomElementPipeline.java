@@ -15,24 +15,25 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     // Initialize values
     String cameraName;
+    Start.StartLocation start;
     Mat mat = new Mat();
 
     private Start.CustomElement location;
     private Start.TeamColor teamColor;
     static final Rect LEFT_ROI_WAREHOUSE = new Rect(
-            new Point(40, 140),
-            new Point(120, 220)
+            new Point(10, 160),
+            new Point(90, 240)
     );
     static final Rect RIGHT_ROI_WAREHOUSE = new Rect(
-            new Point(150, 140),
-            new Point(210, 220)
+            new Point(130, 140),
+            new Point(190, 220)
     );
     static final Rect LEFT_ROI_SPINNER = new Rect(
-            new Point(30, 140),
-            new Point(130, 240)
+            new Point(60, 140),
+            new Point(160, 240)
     );
     static final Rect RIGHT_ROI_SPINNER = new Rect(
-            new Point(240, 140),
+            new Point(270, 140),
             new Point(320, 240)
     );
     static double PERCENT_COLOR_THRESHOLD = 0.2;
@@ -41,17 +42,18 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     static Rect RIGHT_RECTANGLE;
 
-    public CustomElementPipeline(String cn, Start.StartLocation location, Start.TeamColor teamColorInit) {
+    public CustomElementPipeline(String cn, Start.StartLocation startInit, Start.TeamColor teamColorInit) {
 //        telemetry = t;
         cameraName = cn;
-        if (location == Start.StartLocation.SPINNER){
+        if (startInit == Start.StartLocation.SPINNER){
             LEFT_RECTANGLE = LEFT_ROI_SPINNER;
             RIGHT_RECTANGLE = RIGHT_ROI_SPINNER;
-        } else if (location == Start.StartLocation.WAREHOUSE){
+        } else if (startInit == Start.StartLocation.WAREHOUSE){
             LEFT_RECTANGLE = LEFT_ROI_WAREHOUSE;
             RIGHT_RECTANGLE = RIGHT_ROI_WAREHOUSE;
         }
         teamColor = teamColorInit;
+        start = startInit;
     }
 
     @Override
@@ -81,58 +83,107 @@ public class CustomElementPipeline extends OpenCvPipeline {
         boolean elementLeft = leftValue > PERCENT_COLOR_THRESHOLD;
         boolean elementRight = rightValue > PERCENT_COLOR_THRESHOLD;
 
-        if (elementLeft) {
-            if (cameraName == "Webcam 1") {
-                if (teamColor == Start.TeamColor.BLUE) {
-                    location = Start.CustomElement.LEFT;
-                } else {
-                    location = Start.CustomElement.MID;
+        switch (teamColor) {
+            case RED:
+                switch (start) {
+                    case SPINNER:
+                        if (elementLeft) {
+                            location = Start.CustomElement.LEFT;
+                        } else if (elementRight) {
+                            location = Start.CustomElement.MID;
+                        } else {
+                            location = Start.CustomElement.RIGHT;
+                        }
+                        break;
+
+                    case WAREHOUSE:
+                        if (elementLeft) {
+                            location = Start.CustomElement.LEFT;
+                        } else if (elementRight) {
+                            location = Start.CustomElement.MID;
+                        } else {
+                            location = Start.CustomElement.RIGHT;
+                        }
+                        break;
                 }
-//                location = Start.CustomElement.MID;
-//                telemetry.addData("Element location:", "Mid");
-            } else {
-                if (teamColor == Start.TeamColor.BLUE) {
-                    location = Start.CustomElement.MID;
-                } else {
-                    location = Start.CustomElement.LEFT;
+                break;
+
+            case BLUE:
+                switch (start) {
+                    case SPINNER:
+                        if (elementLeft) {
+                            location = Start.CustomElement.MID;
+                        } else if (elementRight) {
+                            location = Start.CustomElement.RIGHT;
+                        } else {
+                            location = Start.CustomElement.LEFT;
+                        }
+                        break;
+
+                    case WAREHOUSE:
+                        if (elementLeft) {
+                            location = Start.CustomElement.LEFT;
+                        } else if (elementRight) {
+                            location = Start.CustomElement.MID;
+                        } else {
+                            location = Start.CustomElement.RIGHT;
+                        }
                 }
-//                telemetry.addData("Element location:", "Left");
-            }
+                break;
         }
 
-        else if (elementRight) {
-            if (cameraName == "Webcam 1") {
-                if (teamColor == Start.TeamColor.BLUE) {
-                    location = Start.CustomElement.MID;
-                } else {
-                    location = Start.CustomElement.RIGHT;
-                }
-//                location = Start.CustomElement.RIGHT;
-//                telemetry.addData("Element location:", "Right");
-            } else {
-                if (teamColor == Start.TeamColor.BLUE) {
-                    location = Start.CustomElement.RIGHT;
-                } else {
-                    location = Start.CustomElement.MID;
-                }
-//                telemetry.addData("Element location:", "Mid");
-            }
-        } else {
-            if (cameraName == "Webcam 1") {
-                if (teamColor == Start.TeamColor.BLUE) {
-                    location = Start.CustomElement.RIGHT;
-                } else {
-                    location = Start.CustomElement.LEFT;
-                }
-            } else {
-                if (teamColor == Start.TeamColor.BLUE) {
-                    location = Start.CustomElement.LEFT;
-                } else {
-                    location = Start.CustomElement.RIGHT;
-                }
-            }
-//            telemetry.addData("Element location:", "Left");
-        }
+//        if (elementLeft) {
+//            if (cameraName == "Webcam 1") {
+//                if (teamColor == Start.TeamColor.BLUE) {
+//                    location = Start.CustomElement.LEFT;
+//                } else {
+//                    location = Start.CustomElement.MID;
+//                }
+////                location = Start.CustomElement.MID;
+////                telemetry.addData("Element location:", "Mid");
+//            } else {
+//                if (teamColor == Start.TeamColor.BLUE) {
+//                    location = Start.CustomElement.MID;
+//                } else {
+//                    location = Start.CustomElement.LEFT;
+//                }
+////                telemetry.addData("Element location:", "Left");
+//            }
+//        }
+//
+//        else if (elementRight) {
+//            if (cameraName == "Webcam 1") {
+//                if (teamColor == Start.TeamColor.BLUE) {
+//                    location = Start.CustomElement.MID;
+//                } else {
+//                    location = Start.CustomElement.RIGHT;
+//                }
+////                location = Start.CustomElement.RIGHT;
+////                telemetry.addData("Element location:", "Right");
+//            } else {
+//                if (teamColor == Start.TeamColor.BLUE) {
+//                    location = Start.CustomElement.RIGHT;
+//                } else {
+//                    location = Start.CustomElement.MID;
+//                }
+////                telemetry.addData("Element location:", "Mid");
+//            }
+//        } else {
+//            if (cameraName == "Webcam 1") {
+//                if (teamColor == Start.TeamColor.BLUE) {
+//                    location = Start.CustomElement.RIGHT;
+//                } else {
+//                    location = Start.CustomElement.LEFT;
+//                }
+//            } else {
+//                if (teamColor == Start.TeamColor.BLUE) {
+//                    location = Start.CustomElement.LEFT;
+//                } else {
+//                    location = Start.CustomElement.RIGHT;
+//                }
+//            }
+////            telemetry.addData("Element location:", "Left");
+//        }
 
 //        telemetry.update();
 
@@ -141,8 +192,14 @@ public class CustomElementPipeline extends OpenCvPipeline {
         Scalar colorElement = new Scalar(0,255,0);
         Scalar colorEmpty = new Scalar(255,0,0);
 
-        Imgproc.rectangle(mat, LEFT_RECTANGLE, (location == Start.CustomElement.LEFT && cameraName == "Webcam 2") || (location == Start.CustomElement.LEFT && cameraName == "Webcam 1") ? colorElement : colorEmpty);
-        Imgproc.rectangle(mat, RIGHT_RECTANGLE, (location == Start.CustomElement.MID && cameraName == "Webcam 1") || (location == Start.CustomElement.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
+        Scalar colorLeft = elementLeft ? colorElement : colorEmpty;
+        Scalar colorRight = elementRight ? colorElement : colorEmpty;
+
+        // Imgproc.rectangle(mat, LEFT_RECTANGLE, (location == Start.CustomElement.LEFT && cameraName == "Webcam 2") || (location == Start.CustomElement.LEFT && cameraName == "Webcam 1") ? colorElement : colorEmpty);
+        // Imgproc.rectangle(mat, RIGHT_RECTANGLE, (location == Start.CustomElement.MID && cameraName == "Webcam 1") || (location == Start.CustomElement.MID && cameraName == "Webcam 2") ? colorElement : colorEmpty);
+
+        Imgproc.rectangle(mat, LEFT_RECTANGLE, colorLeft);
+        Imgproc.rectangle(mat, RIGHT_RECTANGLE, colorRight);
 
         return mat;
     }
