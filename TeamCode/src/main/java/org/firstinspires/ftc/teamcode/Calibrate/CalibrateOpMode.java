@@ -25,6 +25,7 @@ public class CalibrateOpMode extends OpMode {
         armSpinner = hardwareMap.get(DcMotor.class, "armSpinner");
         armSpinner.setDirection(DcMotor.Direction.REVERSE);
         armSpinner.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addLine("Press Start");
     }
 
     @Override
@@ -32,8 +33,9 @@ public class CalibrateOpMode extends OpMode {
 
         // Telemetry
         if (!done) {
-            telemetry.addLine("Put the arm inside the drivetrain. So that is as far down as possible (it is not hitting the ground).\n" +
-                    "Point the drivetrain towards the side that has the shared shipping hub.");
+            telemetry.addLine("- Put the arm inside the drivetrain. So that is as far down as possible (it is not hitting the ground).\n" +
+                    "- Point the drivetrain towards the side that has the shared shipping hub." +
+                    "- Check kabels");
             telemetry.addLine("Press x/y/a/b when done with these steps.");
         } else {
             telemetry.addLine("You are finished!");

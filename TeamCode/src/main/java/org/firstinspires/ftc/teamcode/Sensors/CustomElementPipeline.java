@@ -76,7 +76,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
 //        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
 //        telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
-//
+//          Jaron was here
 //        telemetry.addData("Left percentage", Math.round(leftValue) * 100);
 //        telemetry.addData("Right percentage", Math.round(rightValue) * 100);
 

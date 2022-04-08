@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -17,6 +16,15 @@ public class Arm extends RobotPart {
     private double spinnerAngle = 90;
     Location location = null;
     Start.TeamColor teamColor;
+
+    // Variables
+    private final int intakeHeight = 0;
+    private final int intakeAllianceAngle = 125;
+    private final int intakeSharedAngle = -100;
+    private final int outtakeShardedHeight = 470;
+    private final int outtakeShardedAngle = 152;
+    private final int outtakeAllianceHeight = 980;
+    private final int outtakeAllianceAngle = 20;
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit, Start.TeamColor teamColorInit) {
         // setup variables
@@ -72,48 +80,48 @@ public class Arm extends RobotPart {
         // Shortcut spinner positions
         if (teamColor  == Start.TeamColor.RED){
             if (gamepad2.dpad_down) {
-                boolean result = setSpinnerAngle(-100);
+                boolean result = setSpinnerAngle(intakeSharedAngle);
                 if (result) {
-                    setHeight(50);
+                    setHeight(intakeHeight);
                     setMode("intaking");
                 }
             } else if (gamepad2.dpad_up){
-                setSpinnerAngle(152); //141
+                setSpinnerAngle(outtakeShardedAngle);
                 setMode("stop");
-                setHeight(470);
+                setHeight(outtakeShardedHeight);
             } else if (gamepad2.dpad_right){
-                boolean result = setSpinnerAngle(20);
+                boolean result = setSpinnerAngle(outtakeAllianceAngle);
                 if (result) {
-                    setHeight(50);
+                    setHeight(intakeHeight);
                     setMode("intaking");
                 }
             } else if (gamepad2.dpad_left){
-                setSpinnerAngle(125);
+                setSpinnerAngle(intakeAllianceAngle);
                 setMode("stop");
-                setHeight(980);
+                setHeight(outtakeAllianceHeight);
             }
         }
         if (teamColor  == Start.TeamColor.BLUE){
             if (gamepad2.dpad_down) {
-                boolean result = setSpinnerAngle(100);
+                boolean result = setSpinnerAngle(-intakeSharedAngle);
                 if (result) {
-                    setHeight(50);
+                    setHeight(intakeHeight);
                     setMode("intaking");
                 }
             } else if (gamepad2.dpad_up){
-                setSpinnerAngle(-152); // 141
+                setSpinnerAngle(-outtakeShardedAngle); // 141
                 setMode("stop");
-                setHeight(470);
+                setHeight(outtakeShardedHeight);
             } else if (gamepad2.dpad_left){
-                boolean result = setSpinnerAngle(-20);
+                boolean result = setSpinnerAngle(-outtakeAllianceAngle);
                 if (result) {
-                    setHeight(50);
+                    setHeight(intakeHeight);
                     setMode("intaking");
                 }
             } else if (gamepad2.dpad_right){
-                setSpinnerAngle(-125);
+                setSpinnerAngle(-intakeAllianceAngle);
                 setMode("stop");
-                setHeight(980);
+                setHeight(outtakeAllianceHeight);
             }
         }
 
@@ -147,17 +155,11 @@ public class Arm extends RobotPart {
         // Update arm height
         if (gamepad2.left_stick_y != 0) {
             int newHeight = (int) (motors.get("arm").getCurrentPosition() + 120 * -gamepad2.left_stick_y);
-            if (newHeight < 0){
-                newHeight = 0;
-            }
             setHeight(newHeight);
         }
     }
 
     public boolean setHeight(int height){
-        if (height < 0){
-            height = 0;
-        }
         motors.get("arm").setTargetPosition(height);
         return Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 10;
     }
