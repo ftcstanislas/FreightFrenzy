@@ -60,8 +60,8 @@ public class CustomElementPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         // Create a monochrome image with orange areas white and non-orange areas black
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(10, 100, 20);
-        Scalar highHSV = new Scalar(25, 255, 255);
+        Scalar lowHSV = new Scalar(23, 50, 70);
+        Scalar highHSV = new Scalar(32, 255, 255);
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 

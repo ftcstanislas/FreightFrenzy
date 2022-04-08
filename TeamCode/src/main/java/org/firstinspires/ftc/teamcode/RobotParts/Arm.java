@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Location.Location;
@@ -45,6 +46,10 @@ public class Arm extends RobotPart {
         motors.put("intake", map.get(DcMotorEx.class, "intake"));
         motors.get("intake").setDirection(DcMotor.Direction.REVERSE);
 
+        // Setup capping
+        servos.put("capping", map.get(Servo.class, "capping"));
+
+
         // Break
         setBrake(true);
 
@@ -61,6 +66,25 @@ public class Arm extends RobotPart {
         modes.put("outtaking", new HashMap<String, Object[]>() {{
             put("intake", new Object[]{"power", -0.5});
         }});
+
+        // set servo modes
+        currentServoMode = "retract";
+        servoModes.put("retract", new HashMap<String, Object[]>() {{
+            put("capping", new Object[]{"position", 0.0});
+        }});
+
+        servoModes.put("cap", new HashMap<String, Object[]>() {{
+            put("capping", new Object[]{"position", 0.5});
+        }});
+
+//        servoModes.put("lowcap", new HashMap<String, Object[]>() {{
+//            put("capping", new Object[]{"position", 0.7});
+//        }});
+//
+//        servoModes.put("highcap", new HashMap<String, Object[]>() {{
+//            put("capping", new Object[]{"position", 0.9});
+//        }});
+
     }
 
     @Override
@@ -143,6 +167,9 @@ public class Arm extends RobotPart {
         // Update intake
         switchMode(gamepad2.a, "stop","intaking");
         switchMode(gamepad2.y, "stop","outtaking");
+
+        // Update servo
+        switchMode(gamepad2.b, "retract", "cap");
 
         // Update arm height
         if (gamepad2.left_stick_y != 0) {

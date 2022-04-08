@@ -6,6 +6,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -14,45 +15,17 @@ public class StofferPipeline extends OpenCvPipeline {
     String cameraName;
     Mat mat = new Mat();
 
-    static Rect[][] ROIS = {
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()},
-            {new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect()}
+    static Rect[] ROIS = {
+            new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(), new Rect(),
     };
-    static Mat[][] subs = {
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()},
-            {new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat()}
+    static Mat[] subs = {
+            new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(), new Mat(),
     };
-    static double[][] subValues = {
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 0, 0, 0}
+    static double[] subValues = {
+            0, 0, 0, 0, 0, 0, 0, 0,
     };
-    static boolean[][] doesSubContainElement = {
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false},
-            {false, false, false, false, false, false, false, false}
+    static boolean[] doesSubContainElement = {
+            false, false, false, false, false, false, false, false,
     };
 
     static Rect ROI = new Rect(
@@ -66,12 +39,10 @@ public class StofferPipeline extends OpenCvPipeline {
         telemetry = t;
         cameraName = cn;
         for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                ROIS[x][y] = new Rect(
-                        new Point(x*40, y*30),
-                        new Point(x*40+40, y*30+30)
-                );
-            }
+            ROIS[x] = new Rect(
+                    new Point(x*40, 210),
+                    new Point(x*40+40, 240)
+            );
         }
     }
 
@@ -82,22 +53,22 @@ public class StofferPipeline extends OpenCvPipeline {
         Scalar highHSV = new Scalar(25, 255, 255);
 
         Core.inRange(mat, lowHSV, highHSV, mat);
+        //remove random white spots
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(15, 15));
+        Imgproc.morphologyEx(mat, mat, Imgproc.MORPH_OPEN, kernel);
 
         for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                subs[x][y] = mat.submat(ROIS[x][y]);
-            }
+            subs[x] = mat.submat(ROIS[x]);
         }
-//        Mat sub = mat.submat(ROI);
+//        Mat sub = mat.submat(ROI)
+//
 
 //        double subValue = Core.sumElems(sub).val[0] / ROI.area() / 255;
 //        sub.release();
         for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                subValues[x][y] = Core.sumElems(subs[x][y]).val[0] / ROIS[x][y].area() / 255;
-                subs[x][y].release();
-            }
-    }
+            subValues[x] = Core.sumElems(subs[x]).val[0] / ROIS[x].area() / 255;
+            subs[x].release();
+        }
 
 //        telemetry.addData("Left raw value", (int) Core.sumElems(sub).val[0]);
 //
@@ -105,9 +76,7 @@ public class StofferPipeline extends OpenCvPipeline {
 
 //        boolean element = subValue < PERCENT_COLOR_THRESHOLD;
         for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                doesSubContainElement[x][y] = subValues[x][y] < PERCENT_COLOR_THRESHOLD;
-            }
+            doesSubContainElement[x] = subValues[x] < PERCENT_COLOR_THRESHOLD;
         }
 
         telemetry.update();
@@ -119,9 +88,7 @@ public class StofferPipeline extends OpenCvPipeline {
 
 //        Imgproc.rectangle(mat, ROI, (element ? colorElement : colorEmpty));
         for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                Imgproc.rectangle(mat, ROIS[x][y], (doesSubContainElement[x][y] ? colorElement : colorEmpty));
-            }
+                Imgproc.rectangle(mat, ROIS[x], (doesSubContainElement[x] ? colorElement : colorEmpty));
         }
 
         return mat;
@@ -129,10 +96,8 @@ public class StofferPipeline extends OpenCvPipeline {
     public String getRectWithElement() {
         String locations = "";
         for (int x=0; x<8; x++) {
-            for (int y=0; y<8; y++) {
-                if (doesSubContainElement[x][y]) {
-                    locations += "(" + x + "," + y + ") ";
-                }
+            if (doesSubContainElement[x]) {
+                locations += "(" + x + ") ";
             }
         }
         return locations;

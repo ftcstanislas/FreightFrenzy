@@ -20,8 +20,11 @@ public abstract class RobotPart {
     protected Map<String, DcMotorEx> motors = new HashMap<String, DcMotorEx>();
     protected Map<String, Servo> servos = new HashMap<String, Servo>();
     private Map<String, Boolean> switchPressed = new HashMap<String, Boolean>();
+    private Map<String, Boolean> servoSwitchPressed = new HashMap<String, Boolean>();
     protected HashMap<String, HashMap<String, Object[]>> modes = new HashMap<String, HashMap<String, Object[]>>();
+    protected HashMap<String, HashMap<String, Object[]>> servoModes = new HashMap<>();
     protected String currentMode = "";
+    protected String currentServoMode = "";
     abstract void updateTelemetry();
     
 
@@ -119,6 +122,48 @@ public abstract class RobotPart {
             isSwitchPressed = false;
         }
         switchPressed.put(name, isSwitchPressed);
+    }
+
+    public boolean setServoMode(String mode){
+        boolean done = true;
+        if (servoModes.containsKey(mode)){
+            if (!currentServoMode.equals(mode)){
+                for (Map.Entry<String, Object[]> entry : servoModes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
+                    Object[] values = entry.getValue();
+                    String powerType = (String) values[0];
+                    Double value = (double) values[1];
+                    Servo servo = servos.get(entry.getKey());
+                    if (powerType == "position") {
+                        servo.setPosition(value);
+                        done = true;
+                    }
+                }
+                currentServoMode = mode;
+                updateTelemetry();
+            }
+        } else {
+            telemetry.setValue("Mode "+mode+" doesn't exits");
+        }
+        return done;
+    }
+
+    public void switchServoMode(boolean trigger, String defaultMode, String alternativeMode){
+        String name = defaultMode + " " + alternativeMode;
+        if (!servoSwitchPressed.containsKey(name)){
+            servoSwitchPressed.put(name, false);
+        }
+        boolean isSwitchPressed = servoSwitchPressed.get(name);
+        if (trigger && !isSwitchPressed){
+            isSwitchPressed = true;
+            if (currentServoMode != defaultMode){
+                setMode(defaultMode);
+            } else {
+                setMode(alternativeMode);
+            }
+        } else if (!trigger && isSwitchPressed){
+            isSwitchPressed = false;
+        }
+        servoSwitchPressed.put(name, isSwitchPressed);
     }
 
 
