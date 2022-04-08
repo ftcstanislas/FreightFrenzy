@@ -31,6 +31,7 @@ public abstract class DefaultOpMode extends OpMode {
     public Start.StartLocation startLocation;
     public Start.CustomElement customElement;
     public Start.TeamColor teamColor;
+    public int customElementCameraRotation = 0;
 
     // Robot parts
     CustomElementDetection customElementDetection = new CustomElementDetection();
@@ -76,6 +77,10 @@ public abstract class DefaultOpMode extends OpMode {
         startLocation = startPosition;
     }
 
+    public void setCustomElementCameraRotation(int rotation) {
+        customElementCameraRotation = rotation;
+    }
+
     private double[] getLastLocation() {
         double x = openFile("positionX.txt");
         double y = openFile("positionY.txt");
@@ -107,19 +112,20 @@ public abstract class DefaultOpMode extends OpMode {
         drivetrain.setBrake(true);
         location.init(hardwareMap, useCameras, locationRobot, drivetrain, telemetryLocation, telemetryCustomElement);
         if (useCameras) {
-            if (teamColor == Start.TeamColor.RED) {
-                if (location.getNotActiveWebcamName() == "Webcam 2") {
-                    location.getNotActiveWebcam().setPointerAngle(50, false);
-                } else {
-                    location.getNotActiveWebcam().setPointerAngle(82, false);
-                }
-            } else if (teamColor == Start.TeamColor.BLUE){
-                if (location.getNotActiveWebcamName() == "Webcam 2") {
-                    location.getNotActiveWebcam().setPointerAngle(90, false);
-                } else {
-                    location.getNotActiveWebcam().setPointerAngle(138, false);//102
-                }
-            }
+            location.getNotActiveWebcam().setPointerAngle(customElementCameraRotation, false);
+//            if (teamColor == Start.TeamColor.RED) {
+//                if (location.getNotActiveWebcamName() == "Webcam 2") {
+//                    location.getNotActiveWebcam().setPointerAngle(50, false);
+//                } else {
+//                    location.getNotActiveWebcam().setPointerAngle(82, false);
+//                }
+//            } else if (teamColor == Start.TeamColor.BLUE){
+//                if (location.getNotActiveWebcamName() == "Webcam 2") {
+//                    location.getNotActiveWebcam().setPointerAngle(90, false);
+//                } else {
+//                    location.getNotActiveWebcam().setPointerAngle(138, false);//102
+//                }
+//            }
 
             customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false, teamColor);
             customElementDetection.startStream();

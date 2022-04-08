@@ -19,7 +19,7 @@ public class Arm extends RobotPart {
     Start.TeamColor teamColor;
 
     // Variables
-    private final int intakeHeight = 0;
+    private final int intakeHeight = -5;
     private final int intakeAllianceAngle = 125;
     private final int intakeSharedAngle = -100;
     private final int outtakeShardedHeight = 470;
@@ -46,7 +46,7 @@ public class Arm extends RobotPart {
         motors.put("arm", map.get(DcMotorEx.class, "arm"));
         motors.get("arm").setDirection(DcMotor.Direction.FORWARD);
         motors.get("arm").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motors.get("arm").setPower(1);
+        motors.get("arm").setPower(0.7);
         setHeight(motors.get("arm").getCurrentPosition());
         motors.get("arm").setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -85,13 +85,6 @@ public class Arm extends RobotPart {
             put("capping", new Object[]{"position", 0.5});
         }});
 
-//        servoModes.put("lowcap", new HashMap<String, Object[]>() {{
-//            put("capping", new Object[]{"position", 0.7});
-//        }});
-//
-//        servoModes.put("highcap", new HashMap<String, Object[]>() {{
-//            put("capping", new Object[]{"position", 0.9});
-//        }});
 
     }
 
@@ -111,7 +104,6 @@ public class Arm extends RobotPart {
                 }
             } else if (gamepad2.dpad_up){
                 setSpinnerAngle(outtakeShardedAngle);
-                setMode("stop");
                 setHeight(outtakeShardedHeight);
             } else if (gamepad2.dpad_right){
                 boolean result = setSpinnerAngle(outtakeAllianceAngle);
@@ -121,7 +113,6 @@ public class Arm extends RobotPart {
                 }
             } else if (gamepad2.dpad_left){
                 setSpinnerAngle(intakeAllianceAngle);
-                setMode("stop");
                 setHeight(outtakeAllianceHeight);
             }
         }
@@ -134,7 +125,6 @@ public class Arm extends RobotPart {
                 }
             } else if (gamepad2.dpad_up){
                 setSpinnerAngle(-outtakeShardedAngle); // 141
-                setMode("stop");
                 setHeight(outtakeShardedHeight);
             } else if (gamepad2.dpad_left){
                 boolean result = setSpinnerAngle(-outtakeAllianceAngle);
@@ -144,7 +134,6 @@ public class Arm extends RobotPart {
                 }
             } else if (gamepad2.dpad_right){
                 setSpinnerAngle(-intakeAllianceAngle);
-                setMode("stop");
                 setHeight(outtakeAllianceHeight);
             }
         }

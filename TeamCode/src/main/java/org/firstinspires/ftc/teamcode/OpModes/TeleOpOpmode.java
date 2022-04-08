@@ -11,13 +11,12 @@ public class TeleOpOpmode extends DefaultOpMode {
         super.setUseCameras(false);
         super.setUseInstructions(false);
         super.init();
-//        arm.setHeight(890);
     }
 
     @Override
     public void start() {
         arm.setHeight(890);
-        arm.setSpinnerAngle(180);
+        arm.setSpinnerAngle(locationRobot[2]);
     }
 
     @Override

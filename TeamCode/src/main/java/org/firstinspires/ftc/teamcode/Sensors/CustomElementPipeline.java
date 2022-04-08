@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Sensors;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Location.Start;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -20,21 +19,21 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     private Start.CustomElement location;
     private Start.TeamColor teamColor;
-    static final Rect LEFT_ROI_WAREHOUSE = new Rect(
-            new Point(10, 160),
-            new Point(90, 240)
+    static final Rect LEFT_BOX_WAREHOUSE = new Rect(
+            new Point(10, 100),
+            new Point(90, 200)
     );
-    static final Rect RIGHT_ROI_WAREHOUSE = new Rect(
+    static final Rect RIGHT_BOX_WAREHOUSE = new Rect(
             new Point(130, 140),
             new Point(190, 220)
     );
-    static final Rect LEFT_ROI_SPINNER = new Rect(
-            new Point(60, 140),
-            new Point(160, 240)
+    static final Rect LEFT_BOX_SPINNER = new Rect(
+            new Point(0, 140),
+            new Point(100, 230)
     );
-    static final Rect RIGHT_ROI_SPINNER = new Rect(
-            new Point(270, 140),
-            new Point(320, 240)
+    static final Rect RIGHT_BOX_SPINNER = new Rect(
+            new Point(200, 140),
+            new Point(300, 230)
     );
     static double PERCENT_COLOR_THRESHOLD = 0.2;
 
@@ -46,11 +45,11 @@ public class CustomElementPipeline extends OpenCvPipeline {
 //        telemetry = t;
         cameraName = cn;
         if (startInit == Start.StartLocation.SPINNER){
-            LEFT_RECTANGLE = LEFT_ROI_SPINNER;
-            RIGHT_RECTANGLE = RIGHT_ROI_SPINNER;
+            LEFT_RECTANGLE = LEFT_BOX_SPINNER;
+            RIGHT_RECTANGLE = RIGHT_BOX_SPINNER;
         } else if (startInit == Start.StartLocation.WAREHOUSE){
-            LEFT_RECTANGLE = LEFT_ROI_WAREHOUSE;
-            RIGHT_RECTANGLE = RIGHT_ROI_WAREHOUSE;
+            LEFT_RECTANGLE = LEFT_BOX_WAREHOUSE;
+            RIGHT_RECTANGLE = RIGHT_BOX_WAREHOUSE;
         }
         teamColor = teamColorInit;
         start = startInit;
@@ -60,9 +59,9 @@ public class CustomElementPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         // Create a monochrome image with orange areas white and non-orange areas black
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(23, 50, 70);
-        Scalar highHSV = new Scalar(32, 255, 255);
 
+        Scalar lowHSV = new Scalar(10, 100, 20);
+        Scalar highHSV = new Scalar(25, 255, 255);
         Core.inRange(mat, lowHSV, highHSV, mat);
 
         Mat left = mat.submat(LEFT_RECTANGLE);
@@ -76,7 +75,6 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
 //        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
 //        telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
-//          Jaron was here
 //        telemetry.addData("Left percentage", Math.round(leftValue) * 100);
 //        telemetry.addData("Right percentage", Math.round(rightValue) * 100);
 
@@ -208,3 +206,16 @@ public class CustomElementPipeline extends OpenCvPipeline {
         return location;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//Jaron was here

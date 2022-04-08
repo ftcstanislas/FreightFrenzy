@@ -58,7 +58,7 @@ public class Location {
     private SwitchableCamera switchableCamera;
     VuforiaLocalizer.Parameters parameters = null;
     private VuforiaLocalizer vuforia;
-    double[][] positionCameras = {{230, -115}, {230, 115}};
+    double[][] positionCameras = {{230, -130}, {230, 130}};
     private Camera activeCamera = null;
     double[] positionCamera = null;
 
@@ -66,7 +66,7 @@ public class Location {
     String text = "";
 
     public void init(HardwareMap hardwareMap, boolean advancedInit, double[] position, MecanumDrive drivetrainInit, Telemetry.Item telemetryInit, Telemetry.Item telemetryDucks) {
-        advanced = advancedInit; // keep track of location
+        advanced = advancedInit; // keep track of location with camera's
         x = position[0];
         y = position[1];
         heading = position[2];
