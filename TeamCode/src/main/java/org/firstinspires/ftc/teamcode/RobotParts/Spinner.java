@@ -44,9 +44,9 @@ public class Spinner extends RobotPart{
                 speed = 2500;
             }
             if (currentMode == SpinMode.SPIN_RED){
-                motors.get("spinner").setVelocity(-speed);
-            } else if (currentMode == SpinMode.SPIN_BLUE) {
                 motors.get("spinner").setVelocity(speed);
+            } else if (currentMode == SpinMode.SPIN_BLUE) {
+                motors.get("spinner").setVelocity(-speed);
             }
 
             if (startSpinnerTime + 1500 < System.currentTimeMillis()){

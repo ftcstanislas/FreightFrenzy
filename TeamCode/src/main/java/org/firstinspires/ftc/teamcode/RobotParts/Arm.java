@@ -26,6 +26,7 @@ public class Arm extends RobotPart {
     private final int outtakeShardedAngle = 152;
     private final int outtakeAllianceHeight = 980;
     private final int outtakeAllianceAngle = 20;
+    //Jaron was here
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit, Start.TeamColor teamColorInit) {
         // setup variables
@@ -72,7 +73,7 @@ public class Arm extends RobotPart {
         }});
 
         modes.put("outtaking", new HashMap<String, Object[]>() {{
-            put("intake", new Object[]{"power", -0.5});
+            put("intake", new Object[]{"power", -1.0});
         }});
 
         // set servo modes
@@ -95,53 +96,53 @@ public class Arm extends RobotPart {
 
     public void checkController(Gamepad gamepad1, Gamepad gamepad2, Start.TeamColor teamColor) {
         // Shortcut spinner positions
-        if (teamColor  == Start.TeamColor.RED){
+        if (teamColor == Start.TeamColor.RED) {
             if (gamepad2.dpad_down) {
                 boolean result = setSpinnerAngle(intakeSharedAngle);
                 if (result) {
                     setHeight(intakeHeight);
                     setMode("intaking");
                 }
-            } else if (gamepad2.dpad_up){
+            } else if (gamepad2.dpad_up) {
                 setSpinnerAngle(outtakeShardedAngle);
                 setHeight(outtakeShardedHeight);
-            } else if (gamepad2.dpad_right){
+            } else if (gamepad2.dpad_right) {
                 boolean result = setSpinnerAngle(outtakeAllianceAngle);
                 if (result) {
                     setHeight(intakeHeight);
                     setMode("intaking");
                 }
-            } else if (gamepad2.dpad_left){
+            } else if (gamepad2.dpad_left) {
                 setSpinnerAngle(intakeAllianceAngle);
                 setHeight(outtakeAllianceHeight);
             }
         }
-        if (teamColor  == Start.TeamColor.BLUE){
+        if (teamColor == Start.TeamColor.BLUE) {
             if (gamepad2.dpad_down) {
                 boolean result = setSpinnerAngle(-intakeSharedAngle);
                 if (result) {
                     setHeight(intakeHeight);
                     setMode("intaking");
                 }
-            } else if (gamepad2.dpad_up){
+            } else if (gamepad2.dpad_up) {
                 setSpinnerAngle(-outtakeShardedAngle); // 141
                 setHeight(outtakeShardedHeight);
-            } else if (gamepad2.dpad_left){
+            } else if (gamepad2.dpad_left) {
                 boolean result = setSpinnerAngle(-outtakeAllianceAngle);
                 if (result) {
                     setHeight(intakeHeight);
                     setMode("intaking");
                 }
-            } else if (gamepad2.dpad_right){
+            } else if (gamepad2.dpad_right) {
                 setSpinnerAngle(-intakeAllianceAngle);
                 setHeight(outtakeAllianceHeight);
             }
         }
 
         // Ducks
-        if (gamepad2.x){
+        if (gamepad2.x) {
             setHeight(1885);
-            if (teamColor == Start.TeamColor.RED){
+            if (teamColor == Start.TeamColor.RED) {
                 setSpinnerAngle(180);
             } else if (teamColor == Start.TeamColor.BLUE) {
                 setSpinnerAngle(0);
@@ -162,8 +163,8 @@ public class Arm extends RobotPart {
         setSpinnerAngle(getSpinnerTargetAngle() + 3 * moveArm);
 
         // Update intake
-        switchMode(gamepad2.a, "stop","intaking");
-        switchMode(gamepad2.y, "stop","outtaking");
+        switchMode(gamepad2.a, "stop", "intaking");
+        switchMode(gamepad2.y, "stop", "outtaking");
 
         // Update servo
         switchMode(gamepad2.b, "retract", "cap");
@@ -175,7 +176,7 @@ public class Arm extends RobotPart {
         }
     }
 
-    public boolean setHeight(int height){
+    public boolean setHeight(int height) {
         motors.get("arm").setTargetPosition(height);
         return Math.abs(motors.get("arm").getTargetPosition() - motors.get("arm").getCurrentPosition()) < 10;
     }
@@ -185,7 +186,7 @@ public class Arm extends RobotPart {
         return updateSpinnerAngle();
     }
 
-    public double getSpinnerTargetAngle(){
+    public double getSpinnerTargetAngle() {
         return spinnerAngle;
     }
 
@@ -217,9 +218,9 @@ public class Arm extends RobotPart {
         int targetArmPosition = (int) Math.round(armPosition + difference / 360 * ENCODER_TICK_PER_ROUND);
 
         // Fail safe for turning to much
-        if (targetArmPosition > ENCODER_TICK_PER_ROUND){
+        if (targetArmPosition > ENCODER_TICK_PER_ROUND) {
             targetArmPosition = (int) ENCODER_TICK_PER_ROUND;
-        } else if (targetArmPosition < -ENCODER_TICK_PER_ROUND){
+        } else if (targetArmPosition < -ENCODER_TICK_PER_ROUND) {
             targetArmPosition = (int) -ENCODER_TICK_PER_ROUND;
         }
 
