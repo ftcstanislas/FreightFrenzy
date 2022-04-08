@@ -10,7 +10,7 @@ public class TestOpmode extends AutonomousOpmode {
     @Override
     public void init() {
         super.setTeam(Start.TeamColor.RED);
-        super.setStart(Start.StartLocation.SPINNER);
+        super.setStart(Start.StartLocation.WAREHOUSE);
         super.init();
     }
 
