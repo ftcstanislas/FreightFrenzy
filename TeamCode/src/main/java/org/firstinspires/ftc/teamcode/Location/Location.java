@@ -24,26 +24,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Location {
-    //    private Odometry odometry = null;
-    private IMU IMU = null;
-    public Camera camera1 = null;
-    public Camera camera2 = null;
-    private Telemetry.Item telemetry = null;
-    private MecanumDrive drivetrain = null;
-    private boolean advanced = false;
 
-    //Location
-    final int HISTORY_LENGTH = 1;
-    ArrayList<Double> historyX = new ArrayList<Double>();
-    ArrayList<Double> historyY = new ArrayList<Double>();
-    ArrayList<Double> historyHeading = new ArrayList<Double>();
-    double x;
-    double y;
-    double heading;
+    /**********CONSTANTS**********/
+    final int HISTORY_LENGTH = 1; // Amount of previous locations stored
+    double[][] positionCameras = {{230, -130}, {230, 130}};
 
-    // Targets
-    private VuforiaTrackables targets = null;
-    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
@@ -53,14 +38,41 @@ public class Location {
     private static final float halfTile = 0.5f * fieldTile;
     private static final float oneAndHalfTile = 1.5f * fieldTile;
 
-    // Camera
+
+
+
+    /**********GLOBAL VARS**********/
+    //    private Odometry odometry = null;
+    private IMU IMU = null;
+    public Camera camera1 = null;
+    public Camera camera2 = null;
+    private Telemetry.Item telemetry = null;
+    private MecanumDrive drivetrain = null;
+    private boolean advanced = false;
+
+    // Storing locations
+    ArrayList<Double> historyX = new ArrayList<Double>(); // History arraylist for the X-positions
+    ArrayList<Double> historyY = new ArrayList<Double>(); // History arraylist for the Y-positions
+    ArrayList<Double> historyHeading = new ArrayList<Double>(); // History arraylist for the headings
+    double x;
+    double y;
+    double heading;
+
+    // Targets
+    private VuforiaTrackables targets = null;
+    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+
+    // Camera names
     private WebcamName webcam1, webcam2;
-    private SwitchableCamera switchableCamera;
+
+    // Active camera
+    private SwitchableCamera switchableCamera; // Active camera vuforia object
+    private Camera activeCamera = null; // Active camera class
+    double[] positionCamera = null; // Active camera positions
+
+    //Vuforia
     VuforiaLocalizer.Parameters parameters = null;
     private VuforiaLocalizer vuforia;
-    double[][] positionCameras = {{230, -130}, {230, 130}};
-    private Camera activeCamera = null;
-    double[] positionCamera = null;
 
     // Telemetry
     String text = "";
@@ -129,18 +141,24 @@ public class Location {
 
             // Calculate new position of robot
             if (activeCamera.targetVisible) {
+                //Location of camera on the field
                 double[] locationCamera = activeCamera.getPosition();
-                double[] robotCoordinates = activeCamera.calculateRobotCoordinates(positionCamera, heading);
-                double robotX = robotCoordinates[0];
-                double robotY = robotCoordinates[1];
 
-                historyX.add(locationCamera[0] + robotX);
-                historyY.add(locationCamera[1] + robotY);
+                //Location of center of robot from the camera (relative the field)
+                double[] robotCoordinates = activeCamera.calculateRobotCoordinates(positionCamera, heading);
+
+                //Calculate center of robot on the field
+                double robotX = locationCamera[0] + robotCoordinates[0];
+                double robotY = locationCamera[1] + robotCoordinates[1];
+
+                //Add new location to locations history
+                historyX.add(robotX);
+                historyY.add(robotY);
                 historyHeading.add(locationCamera[2]);
             }
         }
 
-        // Remove part of history
+        // Remove parts of history when length exceeds limit
         while (historyX.size() > HISTORY_LENGTH) {
             historyX.remove(0);
         }
@@ -183,6 +201,8 @@ public class Location {
         text = "";
     }
 
+
+    // Get inactive webcam class
     public Camera getNotActiveWebcam() {
         if (activeCamera == camera1) {
             return camera2;
@@ -191,6 +211,7 @@ public class Location {
         }
     }
 
+    // Get inactive webcam name
     public String getNotActiveWebcamName() {
         if (activeCamera == camera1) {
             return "Webcam 2";
@@ -204,6 +225,7 @@ public class Location {
     // Give feedback to user
     public void debug(Gamepad gamepad1, Gamepad gamepad2) {
         if (advanced) {
+            // Rumble if camera can't find navigation image
             if (activeCamera.targetVisible) {
                 gamepad1.stopRumble();
             } else {
@@ -214,6 +236,7 @@ public class Location {
                 drivetrain.stopDriving();
             }
 
+            // Manually set active webcam
             if (gamepad1.dpad_right) {
                 setActiveCamera(1);
             } else if (gamepad1.dpad_left) {
@@ -223,12 +246,12 @@ public class Location {
     }
 
     private void updatePointerPositions() {
-        // Camera 1
+        // Get camera 1 position on the field by using robot's center position
         double[] robotCoordinates1 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
         double camera1RobotX = robotCoordinates1[0];
         double camera1RobotY = robotCoordinates1[1];
 
-        // Camera 2
+        // Get camera 2 position on the field by using robot's center position
         double[] robotCoordinates2 = camera2.calculateRobotCoordinates(positionCameras[1], heading);
         double camera2RobotX = robotCoordinates2[0];
         double camera2RobotY = robotCoordinates2[1];
@@ -246,22 +269,24 @@ public class Location {
             activeCamera1 = false;
             activeCamera2 = false;
         }
+
+        //Update both camera pointers
         camera1.setPointerPosition(x - camera1RobotX, y - camera1RobotY, heading, activeCamera1);
         camera2.setPointerPosition(x - camera2RobotX, y - camera2RobotY, heading, activeCamera2);
     }
 
     private void updateActiveCamera() {
-        // Camera 1
+        // Get camera 1 position on the field by using robot's center position
         double[] robotCoordinates1 = camera1.calculateRobotCoordinates(positionCameras[0], heading);
         double camera1RobotX = robotCoordinates1[0];
         double camera1RobotY = robotCoordinates1[1];
 
-        // Camera 2
+        // Get camera 2 position on the field by using robot's center position
         double[] robotCoordinates2 = camera2.calculateRobotCoordinates(positionCameras[1], heading);
         double camera2RobotX = robotCoordinates2[0];
         double camera2RobotY = robotCoordinates2[1];
 
-        // Get score's
+        // Get scores for both camera
         boolean activeCamera1;
         boolean activeCamera2;
         if (activeCamera == camera1) {
@@ -277,15 +302,24 @@ public class Location {
         double[] scoreCamera1 = camera1.getBestScore(x - camera1RobotX, y - camera1RobotY, heading, activeCamera1);
         double[] scoreCamera2 = camera2.getBestScore(x - camera2RobotX, y - camera2RobotY, heading, activeCamera2);
 
-        // Switch camera to best score
+        // Switch camera to the one with best score
         double scoreDifference = Math.abs(scoreCamera1[0] - scoreCamera2[0]);
         double MAX_SCORE_TO_SWITCH = 1000;
         double MIN_SCORE_TO_SWITCH = 100;
         double MIN_SCORE_DIFFERENCE = 100;
         if (scoreDifference >= MIN_SCORE_DIFFERENCE) {
+            /* Set camera 1 active if:
+            -It's score is better than camera 2
+            -It's not currently the active camera
+            -It's does not exceed the limits for when to switch */
             if (scoreCamera1[0] < scoreCamera2[0] && activeCamera != camera1 && scoreCamera1[0] < MAX_SCORE_TO_SWITCH && scoreCamera1[0] > MIN_SCORE_TO_SWITCH) {
                 setActiveCamera(1);
-            } else if (scoreCamera1[0] > scoreCamera2[0] && activeCamera != camera2 && scoreCamera2[0] < MAX_SCORE_TO_SWITCH && scoreCamera2[0] > MIN_SCORE_TO_SWITCH) {
+            }
+            /* Set camera 2 active if:
+            -It's score is better than camera 1
+            -It's not currently the active camera
+            -It's does not exceed the limits for when to switch */
+            else if (scoreCamera1[0] > scoreCamera2[0] && activeCamera != camera2 && scoreCamera2[0] < MAX_SCORE_TO_SWITCH && scoreCamera2[0] > MIN_SCORE_TO_SWITCH) {
                 setActiveCamera(2);
             }
         }
@@ -298,8 +332,10 @@ public class Location {
     }
 
     private void setActiveCamera(int number) {
+        // Stop driving when switching (switching takes some time)
         drivetrain.stopDriving();
 
+        // Swap active camera variables
         if (number == 1) {
             activeCamera = camera1;
             positionCamera = positionCameras[0];
@@ -372,6 +408,11 @@ public class Location {
         return heading;
     }
 
+
+    /*
+    -Drive to position autonomously 
+    -Returns true if position is reached
+    */
     public boolean goToPosition(double targetX, double targetY, double targetRotation, double power) {
 
         // Constants
@@ -421,6 +462,10 @@ public class Location {
         }
     }
 
+    /*
+    -Drive to circle autonomously 
+    -Returns true if position is reached
+    */
     public boolean goToCircle(double midPointX, double midPointY, double radius) {
         double currentX = getXCoordinate();
         double currentY = getYCoordinate();
@@ -436,6 +481,7 @@ public class Location {
         return targetReached;
     }
 
+    // Time based IMU driving
     public void driveImu(double x, double y, double orientation, double power) {
 
         // Calculate orientation

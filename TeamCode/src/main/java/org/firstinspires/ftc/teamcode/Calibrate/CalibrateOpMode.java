@@ -35,13 +35,13 @@ public class CalibrateOpMode extends OpMode {
         if (!done) {
             telemetry.addLine("- Put the arm inside the drivetrain. So that is as far down as possible (it is not hitting the ground).\n" +
                     "- Point the drivetrain towards the side that has the shared shipping hub." +
-                    "- Check kabels");
+                    "- Check cables");
             telemetry.addLine("Press x/y/a/b when done with these steps.");
         } else {
             telemetry.addLine("You are finished!");
         }
 
-
+        //Calibrating
         if (gamepad1.x || gamepad1.a || gamepad1.y || gamepad1.b) {
             // Arm height
             arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -66,6 +66,7 @@ public class CalibrateOpMode extends OpMode {
         }
     }
 
+    //Save data to file on control hub
     private void saveValue(String filename, double value) {
         File file = AppUtil.getInstance().getSettingsFile(filename);
         ReadWriteFile.writeFile(file, String.valueOf(value));

@@ -43,6 +43,7 @@ public class PointerCalibrator extends OpMode {
 
     @Override
     public void loop() {
+        //Selecting active servo
         if (gamepad1.right_bumper) {
             activeServo = servo1;
             OFFSET = OFFSET1;
@@ -61,9 +62,11 @@ public class PointerCalibrator extends OpMode {
             angle = 270; // Change total counts
         }
 
+        //Manually finding correct position using controller
         OFFSET += -gamepad1.right_stick_y * multiplier;
         TOTAL_COUNTS_PER_ROUND += -gamepad1.left_stick_y * multiplier;
 
+        //Turn servo to angle in degrees
         setServoAngle(angle);
 
         // Telemetry
@@ -74,8 +77,8 @@ public class PointerCalibrator extends OpMode {
         telemetry.addLine("Total counts " + TOTAL_COUNTS_PER_ROUND);
     }
 
+    //Turn servo angle in degrees using the calibrated constants
     public void setServoAngle(double angle) {
-
         double pointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
         double outsideServoSize = (TOTAL_COUNTS_PER_ROUND - 1) / 2;
         while (pointerPosition < -outsideServoSize) {

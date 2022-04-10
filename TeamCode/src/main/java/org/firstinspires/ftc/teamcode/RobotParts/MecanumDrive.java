@@ -65,40 +65,44 @@ public class MecanumDrive extends RobotPart{
         double power = 0;
 
         if (Math.abs(gamepad1.left_stick_x) > 0 || Math.abs(gamepad1.left_stick_y) > 0){
-            // Normal
+            // Normal controls
             x = gamepad1.left_stick_x;
             y = -gamepad1.left_stick_y;
-            power = Math.sqrt(x*x + y*y);
+            power = Math.sqrt(x*x + y*y); // Hypotenuse
         } else if (Math.abs(gamepad1.right_stick_x) > 0 || Math.abs(gamepad1.right_stick_y) > 0) {
-            // Headless
+            // Headless controls
             double robotAngle;
             if (teamColor == Start.TeamColor.RED) {
-                robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
+                robotAngle = Math.atan2(-gamepad1.right_stick_y, gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI; // Add 0.5π so 0 is forward
             } else {
-                robotAngle = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI;
+                robotAngle = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.toRadians(location.getOrientation()) + 0.5 * Math.PI; // Add 0.5π so 0 is forward
             }
             x = Math.cos(robotAngle);
             y = Math.sin(robotAngle);
-            power = Math.sqrt(Math.pow(gamepad1.right_stick_x, 2) + Math.pow(gamepad1.right_stick_y, 2));
+            power = Math.sqrt(Math.pow(gamepad1.right_stick_x, 2) + Math.pow(gamepad1.right_stick_y, 2)); // Hypotenuse
         }
 
-        // turning
+        // Turning 
         double turning = gamepad1.left_trigger - gamepad1.right_trigger;
+
+        // Slower turning
         if (gamepad1.x){
             turning *= 0.45;
         }
         power = Math.max(power, Math.abs(turning));
         
-        // calculate slow down
+        // Slow robot speed
         if (gamepad1.a || gamepad1.dpad_down) {
             power *= 0.45;
         } else if (gamepad1.x || gamepad1.dpad_right){
             power *= 0.3;
         }
 
+        // Set motor to powers
         setPowerDirection(x, y, turning, power);
     }
     
+    // Set power to motors
     public void setPowerDirection(double x, double y, double turn, double power){
         power = Math.min(Math.max(power, -1), 1);
         double straal = Math.hypot(x, y);
@@ -163,6 +167,7 @@ public class MecanumDrive extends RobotPart{
 //        drawArrows(x, y, turn);
     }
 
+    // Draw arrows to indicate to which side the robot is moving (or turning)
     public void drawArrows(double x, double y, double turn){
         double orientation = Math.toDegrees(Math.atan2(y, x));
         String text = "";
