@@ -13,10 +13,10 @@ public class AutonomousOpmode extends DefaultOpMode {
     // Wich program to follow
     Object[][] instructions = null;
 
-    // sleeping
+    // Sleeping
     double wakeUpTime = 0;
 
-    // make runtime
+    // Make runtime
     ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -124,12 +124,12 @@ public class AutonomousOpmode extends DefaultOpMode {
                         break;
 
                     case "setPower":
-                        drivetrain.setPowerDirection((double) instruction[3], (double) instruction[4], (double) instruction[5], (double) instruction[6]);
+                        drivetrain.setPowerDirection((double) instruction[3], (double) instruction[4], (double) instruction[5], (double) instruction[6]); // x, y, turning, speed
                         break;
 
                     case "driveImu1":
                     case "driveImu":
-                        location.driveImu((double) instruction[3], (double) instruction[4], (double) instruction[5],  (double) instruction[6]);
+                        location.driveImu((double) instruction[3], (double) instruction[4], (double) instruction[5],  (double) instruction[6]); // x, y, orientation, power
                         //Calculate wait time
                         if (wakeUpTime == 0) {
                             wakeUpTime = (double) runtime.time() + (double) instruction[7];

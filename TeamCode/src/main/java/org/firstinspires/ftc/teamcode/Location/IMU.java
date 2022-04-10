@@ -47,11 +47,13 @@ public class IMU {
         return curHeading + offset;
     }
 
+    // Telemetry pretty displaying
     public String getDisplay() {
         double curHeading = getHeading();
         return "Orientation: " + curHeading;
     }
 
+    // WORDT DIT GEBRUIKT?
     public double[] getPosition() {
         Position position = imu.getPosition();
         position = position.toUnit(DistanceUnit.MM);

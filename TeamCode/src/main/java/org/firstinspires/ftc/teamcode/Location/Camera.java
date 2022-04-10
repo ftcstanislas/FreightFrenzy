@@ -26,6 +26,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 public class Camera{
+    //Vuforia key
     private static final String VUFORIA_KEY =
             "AYijR7b/////AAABmQXodEBY4E1gjxKsoSygzWsm4RFjj/z+nzPa0q3oo3vJNz51j477KysEdl4h1YfezCokKxkUeK3ARNjE1tH80M5gZbubu2bkdF6Ja8gINhJTAY/ZJrFkPGiiLfausXsCWAygHW7ufeu3FLIDp1DN2NHj4rzDP4vRv5z/0T0deRLucpRcv36hqUkJ1N6Duumo0se+BCmdAh7ycUW2wteJ3T1e/LxuO5sI6qtwnJW64fe2n6cehk5su76c9t45AcBfod6f0txGezdzpqY5NoHjz0G/gLvah0vAYW+/0x3yaWy8thEd64OVMVb2q37TsJ1UDjl5qupztdG7nXkRGYF5oaR8CGkm2lqPyugJuRFNMRcM";
 
@@ -50,18 +51,27 @@ public class Camera{
     // Trackables
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
-    // Paramerters
+    // Parameters
     VuforiaLocalizer.Parameters parameters = null;
 
     // Pointer
     Servo pointer = null;
+
     double pointerPosition = 0;
     double pointerLastUpdate = System.currentTimeMillis();;
     double POINTER_SPEED = 1.14;
+
+    //Default pointer angle (forwards)
     private double pointerAngle = 90;
+
+    //Pointer servo constants
     double TOTAL_COUNTS_PER_ROUND = 0;
     double OFFSET = 0;
+
+    //Navigation image index
     double pointingAt = 0;
+
+    //Webcam id (1 or 2)
     String id = "";
 
     public void init(List<VuforiaTrackable> allTrackablesInit, VuforiaLocalizer vuforiaInit, VuforiaLocalizer.Parameters parametersInit, HardwareMap hardwareMap, String number, double TOTAL_COUNTS_PER_ROUND_INIT, double OFFSET_INIT, Telemetry.Item telemetryInit) {
@@ -70,7 +80,7 @@ public class Camera{
 
         // Servo pointer
         id = number;
-        pointer = hardwareMap.get(Servo.class, "cameraPointer"+number);
+        pointer = hardwareMap.get(Servo.class, "cameraPointer" + number);
         TOTAL_COUNTS_PER_ROUND = TOTAL_COUNTS_PER_ROUND_INIT;
         OFFSET = OFFSET_INIT;
 
@@ -81,6 +91,7 @@ public class Camera{
     }
 
     public void setCameraPosition(float forward, float left, float height, float heading){
+        /**  Create a matrix containing information about the camera location on the robot.  */
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
                 .translation(forward, left, height)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, heading, 0));
@@ -95,13 +106,14 @@ public class Camera{
         targetVisible = false;
         updateServoPosition();
 
+        //Only update if pointer has the correct target position
         if (pointerPosition == pointer.getPosition()) {
             updateCamera();
         }
     }
 
     public void updateCamera(){
-        // check all the trackable targets to see which one (if any) is visible.
+        // Check all the trackable targets to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
@@ -132,6 +144,11 @@ public class Camera{
         return new double[]{robotX, robotY};
     }
 
+    /* 
+    Calculate scores for each possible active camera configuration by calculating
+    -Distance to each navigation image
+    -Best rotation for each navigation image 
+    */
     public double[] getBestScore(double x, double y, double heading, boolean activeCamera){
         double[][] locations = {
                 {-halfField, oneAndHalfTile}, // 0: blue storage
@@ -159,19 +176,22 @@ public class Camera{
                 score *= 100000; // Very bad score
             }
 
-            // Check if it is the best option
+            /* 
+            Check wether it's the best option, only update best score if:
+            -The current camera is not the active camera
+            -The active camera is pointing at the same navigation image */
             if ((score < bestScore && !activeCamera) || (activeCamera && index == pointingAt)) {
                 bestScore = score;
                 bestPointerAngle = pointerAngle;
                 bestIndex = index;
             }
         }
-        return new double[]{bestScore, Math.round(bestPointerAngle), bestIndex};
+        return new double[] {bestScore, Math.round(bestPointerAngle), bestIndex};
     }
 
     public void updateServoPosition(){
         double currentTime = System.currentTimeMillis();
-        double timePassed = (currentTime - pointerLastUpdate)/1000;
+        double timePassed = (currentTime - pointerLastUpdate)/1000; //In seconds
         double movement = pointer.getPosition() - pointerPosition;
         if (movement > 0){
             pointerPosition += Math.min(POINTER_SPEED * timePassed, movement);
@@ -184,15 +204,21 @@ public class Camera{
 
     // Set angle of servo (angle in degrees)
     public void setPointerAngle(double angle, boolean activeCamera) {
+        //Get the pointer position in servo ticks
         double targetPointerPosition = getPointerPosition(angle);
+
         updateServoPosition();
+
+        //Turn servo to this position
         pointer.setPosition(targetPointerPosition);
+
+        //Update the camera's relative position on the robot, because servo has turned
         if (activeCamera) {
             setCameraPosition(0, 0, 222, (float) angle);
         }
     }
 
-    // Get position of pointer for angle
+    // Get position of pointer in ticks for angle
     public double getPointerPosition(double angle){
         double targetPointerPosition = TOTAL_COUNTS_PER_ROUND / 360 * angle + OFFSET;
         double outsideServoSize = (TOTAL_COUNTS_PER_ROUND - 1) / 2;
@@ -206,6 +232,7 @@ public class Camera{
         return targetPointerPosition;
     }
 
+    // Get position of robot in array like: [x, y, heading]
     public double[] getPosition() {
         VectorF translation = lastLocation.getTranslation();
         Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);

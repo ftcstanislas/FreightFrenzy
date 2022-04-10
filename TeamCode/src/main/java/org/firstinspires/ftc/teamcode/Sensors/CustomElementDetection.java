@@ -18,7 +18,11 @@ public class CustomElementDetection {
 
     public void init(HardwareMap hardwareMap, Telemetry.Item telemetryInit, Start.StartLocation startLocation, String webcamName, boolean useCameraStream, Start.TeamColor teamColor) {
         telemetry = telemetryInit;
+
+        // Create new pipeline
         pipeline = new CustomElementPipeline(webcamName, startLocation, teamColor);
+
+        //Get webcam and init OpenCV on webcam
         WebcamName webcam = hardwareMap.get(WebcamName.class, webcamName);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         if (useCameraStream) {
@@ -26,6 +30,8 @@ public class CustomElementDetection {
         } else {
             camera = OpenCvCameraFactory.getInstance().createWebcam(webcam);
         }
+
+        // Specify the pipeline the camera is going to use to detect special elements
         camera.setPipeline(pipeline);
     }
 

@@ -19,6 +19,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     private Start.CustomElement location;
     private Start.TeamColor teamColor;
+
     static final Rect LEFT_BOX_WAREHOUSE = new Rect(
             new Point(10, 100),
             new Point(90, 200)
@@ -35,14 +36,19 @@ public class CustomElementPipeline extends OpenCvPipeline {
             new Point(200, 140),
             new Point(300, 230)
     );
+
+    // Threshold for when element is considered visible
     static double PERCENT_COLOR_THRESHOLD = 0.2;
 
     static Rect LEFT_RECTANGLE;
 
     static Rect RIGHT_RECTANGLE;
 
+    // Constructor
     public CustomElementPipeline(String cn, Start.StartLocation startInit, Start.TeamColor teamColorInit) {
 //        telemetry = t;
+
+        //  Update local variables
         cameraName = cn;
         if (startInit == Start.StartLocation.SPINNER){
             LEFT_RECTANGLE = LEFT_BOX_SPINNER;
@@ -57,16 +63,19 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        // Create a monochrome image with orange areas white and non-orange areas black
-        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
+        /* Create a monochrome image with orange areas white and non-orange areas black
+        An area is considered orange when it's HSV lies between the lower and upper HSV threshold */
+        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);`
 
-        Scalar lowHSV = new Scalar(10, 100, 20);
-        Scalar highHSV = new Scalar(25, 255, 255);
-        Core.inRange(mat, lowHSV, highHSV, mat);
+        Scalar lowHSV = new Scalar(10, 100, 20); //Lower HSV
+        Scalar highHSV = new Scalar(25, 255, 255); //Upper HSV
+        Core.inRange(mat, lowHSV, highHSV, mat); //Update mat to show black and white areas
 
+        // Create two submats to read data from
         Mat left = mat.submat(LEFT_RECTANGLE);
         Mat right = mat.submat(RIGHT_RECTANGLE);
 
+        // Calculate percent of orange in submats
         double leftValue = Core.sumElems(left).val[0] / LEFT_RECTANGLE.area() / 255;
         double rightValue = Core.sumElems(right).val[0] / RIGHT_RECTANGLE.area() / 255;
 
@@ -78,6 +87,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
 //        telemetry.addData("Left percentage", Math.round(leftValue) * 100);
 //        telemetry.addData("Right percentage", Math.round(rightValue) * 100);
 
+        // Compare percentages to the thresholds
         boolean elementLeft = leftValue > PERCENT_COLOR_THRESHOLD;
         boolean elementRight = rightValue > PERCENT_COLOR_THRESHOLD;
 
@@ -185,8 +195,10 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
 //        telemetry.update();
 
+        // Convert mat back to RGB
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
+        // Draw rectangles around submats
         Scalar colorElement = new Scalar(0,255,0);
         Scalar colorEmpty = new Scalar(255,0,0);
 

@@ -107,11 +107,14 @@ public abstract class DefaultOpMode extends OpMode {
             telemetryCustomElement = telemetry.addData("\uD83D\uDD34Custom element", "X");
         }
 
-        // Initialize objects
+        // Initialize drivetrain
         drivetrain.init(hardwareMap, telemetryDrivetrain, location, teamColor);
         drivetrain.setBrake(true);
+
+        // Initialize location (odometry)
         location.init(hardwareMap, useCameras, locationRobot, drivetrain, telemetryLocation, telemetryCustomElement);
         if (useCameras) {
+            // Set the inactive webcam to look at our custom element
             location.getNotActiveWebcam().setPointerAngle(customElementCameraRotation, false);
 //            if (teamColor == Start.TeamColor.RED) {
 //                if (location.getNotActiveWebcamName() == "Webcam 2") {
@@ -127,10 +130,14 @@ public abstract class DefaultOpMode extends OpMode {
 //                }
 //            }
 
+            // Initialize OpenCV custom element detection
             customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false, teamColor);
             customElementDetection.startStream();
         }
+        // Initialize spinner
         spinner.init(hardwareMap, telemetrySpinner);
+
+        // Initialize arm
         arm.init(hardwareMap, telemetryArm, location, teamColor);
 
         status.setValue("Initialized");
@@ -174,6 +181,7 @@ public abstract class DefaultOpMode extends OpMode {
         // Telemetry update
         status.setValue("Stopping");
 
+        // Turn camera's pointing forward (for begin tele-op)
         if (useCameras){
             location.camera1.setPointerAngle(90, false);
             location.camera2.setPointerAngle(90, false);
@@ -204,6 +212,7 @@ public abstract class DefaultOpMode extends OpMode {
         return performance;
     }
 
+    // Get file contents from filename in local storage
     private double openFile(String filename){
         File file = AppUtil.getInstance().getSettingsFile(filename);
         double value;
