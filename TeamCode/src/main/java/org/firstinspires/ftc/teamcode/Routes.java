@@ -50,6 +50,7 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -740.0, -1080.0, -160.0, 0.5},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 50.0},
+            {true, "WAIT", "wait", 0.2},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 2.0},
             {true, "ARM", "setIntake", "stop"},
@@ -73,9 +74,10 @@ public class Routes {
             // Deliver preloaded freight
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", 8.0, -1180.0, 0.0, 0.3},
+            {true, "DRIVETRAIN", "toPosition", 8.0, -1160.0, 0.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 125.0},
+            {true, "WAIT", "wait", 0.2},
             {true, "ARM", "setIntake", "outtaking"},
             {true, "WAIT", "wait", 2.0},
             {true, "ARM", "setIntake", "stop"},
@@ -84,7 +86,7 @@ public class Routes {
             {false, "ARM", "toHeight", 900},
             {false, "ARM", "toAngle", 0.0},
             {true, "DRIVETRAIN", "toPosition", -100.0, -1200.0, 0.0, 0.3},
-            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0, 1.7},
+            {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 0.0, 1.0, 1.8},
     };
 
     public Object[][] test = {

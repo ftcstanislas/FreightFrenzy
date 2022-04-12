@@ -38,7 +38,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
     );
 
     // Threshold for when element is considered visible
-    static double PERCENT_COLOR_THRESHOLD = 0.2;
+    static double PERCENT_COLOR_THRESHOLD = 0.1;
 
     static Rect LEFT_RECTANGLE;
 
@@ -130,11 +130,11 @@ public class CustomElementPipeline extends OpenCvPipeline {
 
                     case WAREHOUSE:
                         if (elementLeft) {
-                            location = Start.CustomElement.LEFT;
-                        } else if (elementRight) {
                             location = Start.CustomElement.MID;
-                        } else {
+                        } else if (elementRight) {
                             location = Start.CustomElement.RIGHT;
+                        } else {
+                            location = Start.CustomElement.LEFT;
                         }
                 }
                 break;

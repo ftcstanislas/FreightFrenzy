@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.testing;
+package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -48,22 +48,28 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-// Commit test
-// Testing if the control hub does not simply crash without any accessible motors
-@TeleOp(name="Control Hub test", group="testing")
+@TeleOp(name="Single motor test", group="testing")
 //@Disabled
-public class ControlHubTest extends OpMode
+public class SingleMotorTest extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor motor = null;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
+        telemetry.addData("Status", "Initialized");
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        motor  = hardwareMap.get(DcMotor.class, "leftFront");
+        motor.setDirection(DcMotor.Direction.FORWARD);
+
+        // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
 
@@ -87,7 +93,15 @@ public class ControlHubTest extends OpMode
      */
     @Override
     public void loop() {
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        double power = gamepad1.right_stick_y;
+        motor.setPower(power);
+
+        telemetry.addData("power", motor.getPower());
+//
+//        // Show the elapsed game time and wheel power.
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("Motors", "Power (%.2f)", power);
+//        telemetry.addData("position", motor.getCurrentPosition());
     }
 
     /*
