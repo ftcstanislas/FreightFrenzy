@@ -65,7 +65,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         /* Create a monochrome image with orange areas white and non-orange areas black
         An area is considered orange when it's HSV lies between the lower and upper HSV threshold */
-        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);`
+        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         Scalar lowHSV = new Scalar(10, 100, 20); //Lower HSV
         Scalar highHSV = new Scalar(25, 255, 255); //Upper HSV
