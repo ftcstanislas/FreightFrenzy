@@ -21,12 +21,12 @@ public class CustomElementPipeline extends OpenCvPipeline {
     private Start.TeamColor teamColor;
 
     static final Rect LEFT_BOX_WAREHOUSE = new Rect(
-            new Point(10, 100),
-            new Point(90, 200)
+            new Point(50, 120),
+            new Point(150, 220)
     );
     static final Rect RIGHT_BOX_WAREHOUSE = new Rect(
-            new Point(130, 140),
-            new Point(190, 220)
+            new Point(190, 120),
+            new Point(290, 220)
     );
     static final Rect LEFT_BOX_SPINNER = new Rect(
             new Point(0, 140),
@@ -65,7 +65,7 @@ public class CustomElementPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         /* Create a monochrome image with orange areas white and non-orange areas black
         An area is considered orange when it's HSV lies between the lower and upper HSV threshold */
-        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);`
+        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         Scalar lowHSV = new Scalar(10, 100, 20); //Lower HSV
         Scalar highHSV = new Scalar(25, 255, 255); //Upper HSV
