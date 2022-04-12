@@ -103,7 +103,7 @@ public class YellowPipeline extends OpenCvPipeline {
                     Point[] contourArray = contour.toArray();
 
                     // Bound Rectangle if Contour is Large Enough
-                    if (contourArray.length >= 15 && duckRect != new Rect(300,1,1,1)) {
+                    if (contourArray.length >= 15) {
                         MatOfPoint2f areaPoints = new MatOfPoint2f(contourArray);
                         Rect rect = Imgproc.boundingRect(areaPoints);
                         Mat rectSubmat = processed.submat(rect);
@@ -111,6 +111,10 @@ public class YellowPipeline extends OpenCvPipeline {
 
                         if (rectValue > PERCENT_COLOR_THRESHOLD) {
                             duckRect = rect;
+                            Imgproc.putText(input, "(" + getRectMidpointX() + "," + getRectMidpointY() + ")", new Point(0, 300), 0, 0.6, new Scalar(255, 255, 255), 2);
+                            Imgproc.rectangle(input, duckRect, new Scalar(255,0,0), 2);
+                            Imgproc.putText(input, "(" + duckRect + ")", new Point(duckRect.x, duckRect.y), 0, 0.6, new Scalar(255, 255, 255), 2);
+                            break;
                         }
 
                         areaPoints.release();
@@ -120,9 +124,7 @@ public class YellowPipeline extends OpenCvPipeline {
 
             }
 
-            Imgproc.putText(input, "(" + getRectMidpointX() + "," + getRectMidpointY() + ")", new Point(0, 300), 0, 0.6, new Scalar(255, 255, 255), 2);
-            Imgproc.rectangle(input, duckRect, new Scalar(255,0,0), 2);
-            Imgproc.putText(input, "(" + duckRect + ")", new Point(duckRect.x, duckRect.y), 0, 0.6, new Scalar(255, 255, 255), 2);
+
             loopCounter++;
         } catch (Exception e) {
             debug = e;

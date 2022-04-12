@@ -97,7 +97,6 @@ public class YellowTest extends LinearOpMode {
             if(myPipeline.error){
                 telemetry.addData("Exception: ", myPipeline.debug);
             }
-            telemetry.addData("Duck coordinates: ", "(" + myPipeline.getRectMidpointX() + "," + myPipeline.getRectMidpointY() + ")");
             // Only use this line of the code when you want to find the lower and upper values
 //            testing(myPipeline);
 
@@ -119,17 +118,15 @@ public class YellowTest extends LinearOpMode {
 
 //            rectArea = myPipeline.getRectArea();
 //
-//            if (myPipeline.getRectArea() > 200) {
-//                rectX = myPipeline.getRectMidpointX();
-//                rectY = myPipeline.getRectMidpointY();
-//
-//                distance = rectY * 1.5; // placeholder, plz test actual value!
-//                angleDegrees = (rectX-160) / (16.0/3.0); // convert [0,320] to [-30,30]
-//                angleRadians = Math.toRadians(angleDegrees);
-//                targetX = Math.cos(/* angleDegrees */ angleRadians) * distance;
-//                targetY = Math.sin(/* angleDegrees */ angleRadians) * distance;
-//                telemetry.addData("Target coords: ", "(" + targetX + "," + targetY + ")");
-//            }
+            rectX = myPipeline.getRectMidpointX();
+            rectY = myPipeline.getRectMidpointY();
+
+            distance = rectY * 1.5; // placeholder, plz test actual value!
+            angleDegrees = (rectX-160) / (16.0/3.0); // convert [0,320] to [-30,30]
+            angleRadians = Math.toRadians(angleDegrees);
+            targetX = Math.cos(/* angleDegrees */ angleRadians) * distance;
+            targetY = Math.sin(/* angleDegrees */ angleRadians) * distance;
+            telemetry.addData("Target coords: ", "(" + targetX + "," + targetY + ")");
 
         }
     }
