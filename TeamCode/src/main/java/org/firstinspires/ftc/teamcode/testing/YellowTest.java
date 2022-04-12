@@ -64,8 +64,8 @@ public class YellowTest extends LinearOpMode {
         YellowPipeline myPipeline;
         webcam.setPipeline(myPipeline = new YellowPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY));
         // Configuration of Pipeline
-        myPipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
-        myPipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
+        // myPipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
+        // myPipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
         // Webcam Streaming
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -97,6 +97,7 @@ public class YellowTest extends LinearOpMode {
             if(myPipeline.error){
                 telemetry.addData("Exception: ", myPipeline.debug);
             }
+            telemetry.addData("Duck coordinates: ", "(" + myPipeline.getRectMidpointX() + "," + myPipeline.getRectMidpointY() + ")");
             // Only use this line of the code when you want to find the lower and upper values
 //            testing(myPipeline);
 

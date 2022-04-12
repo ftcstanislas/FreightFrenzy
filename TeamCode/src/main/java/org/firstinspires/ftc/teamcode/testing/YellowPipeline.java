@@ -47,6 +47,7 @@ public class YellowPipeline extends OpenCvPipeline {
 
     private int CAMERA_WIDTH;
     private int CAMERA_HEIGHT;
+    private double PERCENT_COLOR_THRESHOLD = 0.4;
 
     private int loopCounter = 0;
     private int pLoopCounter = 0;
@@ -54,7 +55,8 @@ public class YellowPipeline extends OpenCvPipeline {
     private final Mat mat = new Mat();
     private final Mat processed = new Mat();
 
-    private Rect maxRect = new Rect(300,1,1,1);
+    // private Rect maxRect = new Rect(300,1,1,1);
+    private Rect duckRect = new Rect(300,1,1,1);
 
     private double maxArea = 0;
     private boolean first = false;
@@ -66,18 +68,6 @@ public class YellowPipeline extends OpenCvPipeline {
         this.borderRightX = borderRightX;
         this.borderTopY = borderTopY;
         this.borderBottomY = borderBottomY;
-    }
-    public void configureScalarLower(double y, double cr, double cb) {
-        lowHSV = new Scalar(y, cr, cb);
-    }
-    public void configureScalarUpper(double y, double cr, double cb) {
-        highHSV = new Scalar(y, cr, cb);
-    }
-    public void configureScalarLower(int y, int cr, int cb) {
-        lowHSV = new Scalar(y, cr, cb);
-    }
-    public void configureScalarUpper(int y, int cr, int cb) {
-        highHSV = new Scalar(y, cr, cb);
     }
     public void configureBorders(double borderLeftX, double borderRightX, double borderTopY, double borderBottomY) {
         this.borderLeftX = borderLeftX;
@@ -104,7 +94,7 @@ public class YellowPipeline extends OpenCvPipeline {
             Imgproc.findContours(processed, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
             // Draw Contours
-            Imgproc.drawContours(processed, contours, -1, new Scalar(255, 0, 0));
+            Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0));
 
             // Lock this up to prevent errors when outside threads access the max rect property.
             synchronized (sync) {
@@ -113,62 +103,26 @@ public class YellowPipeline extends OpenCvPipeline {
                     Point[] contourArray = contour.toArray();
 
                     // Bound Rectangle if Contour is Large Enough
-                    if (contourArray.length >= 15) {
+                    if (contourArray.length >= 15 && duckRect != new Rect(300,1,1,1)) {
                         MatOfPoint2f areaPoints = new MatOfPoint2f(contourArray);
                         Rect rect = Imgproc.boundingRect(areaPoints);
                         Mat rectSubmat = processed.submat(rect);
                         double rectValue = Core.sumElems(rectSubmat).val[0] / rect.area() / 255;
-                        Imgproc.rectangle(processed, rect, new Scalar(255,0,0), 2);
-                        Imgproc.putText(processed, "(" + rectValue + ")", new Point(rect.x, rect.y), 0, 0.6, new Scalar(255, 255, 255), 2);
 
-//                        if ((                        rect.area() > maxArea
-//                                && rect.x + (rect.width / 2.0)  > (borderLeftX * CAMERA_WIDTH)
-//                                && rect.x + (rect.width / 2.0)  < CAMERA_WIDTH - (borderRightX * CAMERA_WIDTH)
-//                                && rect.y + (rect.height / 2.0) > (borderTopY * CAMERA_HEIGHT)
-//                                && rect.y + (rect.height / 2.0) < CAMERA_HEIGHT - (borderBottomY * CAMERA_HEIGHT)
-//
-//                                || loopCounter - pLoopCounter   > 6
-//                                && rect.x + (rect.width / 2.0)  > (borderLeftX * CAMERA_WIDTH)
-//                                && rect.x + (rect.width / 2.0)  < CAMERA_WIDTH - (borderRightX * CAMERA_WIDTH)
-//                                && rect.y + (rect.height / 2.0) > (borderTopY * CAMERA_HEIGHT)
-//                                && rect.y + (rect.height / 2.0) < CAMERA_HEIGHT - (borderBottomY * CAMERA_HEIGHT)
-//                        ) & rectValue > 0){
-//                            maxArea = rect.area();
-//                            maxRect = rect;
-//                            pLoopCounter++;
-//                            loopCounter = pLoopCounter;
-//                            first = true;
-//                        }
-//                        else if(loopCounter - pLoopCounter > 10){
-//                            maxArea = new Rect().area();
-//                            maxRect = new Rect();
-//                        }
+                        if (rectValue > PERCENT_COLOR_THRESHOLD) {
+                            duckRect = rect;
+                        }
 
                         areaPoints.release();
                     }
                     contour.release();
                 }
-                if (contours.isEmpty()) {
-                    maxRect = new Rect(300,1,1,1);
-                }
 
             }
 
-            // Draw Rectangles If Area Is At Least 250
-//            if (first && maxRect.area() > 250) {
-//                Imgproc.rectangle(input, maxRect, new Scalar(0, 255, 0), 2);
-//            }
-            // Draw Borders
-//            Imgproc.rectangle(input, new Rect(
-//                    (int) (borderLeftX * CAMERA_WIDTH),
-//                    (int) (borderTopY * CAMERA_HEIGHT),
-//                    (int) (CAMERA_WIDTH - (borderRightX * CAMERA_WIDTH) - (borderLeftX * CAMERA_WIDTH)),
-//                    (int) (CAMERA_HEIGHT - (borderBottomY * CAMERA_HEIGHT) - (borderTopY * CAMERA_HEIGHT))
-//            ), HOT_PINK, 2);
-
-            // Display Data
-            // Imgproc.putText(input, "Area: " + getRectArea() + " Midpoint: " + getRectMidpointXY().x + " , " + getRectMidpointXY().y, new Point(5, CAMERA_HEIGHT - 5), 0, 0.6, new Scalar(255, 255, 255), 2);
-
+            Imgproc.putText(input, "(" + getRectMidpointX() + "," + getRectMidpointY() + ")", new Point(0, 300), 0, 0.6, new Scalar(255, 255, 255), 2);
+            Imgproc.rectangle(input, duckRect, new Scalar(255,0,0), 2);
+            Imgproc.putText(input, "(" + duckRect + ")", new Point(duckRect.x, duckRect.y), 0, 0.6, new Scalar(255, 255, 255), 2);
             loopCounter++;
         } catch (Exception e) {
             debug = e;
@@ -184,22 +138,22 @@ public class YellowPipeline extends OpenCvPipeline {
 
     public int getRectHeight() {
         synchronized (sync) {
-            return maxRect.height;
+            return duckRect.height;
         }
     }
     public int getRectWidth() {
         synchronized (sync) {
-            return maxRect.width;
+            return duckRect.width;
         }
     }
     public int getRectX() {
         synchronized (sync) {
-            return maxRect.x;
+            return duckRect.x;
         }
     }
     public int getRectY() {
         synchronized (sync) {
-            return maxRect.y;
+            return duckRect.y;
         }
     }
     public double getRectMidpointX() {
@@ -224,7 +178,7 @@ public class YellowPipeline extends OpenCvPipeline {
     }
     public double getRectArea() {
         synchronized (sync) {
-            return maxRect.area();
+            return duckRect.area();
         }
     }
 }
