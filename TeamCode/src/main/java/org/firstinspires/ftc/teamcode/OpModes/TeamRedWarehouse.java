@@ -10,7 +10,7 @@ public class TeamRedWarehouse extends AutonomousOpmode {
     public void init() {
         super.setTeam(Start.TeamColor.RED);
         super.setStart(Start.StartLocation.WAREHOUSE);
-        super.setCustomElementCameraRotation(50);
+        super.setCustomElementCameraRotation(57);
         super.init();
     }
 }

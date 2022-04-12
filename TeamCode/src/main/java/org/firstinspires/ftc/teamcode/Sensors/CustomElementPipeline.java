@@ -21,12 +21,12 @@ public class CustomElementPipeline extends OpenCvPipeline {
     private Start.TeamColor teamColor;
 
     static final Rect LEFT_BOX_WAREHOUSE = new Rect(
-            new Point(10, 100),
-            new Point(90, 200)
+            new Point(50, 120),
+            new Point(150, 220)
     );
     static final Rect RIGHT_BOX_WAREHOUSE = new Rect(
-            new Point(130, 140),
-            new Point(190, 220)
+            new Point(190, 120),
+            new Point(290, 220)
     );
     static final Rect LEFT_BOX_SPINNER = new Rect(
             new Point(0, 140),
