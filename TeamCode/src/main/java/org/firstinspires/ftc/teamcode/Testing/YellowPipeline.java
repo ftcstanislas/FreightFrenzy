@@ -113,7 +113,7 @@ public class YellowPipeline extends OpenCvPipeline {
                             duckRect = rect;
                             Imgproc.putText(input, "(" + getRectMidpointX() + "," + getRectMidpointY() + ")", new Point(0, 300), 0, 0.6, new Scalar(255, 255, 255), 2);
                             Imgproc.rectangle(input, duckRect, new Scalar(255,0,0), 2);
-                            Imgproc.putText(input, "(" + duckRect + ")", new Point(duckRect.x, duckRect.y), 0, 0.6, new Scalar(255, 255, 255), 2);
+                            // Imgproc.putText(input, "(" + duckRect + ")", new Point(duckRect.x, duckRect.y), 0, 0.6, new Scalar(255, 255, 255), 2);
                             break;
                         }
 
