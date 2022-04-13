@@ -29,6 +29,7 @@ public class TeleOpOpmode extends DefaultOpMode {
         drivetrain.checkController(gamepad1, gamepad2);
         spinner.checkController(gamepad1, gamepad2, teamColor);
         arm.checkController(gamepad1, gamepad2, teamColor);
+        capper.checkController(gamepad1, gamepad2);
 
         // Party mode
         if (gamepad1.touchpad_finger_1 && gamepad1.touchpad_finger_2 && gamepad1.right_bumper && gamepad1.left_bumper){

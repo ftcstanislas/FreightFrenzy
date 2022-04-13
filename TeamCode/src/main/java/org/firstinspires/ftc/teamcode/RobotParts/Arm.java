@@ -26,7 +26,6 @@ public class Arm extends RobotPart {
     private final int outtakeShardedAngle = 162;
     private final int outtakeAllianceHeight = 980;
     private final int outtakeAllianceAngle = 20;
-    //Jaron was here
 
     public void init(HardwareMap map, Telemetry.Item telemetryInit, Location locationInit, Start.TeamColor teamColorInit) {
         // setup variables
@@ -55,10 +54,6 @@ public class Arm extends RobotPart {
         motors.put("intake", map.get(DcMotorEx.class, "intake"));
         motors.get("intake").setDirection(DcMotor.Direction.REVERSE);
 
-        // Setup capping
-        servos.put("capping", map.get(Servo.class, "capping"));
-
-
         // Break
         setBrake(true);
 
@@ -75,18 +70,6 @@ public class Arm extends RobotPart {
         modes.put("outtaking", new HashMap<String, Object[]>() {{
             put("intake", new Object[]{"power", -1.0});
         }});
-
-        // set servo modes
-        currentServoMode = "retract";
-        servoModes.put("retract", new HashMap<String, Object[]>() {{
-            put("capping", new Object[]{"position", 0.0});
-        }});
-
-        servoModes.put("cap", new HashMap<String, Object[]>() {{
-            put("capping", new Object[]{"position", 0.5});
-        }});
-
-
     }
 
     @Override
@@ -192,9 +175,6 @@ public class Arm extends RobotPart {
         // Update intake
         switchMode(gamepad2.a, "stop", "intaking");
         switchMode(gamepad2.y, "stop", "outtaking");
-
-        // Update servo
-        switchMode(gamepad2.b, "retract", "cap");
 
         // Update arm height
         if (gamepad2.left_stick_y != 0) {

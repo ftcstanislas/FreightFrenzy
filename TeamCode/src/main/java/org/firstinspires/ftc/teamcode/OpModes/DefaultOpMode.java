@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Location.Location;
 import org.firstinspires.ftc.teamcode.Location.Start;
 import org.firstinspires.ftc.teamcode.RobotParts.Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Capper;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.Sensors.CustomElementDetection;
@@ -38,6 +39,7 @@ public abstract class DefaultOpMode extends OpMode {
     Location location = new Location();
     MecanumDrive drivetrain = new MecanumDrive();
     Spinner spinner = new Spinner();
+    Capper capper = new Capper();
     Arm arm = new Arm();
 
     // Telemetry
@@ -47,6 +49,7 @@ public abstract class DefaultOpMode extends OpMode {
     Telemetry.Item telemetryDrivetrain = null;
     Telemetry.Item telemetryArm = null;
     Telemetry.Item telemetrySpinner = null;
+    Telemetry.Item telemetryCapper = null;
     Telemetry.Item telemetryLocation = null;
     Telemetry.Item telemetryCustomElement = null;
 
@@ -102,6 +105,7 @@ public abstract class DefaultOpMode extends OpMode {
         telemetryDrivetrain = telemetry.addData("\uD83D\uDD34Robot", "X");
         telemetryArm = telemetry.addData("\uD83D\uDD34Arm", "X");
         telemetrySpinner = telemetry.addData("\uD83D\uDD34Spinner", "X");
+        telemetryCapper = telemetry.addData("\uD83D\uDD34Capper", "X");
         telemetryLocation = telemetry.addData("\uD83D\uDD34Location", "X");
         if (useCameras) {
             telemetryCustomElement = telemetry.addData("\uD83D\uDD34Custom element", "X");
@@ -116,29 +120,16 @@ public abstract class DefaultOpMode extends OpMode {
         if (useCameras) {
             // Set the inactive webcam to look at our custom element
             location.getNotActiveWebcam().setPointerAngle(customElementCameraRotation, false);
-//            if (teamColor == Start.TeamColor.RED) {
-//                if (location.getNotActiveWebcamName() == "Webcam 2") {
-//                    location.getNotActiveWebcam().setPointerAngle(50, false);
-//                } else {
-//                    location.getNotActiveWebcam().setPointerAngle(82, false);
-//                }
-//            } else if (teamColor == Start.TeamColor.BLUE){
-//                if (location.getNotActiveWebcamName() == "Webcam 2") {
-//                    location.getNotActiveWebcam().setPointerAngle(90, false);
-//                } else {
-//                    location.getNotActiveWebcam().setPointerAngle(138, false);//102
-//                }
-//            }
 
             // Initialize OpenCV custom element detection
             customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false, teamColor);
             customElementDetection.startStream();
         }
-        // Initialize spinner
-        spinner.init(hardwareMap, telemetrySpinner);
 
-        // Initialize arm
+        // Initialize robot parts
+        spinner.init(hardwareMap, telemetrySpinner);
         arm.init(hardwareMap, telemetryArm, location, teamColor);
+        capper.init(hardwareMap, telemetryCapper);
 
         status.setValue("Initialized");
     }
