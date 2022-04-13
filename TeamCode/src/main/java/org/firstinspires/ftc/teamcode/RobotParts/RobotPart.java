@@ -78,7 +78,7 @@ public abstract class RobotPart {
         boolean done = true;
         if (modes.containsKey(mode)){
             if (!currentMode.equals(mode)){
-                for (Map.Entry<String, Object[]> entry : modes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
+                for (Map.Entry<String, Object[]> entry : modes.get(mode).entrySet()) {
                     Object[] values = entry.getValue();
                     String powerType = (String) values[0];
                     Double value = (double) values[1];
@@ -128,7 +128,7 @@ public abstract class RobotPart {
         boolean done = true;
         if (servoModes.containsKey(mode)){
             if (!currentServoMode.equals(mode)){
-                for (Map.Entry<String, Object[]> entry : servoModes.get(mode).entrySet()) { //Klopt dit?? Ik heb error gefixt maar weet niet of dit werkt
+                for (Map.Entry<String, Object[]> entry : servoModes.get(mode).entrySet()) {
                     Object[] values = entry.getValue();
                     String powerType = (String) values[0];
                     Double value = (double) values[1];
@@ -156,9 +156,9 @@ public abstract class RobotPart {
         if (trigger && !isSwitchPressed){
             isSwitchPressed = true;
             if (currentServoMode != defaultMode){
-                setMode(defaultMode);
+                setServoMode(defaultMode);
             } else {
-                setMode(alternativeMode);
+                setServoMode(alternativeMode);
             }
         } else if (!trigger && isSwitchPressed){
             isSwitchPressed = false;

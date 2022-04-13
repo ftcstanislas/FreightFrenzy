@@ -30,8 +30,10 @@ public class Capper extends RobotPart{
         }});
 
         servoModes.put("cap", new HashMap<String, Object[]>() {{
-            put("capping", new Object[]{"position", 0.5});
+            put("capping", new Object[]{"position", 1.0});
         }});
+
+        servos.get("capping").setPosition(0);
 
 
         // setup

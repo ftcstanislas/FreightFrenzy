@@ -19,10 +19,11 @@ public class Arm extends RobotPart {
     Start.TeamColor teamColor;
 
     // Variables
+    //Jaron
     private final int intakeHeight = -5;
     private final int intakeAllianceAngle = 125;
     private final int intakeSharedAngle = -100;
-    private final int outtakeShardedHeight = 470;
+    private final int outtakeShardedHeight = 420;
     private final int outtakeShardedAngle = 162;
     private final int outtakeAllianceHeight = 980;
     private final int outtakeAllianceAngle = 20;
