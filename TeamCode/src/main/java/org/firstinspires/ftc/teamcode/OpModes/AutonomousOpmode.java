@@ -19,6 +19,12 @@ public class AutonomousOpmode extends DefaultOpMode {
     // Make runtime
     ElapsedTime runtime = new ElapsedTime();
 
+    // Duck
+    boolean duckVisible;
+    double duckX;
+    double duckY;
+    double duckArmAngle;
+
     @Override
     public void init() {
         super.setUseCameras(true);
@@ -96,6 +102,12 @@ public class AutonomousOpmode extends DefaultOpMode {
                     done = arm.setHeight((int) instruction[3]);
                 } else if (function == "setIntake") {
                     arm.setMode((String) instruction[3]);
+                } else if (function == "toDuckAngle") {
+                    if (duckVisible) {
+                        done = arm.setSpinnerAngle(duckArmAngle);
+                    } else {
+                        done = true;
+                    }
                 }
                 break;
 
@@ -145,10 +157,31 @@ public class AutonomousOpmode extends DefaultOpMode {
                         }
                         break;
 
+                    case "driveToDuck":
+                        if (duckVisible) {
+                            // drive to duck
+                        } else {
+                            done = true;
+                        }
+
                     default: // if no match is found
                         throw new java.lang.Error("Part " + function + " does not exist");
                 }
                 break;
+
+            case "CAMERAS":
+                if (function == "setCameraAngle") {
+                    location.getNotActiveWebcam().setPointerAngle((int) instruction[3], false);
+                } else if (function == "detectDuck") {
+                    Object[] duckData = duckDetection.getDuckLocation();
+                    if ((boolean) duckData[0]) {
+                        duckX = location.getXCoordinate() + (double) duckData[1];
+                        duckY = location.getXCoordinate() + (double) duckData[2];
+                        duckArmAngle = (int) duckData[3];
+                    }
+                    duckVisible = (boolean) duckData[0];
+                    done = (boolean) duckData[0];
+                }
         }
         return done;
     }

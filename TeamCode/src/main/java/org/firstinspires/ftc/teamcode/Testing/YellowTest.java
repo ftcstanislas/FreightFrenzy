@@ -63,9 +63,6 @@ public class YellowTest extends LinearOpMode {
         //OpenCV Pipeline
         YellowPipeline myPipeline;
         webcam.setPipeline(myPipeline = new YellowPipeline(borderLeftX,borderRightX,borderTopY,borderBottomY));
-        // Configuration of Pipeline
-        // myPipeline.configureScalarLower(scalarLowerYCrCb.val[0],scalarLowerYCrCb.val[1],scalarLowerYCrCb.val[2]);
-        // myPipeline.configureScalarUpper(scalarUpperYCrCb.val[0],scalarUpperYCrCb.val[1],scalarUpperYCrCb.val[2]);
         // Webcam Streaming
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
@@ -83,11 +80,6 @@ public class YellowTest extends LinearOpMode {
                  */
             }
         });
-        // Only if you are using ftcdashboard
-//        FtcDashboard dashboard = FtcDashboard.getInstance();
-//        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-//        FtcDashboard.getInstance().startCameraStream(webcam, 10);
-
         telemetry.update();
         waitForStart();
 
@@ -97,27 +89,6 @@ public class YellowTest extends LinearOpMode {
             if(myPipeline.error){
                 telemetry.addData("Exception: ", myPipeline.debug);
             }
-            // Only use this line of the code when you want to find the lower and upper values
-//            testing(myPipeline);
-
-//            telemetry.addData("RectArea: ", myPipeline.getRectArea());
-//            telemetry.update();
-
-
-//            if(myPipeline.getRectArea() > 2000){
-//                if(myPipeline.getRectMidpointX() > 400){
-////                    AUTONOMOUS_C();
-//                }
-//                else if(myPipeline.getRectMidpointX() > 200){
-////                    AUTONOMOUS_B();
-//                }
-//                else {
-////                    AUTONOMOUS_A();
-//                }
-//            }
-
-//            rectArea = myPipeline.getRectArea();
-//
             rectX = myPipeline.getRectMidpointX();
             rectY = myPipeline.getRectMidpointY();
 
@@ -130,31 +101,6 @@ public class YellowTest extends LinearOpMode {
 
         }
     }
-//    public void testing(YellowPipeline myPipeline){
-//        if(lowerruntime + 0.05 < getRuntime()){
-//            CrLowerUpdate += -gamepad1.left_stick_y;
-//            CbLowerUpdate += gamepad1.left_stick_x;
-//            lowerruntime = getRuntime();
-//        }
-//        if(upperruntime + 0.05 < getRuntime()){
-//            CrUpperUpdate += -gamepad1.right_stick_y;
-//            CbUpperUpdate += gamepad1.right_stick_x;
-//            upperruntime = getRuntime();
-//        }
-//
-//        CrLowerUpdate = inValues(CrLowerUpdate, 0, 255);
-//        CrUpperUpdate = inValues(CrUpperUpdate, 0, 255);
-//        CbLowerUpdate = inValues(CbLowerUpdate, 0, 255);
-//        CbUpperUpdate = inValues(CbUpperUpdate, 0, 255);
-//
-//        myPipeline.configureScalarLower(0.0, CrLowerUpdate, CbLowerUpdate);
-//        myPipeline.configureScalarUpper(255.0, CrUpperUpdate, CbUpperUpdate);
-//
-//        telemetry.addData("lowerCr ", (int)CrLowerUpdate);
-//        telemetry.addData("lowerCb ", (int)CbLowerUpdate);
-//        telemetry.addData("UpperCr ", (int)CrUpperUpdate);
-//        telemetry.addData("UpperCb ", (int)CbUpperUpdate);
-//    }
     public Double inValues(double value, double min, double max){
         if(value < min){ value = min; }
         if(value > max){ value = max; }

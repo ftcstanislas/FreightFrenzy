@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.Capper;
 import org.firstinspires.ftc.teamcode.RobotParts.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Spinner;
 import org.firstinspires.ftc.teamcode.Sensors.CustomElementDetection;
+import org.firstinspires.ftc.teamcode.Sensors.DuckDetection;
 
 import java.io.File;
 
@@ -41,6 +42,7 @@ public abstract class DefaultOpMode extends OpMode {
     Spinner spinner = new Spinner();
     Capper capper = new Capper();
     Arm arm = new Arm();
+    DuckDetection duckDetection = new DuckDetection();
 
     // Telemetry
     Telemetry.Item status = null;
@@ -52,6 +54,7 @@ public abstract class DefaultOpMode extends OpMode {
     Telemetry.Item telemetryCapper = null;
     Telemetry.Item telemetryLocation = null;
     Telemetry.Item telemetryCustomElement = null;
+    Telemetry.Item telemetryDuckDetection = null;
 
     // Runtime
     ElapsedTime runtime = new ElapsedTime();
@@ -124,6 +127,8 @@ public abstract class DefaultOpMode extends OpMode {
             // Initialize OpenCV custom element detection
             customElementDetection.init(hardwareMap, telemetryCustomElement, startLocation, location.getNotActiveWebcamName(), false, teamColor);
             customElementDetection.startStream();
+
+            duckDetection.init(hardwareMap, telemetryDuckDetection, startLocation, location.getNotActiveWebcamName(), false, teamColor);
         }
 
         // Initialize robot parts
@@ -154,6 +159,7 @@ public abstract class DefaultOpMode extends OpMode {
 
         if (useCameras){
             customElementDetection.stopStream();
+            duckDetection.startStream();
         }
 
         // Reset
