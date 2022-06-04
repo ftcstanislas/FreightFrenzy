@@ -94,7 +94,7 @@ public class MecanumDrive extends RobotPart{
         // Slow robot speed
         if (gamepad1.a || gamepad1.dpad_down) {
             power *= 0.45;
-        } else if (gamepad1.x || gamepad1.dpad_right){
+        } else if (gamepad1.x || gamepad1.dpad_right || gamepad2.b){
             power *= 0.3;
         }
 
