@@ -24,7 +24,7 @@ public class Intake extends RobotPart{
     public void init(HardwareMap map, Telemetry.Item telemetryInit){
         // get motors
         motors.put("intake", map.get(DcMotorEx.class, "intake"));
-        motors.get("intake").setDirection(DcMotor.Direction.FORWARD);
+        motors.get("intake").setDirection(DcMotor.Direction.REVERSE);
         setBrake(true);
 
         // set modes

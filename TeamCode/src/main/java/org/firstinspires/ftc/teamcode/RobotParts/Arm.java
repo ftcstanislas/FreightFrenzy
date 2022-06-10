@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotParts;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,7 +21,7 @@ public class Arm extends RobotPart {
 
     // Variables
     //Jaron
-    private final int intakeHeight = -5;
+    private final int intakeHeight = -15;
     private final int intakeAllianceAngle = 125;
     private final int intakeSharedAngle = -100;
     private final int outtakeShardedHeight = 420;
@@ -53,7 +54,7 @@ public class Arm extends RobotPart {
 
         // Setup intake
         motors.put("intake", map.get(DcMotorEx.class, "intake"));
-        motors.get("intake").setDirection(DcMotor.Direction.REVERSE);
+        motors.get("intake").setDirection(DcMotor.Direction.FORWARD);
 
         // Break
         setBrake(true);
@@ -97,7 +98,7 @@ public class Arm extends RobotPart {
             // DPAD ↑
             else if (gamepad2.dpad_up) {
                 setSpinnerAngle(outtakeShardedAngle);
-                setHeight(outtakeShardedHeight);
+                setHeight(outtakeAllianceHeight);
             } 
             // DPAD →
             else if (gamepad2.dpad_right) {
@@ -129,7 +130,7 @@ public class Arm extends RobotPart {
             // DPAD ↑
             else if (gamepad2.dpad_up) {
                 setSpinnerAngle(-outtakeShardedAngle); // 141
-                setHeight(outtakeShardedHeight);
+                setHeight(outtakeAllianceHeight);
             } 
             // DPAD →
             else if (gamepad2.dpad_left) {
@@ -242,3 +243,21 @@ public class Arm extends RobotPart {
         return Math.abs(difference) < 4;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Jaron was here

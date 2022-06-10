@@ -24,16 +24,17 @@ public class Capper extends RobotPart{
         servos.put("capping", map.get(Servo.class, "capping"));
 
         // set servo modes
-        currentServoMode = "retract";
+        currentServoMode = "a";
         servoModes.put("retract", new HashMap<String, Object[]>() {{
-            put("capping", new Object[]{"position", 0.0});
-        }});
-
-        servoModes.put("cap", new HashMap<String, Object[]>() {{
             put("capping", new Object[]{"position", 1.0});
         }});
 
-        servos.get("capping").setPosition(0);
+        servoModes.put("cap", new HashMap<String, Object[]>() {{
+            put("capping", new Object[]{"position", 0.0});
+        }});
+
+        setServoMode("retract");
+
 
 
         // setup
