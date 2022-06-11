@@ -186,7 +186,7 @@ public class Camera{
                 bestIndex = index;
             }
         }
-        return new double[] {bestScore, Math.round(bestPointerAngle), bestIndex};
+        return new double[] {bestScore, bestPointerAngle, bestIndex};
     }
 
     public void updateServoPosition(){

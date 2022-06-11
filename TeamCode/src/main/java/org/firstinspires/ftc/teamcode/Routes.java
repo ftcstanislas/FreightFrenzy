@@ -35,10 +35,10 @@ public class Routes {
             {true, "DRIVETRAIN", "toPosition", -1101.0, -1109.0, 90.0, 0.3},
 
             // Camera lock
+            {false, "ARM", "toHeight", 1900},
             {true, "DRIVETRAIN", "driveImu", 0.0, 1.0, 90.0, 1.0, 0.5},
 
             // Duck
-            {false, "ARM", "toHeight", 1900},
             {false, "ARM", "toAngle", "{spinnerAngle}"},
             {true, "DRIVETRAIN", "toPosition", -1400.0, -1300.0, 45.0, 0.3},
             {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 45.0, 0.3, 0.8},
@@ -47,7 +47,7 @@ public class Routes {
             // Deliver preloaded freight
             {false, "ARM", "toAngle", 90.0},
             {false, "ARM", "toHeight", 900},
-            {true, "DRIVETRAIN", "toPosition", -740.0, -1080.0, -160.0, 0.5},
+            {true, "DRIVETRAIN", "toPosition", -740.0, -1080.0, -160.0, 0.3},
             {true, "ARM", "toHeight", "{customElementHeight}"},
             {true, "ARM", "toAngle", 50.0},
             {true, "WAIT", "wait", 0.2},
@@ -63,9 +63,10 @@ public class Routes {
 
             // Park
             {false, "ARM", "toAngle", 180.0},
-            {true, "DRIVETRAIN", "toPosition", -1480.0, -900.0, 180.0, 0.5},
+            {true, "DRIVETRAIN", "toPosition", -1480.0, -900.0, 180.0, 0.3},
 //            {true, "DRIVETRAIN", "toPosition", -600.0, -1200.0, 180.0, 0.3},
 //            {true, "DRIVETRAIN", "driveImu", 0.0, -1.0, 180.0, 1.0, 2.3},
+            //Kevin was hier
     };
 
     public Object[][] routeWarehouse = {
