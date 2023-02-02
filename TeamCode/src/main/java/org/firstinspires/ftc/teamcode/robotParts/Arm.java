@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.robotParts;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Arm extends RobotPart {
 
+    DcMotorEx armLeft;
+    DcMotorEx armRight;
+
+    ArmHeight armHeight;
+
     private enum ArmHeight {
-        LOW(0),
-        MID(0),
-        HIGH(0),
-        CUSTOM(0);
+        INTAKE(0),
+        LOW(150),
+        MID(400),
+        HIGH(650);
+//        CUSTOM(0);
 
         private int position;
         public int getPosition() {
@@ -28,37 +31,15 @@ public class Arm extends RobotPart {
 
     private int armTarget = 0;
 
-    private enum ServoPosition {
-        FRONT(0),
-        MID(0),
-        BACK(0),
-        CUSTOM(0);
-
-        private double position;
-        public double getPosition() {
-            return this.position;
-        }
-        public void setPosition(double position) {
-            this.position = position;
-        }
-        ServoPosition(double position) {
-            this.position = position;
-        }
-    }
-
-    private double servoTarget = 0;
-
-    public void init(HardwareMap map, Telemetry.Item telemetry) {
-        telemetry = telemetry;
+//    public void init(HardwareMap map, Telemetry.Item telemetry) {
+    public void init(HardwareMap map) {
+        armLeft = map.get(DcMotorEx.class, "arm1");
+        armRight = map.get(DcMotorEx.class, "arm2");
 
         // motors
-        motors.put("armLeft", map.get(DcMotorEx.class, "armLeft"));
-        motors.put("armRight", map.get(DcMotorEx.class, "armRight"));
+        motors.put("armLeft", armLeft);
+        motors.put("armRight", armRight);
         resetEncoders();
-
-        // servus
-        servos.put("rotate", map.get(Servo.class, "rotate"));
-
     }
 
     public void update() {
