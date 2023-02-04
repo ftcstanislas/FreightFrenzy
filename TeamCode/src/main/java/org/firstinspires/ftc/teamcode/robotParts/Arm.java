@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotParts;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Arm extends RobotPart {
@@ -36,13 +37,16 @@ public class Arm extends RobotPart {
         armLeft = map.get(DcMotorEx.class, "arm1");
         armRight = map.get(DcMotorEx.class, "arm2");
 
+        // reverse one motor
+        armLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
         // motors
         motors.put("armLeft", armLeft);
         motors.put("armRight", armRight);
         resetEncoders();
     }
 
-    public void update() {
-
+    public void update(double power) {
+        setPower(power);
     }
 }

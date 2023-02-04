@@ -1,33 +1,30 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-@Disabled
 public class Disco extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Declare our motors
         // Make sure your ID's match your configuration
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("leftFront");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("leftBack");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("rightFront");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("rightBack");
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("left_front");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("left_back");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("right_front");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("right_back");
         DcMotor armMotor1 = hardwareMap.dcMotor.get("arm1");
         DcMotor armMotor2 = hardwareMap.dcMotor.get("arm2");
 
-        Servo intake = hardwareMap.servo.get("intake");
-        DcMotor intakeMotor = hardwareMap.dcMotor.get("intake_motor");
+        CRServo intake = hardwareMap.crservo.get("intake");
 
         // Reverse the right side motors
         // Reverse left motors if you are using NeveRests
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -45,10 +42,12 @@ public class Disco extends LinearOpMode {
             double intakeMotorPos = -gamepad2.right_stick_y;
 
             if (dpad2Up) {
-                intake.setPosition(-1);
+                intake.setPower(1);
             }
             if (dpad2Down) {
-                intake.setPosition(1);
+                intake.setPower(-1);
+            } else {
+                intake.setPower(0);
             }
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -67,15 +66,11 @@ public class Disco extends LinearOpMode {
             armMotor1.setPower(armPower);
             armMotor2.setPower(-armPower);
 
-            intakeMotor.setPower(intakeMotorPos);
-
 //            runTo(intakeMotor, intakeMotorPos);
 
             telemetry.addData("armPosition1", armMotor1.getCurrentPosition());
             telemetry.addData("armPosition2", armMotor2.getCurrentPosition());
-            telemetry.addData("intake", intake.getPosition());
             telemetry.addData("arm top supposed", intakeMotorPos);
-            telemetry.addData("arm top real", intakeMotor.getCurrentPosition());
             telemetry.update();
         }
     }
