@@ -52,11 +52,11 @@ public class AutonomousEsther extends LinearOpMode {
 
         Servo intake = hardwareMap.servo.get("intake");
         Servo axon1 = hardwareMap.servo.get("axon1");
-        Servo axon2 = hardwareMap.servo.get("axon2");
+//        Servo axon2 = hardwareMap.servo.get("axon2");
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory traj1 = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(-45, 0, Math.toRadians(-45)))
+                .lineToLinearHeading(new Pose2d(-45, 0, Math.toRadians(0)))
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(new Pose2d(0, 0, Math.toRadians(0)))
@@ -75,7 +75,7 @@ public class AutonomousEsther extends LinearOpMode {
 
 //        slideMovement(1000);
 
-//        drive.followTrajectory(traj1);
+        drive.followTrajectory(traj1);
 //        drive.turn(Math.toRadians(45));
 //        // lineair slides uit
 //        // intake arm ding uit

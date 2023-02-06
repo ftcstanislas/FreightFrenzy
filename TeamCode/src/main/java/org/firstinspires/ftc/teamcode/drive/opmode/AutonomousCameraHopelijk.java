@@ -33,15 +33,15 @@ public class AutonomousCameraHopelijk extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory standardTraj = drive.trajectoryBuilder(new Pose2d())
-                .forward(100)
+                .forward(30)
                 .build();
 
         Trajectory leftTraj = drive.trajectoryBuilder(new Pose2d())
-                .strafeLeft(100)
+                .strafeLeft(40)
                 .build();
 
         Trajectory rightTraj = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(100)
+                .strafeRight(40)
                 .build();
 
  /*     Voor cone plaatsen
