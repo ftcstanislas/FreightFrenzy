@@ -1,18 +1,27 @@
 package org.firstinspires.ftc.teamcode.robotParts;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Arm extends RobotPart {
 
+    DcMotorEx armLeft;
+    DcMotorEx armRight;
+
+    int upperLimit = 3685;
+
+    ArmHeight armHeight;
+
     private enum ArmHeight {
-        LOW(0),
-        MID(0),
-        HIGH(0),
-        CUSTOM(0);
+        INTAKE(0),
+        LOW(150),
+        MID(400),
+        HIGH(650);
+//        CUSTOM(0);
 
         private int position;
         public int getPosition() {
@@ -28,40 +37,36 @@ public class Arm extends RobotPart {
 
     private int armTarget = 0;
 
-    private enum ServoPosition {
-        FRONT(0),
-        MID(0),
-        BACK(0),
-        CUSTOM(0);
+    //    public void init(HardwareMap map, Telemetry.Item telemetry) {
+    public void init(HardwareMap map) {
+        armLeft = map.get(DcMotorEx.class, "arm1");
+        armRight = map.get(DcMotorEx.class, "arm2");
 
-        private double position;
-        public double getPosition() {
-            return this.position;
-        }
-        public void setPosition(double position) {
-            this.position = position;
-        }
-        ServoPosition(double position) {
-            this.position = position;
-        }
-    }
+        // reverse one motor
+        armLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-    private double servoTarget = 0;
-
-    public void init(HardwareMap map, Telemetry.Item telemetry) {
-        telemetry = telemetry;
+        // make sure arm stands still with power = 0
+        armLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // motors
-        motors.put("armLeft", map.get(DcMotorEx.class, "armLeft"));
-        motors.put("armRight", map.get(DcMotorEx.class, "armRight"));
+        motors.put("armLeft", armLeft);
+        motors.put("armRight", armRight);
         resetEncoders();
-
-        // servus
-        servos.put("rotate", map.get(Servo.class, "rotate"));
-
     }
 
-    public void update() {
+    public void update(double power, Telemetry telemetry) {
+        int position = armLeft.getCurrentPosition();
 
+        if (position <= 0 && power <= 0) {
+            setPower(0);
+        }
+        else if (position >= upperLimit && power >= 0) {
+            setPower(0.001);
+        } else {
+            armLeft.setPower(power + 0.01);
+            armRight.setPower((power) * 0.63 + 0.01);
+        }
+        telemetry.addData("arm", position);
     }
 }
