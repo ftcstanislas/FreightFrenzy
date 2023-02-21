@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-/*package org.firstinspires.ftc.teamcode.auton;
+package org.firstinspires.ftc.teamcode.auton;
 
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
@@ -192,7 +192,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
      * @param rvec the rotation vector of the detection
      * @param tvec the translation vector of the detection
      * @param cameraMatrix the camera matrix used when finding the detection
-
+     */
     void drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, Mat cameraMatrix)
     {
         // The points in 3D space we wish to project onto the 2D image plane.
@@ -267,7 +267,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
      * @param tagsizeX the original width of the tag
      * @param tagsizeY the original height of the tag
      * @return the 6DOF pose of the camera relative to the tag
-
+     */
     Pose poseFromTrapezoid(Point[] points, Mat cameraMatrix, double tagsizeX , double tagsizeY)
     {
         // The actual 2d points of the tag detected in the image
@@ -291,7 +291,7 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
     /*
      * A simple container to hold both rotation and translation
      * vectors, which together form a 6DOF pose.
-
+     */
     class Pose
     {
         Mat rvec;
@@ -309,4 +309,4 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
             this.tvec = tvec;
         }
     }
-}*/
+}
