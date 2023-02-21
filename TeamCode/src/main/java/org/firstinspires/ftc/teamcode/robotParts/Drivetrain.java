@@ -11,7 +11,7 @@ public class Drivetrain extends RobotPart{
     private DcMotorEx leftBack;
     private DcMotorEx rightBack;
 
-    private double maxSpeed = 0.4;
+    public static double maxSpeed = 0.6;
 
     public void init(HardwareMap map) {
         leftFront = map.get(DcMotorEx.class, "left_front");

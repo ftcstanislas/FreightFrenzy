@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robotParts.Drivetrain;
 import org.firstinspires.ftc.teamcode.robotParts.Intake;
 
 @TeleOp
-public class dracula extends LinearOpMode {
+public class DraculaJOY extends LinearOpMode {
     Drivetrain drivetrain = new Drivetrain();
     Arm arm = new Arm();
     Intake intake = new Intake();
@@ -38,8 +38,6 @@ public class dracula extends LinearOpMode {
             drivetrain.drive(y, x, rotate);
             arm.updateJoyMode(armPower, telemetry);
             intake.update(up, down);
-
-            telemetry.addData("arm power", armPower);
             telemetry.update();
         }
     }
