@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
+import static org.firstinspires.ftc.teamcode.robotParts.Arm.ArmHeight.HIGH;
+import static org.firstinspires.ftc.teamcode.robotParts.Arm.ArmHeight.INTAKE;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -20,6 +23,10 @@ import java.util.ArrayList;
 
 @Autonomous(group = "autonomous", name = "Autonomous Right Camera")
 public class AutonomousRightCamera extends LinearOpMode {
+
+    Arm arm = new Arm();
+    Intake intake = new Intake();
+
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -45,9 +52,6 @@ public class AutonomousRightCamera extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Arm arm = new Arm();
-        Intake intake = new Intake();
-
         arm.init(hardwareMap);
         intake.init(hardwareMap);
 
@@ -55,27 +59,27 @@ public class AutonomousRightCamera extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory Traj1 = drive.trajectoryBuilder(new Pose2d())
-                .strafeTo(new Vector2d(0, -65.5))
+                .strafeTo(new Vector2d(0, -60))
                 .build();
 
         Trajectory Traj2 = drive.trajectoryBuilder(Traj1.end())
-                .strafeTo(new Vector2d(15, -65.5))
+                .strafeTo(new Vector2d(20, -62))
                 .build();
 
         Trajectory Traj3 = drive.trajectoryBuilder(Traj2.end())
-                .strafeTo(new Vector2d(0, -65.5))
+                .strafeTo(new Vector2d(0, -62))
                 .build();
 
         Trajectory Traj4 = drive.trajectoryBuilder(Traj3.end())
-                .strafeTo(new Vector2d(0, -27))
+                .strafeTo(new Vector2d(0, -25))
                 .build();
 
         Trajectory TrajLeft = drive.trajectoryBuilder(Traj4.end())
-                .strafeTo(new Vector2d(38, -27))
+                .strafeTo(new Vector2d(36, -25))
                 .build();
 
         Trajectory TrajRight = drive.trajectoryBuilder(Traj4.end())
-                .strafeTo(new Vector2d(-43, -27))
+                .strafeTo(new Vector2d(-42, -25))
                 .build();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -160,17 +164,19 @@ public class AutonomousRightCamera extends LinearOpMode {
             sleep(20);
         }
 
+        // start of autonomous movement
+
         intake.update(true, false);
         sleep(200);
+        intake.update(false, false);
         drive.followTrajectory(Traj1);
-        arm.updateJoyMode(1, telemetry);
-        sleep(5000);
+        armGoTo(HIGH);
         drive.followTrajectory(Traj2);
         intake.update(false, true);
+        sleep(700);
+        intake.update(false, false);
         drive.followTrajectory(Traj3);
-        arm.updateJoyMode(-1, telemetry);
-        sleep(3000);
-        arm.updateJoyMode(0, telemetry);
+        armGoTo(INTAKE);
         drive.followTrajectory(Traj4);
 
         if (tagOfInterest == null) {
@@ -188,6 +194,9 @@ public class AutonomousRightCamera extends LinearOpMode {
             telemetry.update();
             // trajectory
         }
+
+
+        // end of autonomous movement
     }
 
     void tagToTelemetry(AprilTagDetection detection)
@@ -199,5 +208,17 @@ public class AutonomousRightCamera extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+    }
+
+    // add this at the end of every autonomous program
+    void armGoTo(Arm.ArmHeight height) {
+        double distance = 101;
+        while (distance > 100 & !isStopRequested()) {
+            distance = arm.update(true, 0, height, telemetry);
+            telemetry.addData("distance to goal", distance);
+            telemetry.update();
+            sleep(10);
+        }
+        arm.setPower(0.001);
     }
 }

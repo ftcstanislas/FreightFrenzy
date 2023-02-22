@@ -12,15 +12,23 @@ public class Arm extends RobotPart {
     DcMotorEx armLeft;
     DcMotorEx armRight;
 
-    int upperLimit = 3685;
+    int upperLimit = 3500;
+
+//    double rightMultiplier = 0.63;
+    double rightMultiplier = 0.63;
 
     ArmHeight armHeight;
 
     public enum ArmHeight {
         INTAKE(0),
-        LOW(100),
-        MID(200),
-        HIGH(300);
+        LOW(1300),
+        MID(2300),
+        HIGH(3350),
+        STACK1(0),
+        STACK2(0),
+        STACK3(0),
+        STACK4(0),
+        STACK5(0);
 
         private int position;
         public int getPosition() {
@@ -51,22 +59,34 @@ public class Arm extends RobotPart {
         resetEncoders();
     }
 
-    public void goToHeight(int position, Telemetry telemetry) {
-        double margin = 20;
+    public double goToHeight(int position, Telemetry telemetry) {
+        double margin = 100;
         double currentPos = armLeft.getCurrentPosition();
-        if (currentPos < position && Math.abs(currentPos - position) > margin) {
-            armLeft.setPower(1);
-            armRight.setPower(0.63);
+        double distance = Math.abs(currentPos - position);
+        if (currentPos < position) {
+            if (distance > margin) {
+                armLeft.setPower(1);
+                armRight.setPower(rightMultiplier);
+            } else {
+                armLeft.setPower(1 * (distance/margin) * 0.4);
+                armRight.setPower(rightMultiplier * (distance/margin) * 0.4);
+            }
             telemetry.addLine("up");
-        } else if (currentPos > position && Math.abs(currentPos - position) > margin) {
-            armLeft.setPower(-1);
-            armRight.setPower(-0.63);
+        } else if (currentPos > position) {
+            if (distance > margin) {
+                armLeft.setPower(-1);
+                armRight.setPower(-rightMultiplier);
+            } else {
+                armLeft.setPower(-1 * (distance/margin) * 0.4);
+                armRight.setPower(-rightMultiplier * (distance/margin) * 0.4);
+            }
             telemetry.addLine("down");
         } else if (position == 0 && currentPos <= 0) {
             setPower(0);
         } else {
             setPower(0.01);
         }
+        return distance;
     }
 
     public void updateJoyMode(double power, Telemetry telemetry) {
@@ -79,10 +99,30 @@ public class Arm extends RobotPart {
             setPower(0.001);
         } else {
             armLeft.setPower(power + 0.01);
-            armRight.setPower((power) * 0.63 + 0.01);
+            armRight.setPower((power) * rightMultiplier + 0.01);
         }
         telemetry.addData("arm", position);
         telemetry.addData("arm power", armLeft.getPower());
+        telemetry.addData("arm Right", armRight.getCurrentPosition());
+        telemetry.update();
+    }
+
+    public void upToLimit(double power, Telemetry telemetry) {
+        int position = armLeft.getCurrentPosition();
+
+        if (position <= 0 && power <= 0) {
+            setPower(0);
+        }
+        else if (position >= upperLimit && power >= 0) {
+            setPower(0.001);
+        } else {
+            armLeft.setPower(power + 0.01);
+            armRight.setPower((power) * rightMultiplier + 0.01);
+        }
+        telemetry.addData("arm", position);
+        telemetry.addData("arm power", armLeft.getPower());
+        telemetry.addData("arm Right", armRight.getCurrentPosition());
+        telemetry.update();
     }
 
     public void updateBtnMode(ArmHeight height, Telemetry telemetry) {
@@ -91,5 +131,32 @@ public class Arm extends RobotPart {
         telemetry.addData("arm goal", height.getPosition());
         telemetry.addLine(String.valueOf(height));
         telemetry.addData("arm power", armLeft.getPower());
+    }
+
+    public double update(boolean btns, double power,ArmHeight height, Telemetry telemetry) {
+        double distance = 0;
+        if (btns) {
+            distance = goToHeight(height.getPosition(), telemetry);
+            telemetry.addData("arm", armLeft.getCurrentPosition());
+            telemetry.addData("arm goal", height.getPosition());
+            telemetry.addLine(String.valueOf(height));
+            telemetry.addData("arm power", armLeft.getPower());
+        } else {
+            int position = armLeft.getCurrentPosition();
+
+            if (position <= 0 && power <= 0) {
+                setPower(0);
+            }
+            else if (position >= upperLimit && power >= 0) {
+                setPower(0.001);
+            } else {
+                armLeft.setPower(power + 0.01);
+                armRight.setPower((power) * rightMultiplier + 0.01);
+            }
+            telemetry.addData("arm", position);
+            telemetry.addData("arm power", armLeft.getPower());
+            telemetry.addData("distance to goal", distance);
+        }
+        return distance;
     }
 }

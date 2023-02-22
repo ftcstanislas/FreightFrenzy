@@ -20,6 +20,10 @@ import java.util.ArrayList;
 
 @Autonomous(group = "autonomous", name = "Autonomous Left Camera")
 public class AutonomousLeftCamera extends LinearOpMode {
+
+    Arm arm = new Arm();
+    Intake intake = new Intake();
+
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -44,9 +48,6 @@ public class AutonomousLeftCamera extends LinearOpMode {
     AprilTagDetection tagOfInterest = null;
     @Override
     public void runOpMode() throws InterruptedException {
-
-        Arm arm = new Arm();
-        Intake intake = new Intake();
 
         arm.init(hardwareMap);
         intake.init(hardwareMap);
@@ -184,5 +185,16 @@ public class AutonomousLeftCamera extends LinearOpMode {
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+    }
+
+    void armGoTo(Arm.ArmHeight height) {
+        double distance = 101;
+        while (distance > 100 & !isStopRequested()) {
+            distance = arm.update(true, 0, height, telemetry);
+            telemetry.addData("distance to goal", distance);
+            telemetry.update();
+            sleep(10);
+        }
+        arm.setPower(0.001);
     }
 }
