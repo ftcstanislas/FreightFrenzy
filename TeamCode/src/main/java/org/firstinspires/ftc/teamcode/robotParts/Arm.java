@@ -22,13 +22,13 @@ public class Arm extends RobotPart {
     public enum ArmHeight {
         INTAKE(0),
         LOW(1300),
-        MID(2300),
+        MID(2400),
         HIGH(3350),
         STACK1(0),
         STACK2(0),
         STACK3(0),
         STACK4(0),
-        STACK5(0);
+        STACK5(550);
 
         private int position;
         public int getPosition() {
