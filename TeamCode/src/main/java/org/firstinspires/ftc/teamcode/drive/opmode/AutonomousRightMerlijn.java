@@ -57,7 +57,7 @@ public class AutonomousRightMerlijn extends LinearOpMode {
 
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
+//trajectories
         Trajectory Traj1 = drive.trajectoryBuilder(new Pose2d())
                 .strafeTo(new Vector2d(-5, -40))
                 .build();
