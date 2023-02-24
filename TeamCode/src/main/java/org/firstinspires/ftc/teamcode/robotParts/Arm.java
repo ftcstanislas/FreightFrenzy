@@ -21,9 +21,9 @@ public class Arm extends RobotPart {
 
     public enum ArmHeight {
         INTAKE(0),
-        LOW(1300),
-        MID(2400),
-        HIGH(3350),
+        LOW(1400),
+        MID(2500),
+        HIGH(3450),
         STACK1(0),
         STACK2(0),
         STACK3(0),

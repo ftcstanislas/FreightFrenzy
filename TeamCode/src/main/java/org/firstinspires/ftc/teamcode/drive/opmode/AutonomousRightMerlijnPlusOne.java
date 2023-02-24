@@ -21,8 +21,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Autonomous(group = "autonomous", name = "Autonomous Left Merlijn battery full")
-public class AutonomousLeftMerlijnbatterijFull extends LinearOpMode {
+@Autonomous(group = "autonomous", name = "Autonomous Right Merlijn plus1")
+public class AutonomousRightMerlijnPlusOne extends LinearOpMode {
 
     Arm arm = new Arm();
     Intake intake = new Intake();
@@ -57,31 +57,34 @@ public class AutonomousLeftMerlijnbatterijFull extends LinearOpMode {
 
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
+//trajectories
         Trajectory Traj1 = drive.trajectoryBuilder(new Pose2d())
-                .strafeTo(new Vector2d(5, 40))
+                .strafeTo(new Vector2d(-5, -38))
                 .build();
         Trajectory Traj2 = drive.trajectoryBuilder(Traj1.end())
-                .strafeTo(new Vector2d(14,40))
+                .strafeTo(new Vector2d(14,-38))
                 .build();
         Trajectory Traj3 = drive.trajectoryBuilder(Traj2.end())
-                .strafeTo(new Vector2d(-7, 40))
+                .strafeTo(new Vector2d(-7, -38))
                 .build();
 
         Trajectory Traj4 = drive.trajectoryBuilder(Traj3.end())
-                .strafeTo(new Vector2d(0, 26))
+                .strafeTo(new Vector2d(0, -60))
+                .build();
+        Trajectory Traj5 = drive.trajectoryBuilder(Traj4.end())
+                .lineToLinearHeading(new Pose2d(0, -60, Math.toRadians(180)))
                 .build();
 
-        Trajectory TrajRight = drive.trajectoryBuilder(Traj4.end())
-                .strafeTo(new Vector2d(43, 26))
+        Trajectory TrajRight = drive.trajectoryBuilder(Traj5.end())
+                .strafeTo(new Vector2d(-43, -23))
                 .build();
 
-        Trajectory TrajLeft = drive.trajectoryBuilder(Traj4.end())
-                .strafeTo(new Vector2d(-38, 26))
+        Trajectory TrajLeft = drive.trajectoryBuilder(Traj5.end())
+                .strafeTo(new Vector2d(43, -23))
                 .build();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetectionPipeline);
@@ -146,7 +149,6 @@ public class AutonomousLeftMerlijnbatterijFull extends LinearOpMode {
             {
                 telemetry.addLine("Don't see tag of interest :(");
                 tagOfInterest = null;
-
                 if(tagOfInterest == null)
                 {
                     telemetry.addLine("PRIDE");
@@ -174,6 +176,7 @@ public class AutonomousLeftMerlijnbatterijFull extends LinearOpMode {
         drive.followTrajectory(Traj3);
         drive.followTrajectory(Traj4);
         armGoTo(INTAKE);
+        drive.followTrajectory(Traj5);
 
         if (tagOfInterest == null) {
             telemetry.addLine("RIGHT");

@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Autonomous(group = "autonomous", name = "Autonomous Right Merlijn battery full")
+@Autonomous(group = "autonomous", name = "Autonomous Right Merlijn")
 public class AutonomousRightMerlijn extends LinearOpMode {
 
     Arm arm = new Arm();
@@ -59,25 +59,25 @@ public class AutonomousRightMerlijn extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 //trajectories
         Trajectory Traj1 = drive.trajectoryBuilder(new Pose2d())
-                .strafeTo(new Vector2d(-5, -40))
+                .strafeTo(new Vector2d(-5, -38))
                 .build();
         Trajectory Traj2 = drive.trajectoryBuilder(Traj1.end())
-                .strafeTo(new Vector2d(-14,-40))
+                .strafeTo(new Vector2d(14,-38))
                 .build();
         Trajectory Traj3 = drive.trajectoryBuilder(Traj2.end())
-                .strafeTo(new Vector2d(7, -40))
+                .strafeTo(new Vector2d(-7, -38))
                 .build();
 
         Trajectory Traj4 = drive.trajectoryBuilder(Traj3.end())
-                .strafeTo(new Vector2d(0, -26))
+                .strafeTo(new Vector2d(0, -23))
                 .build();
 
         Trajectory TrajRight = drive.trajectoryBuilder(Traj4.end())
-                .strafeTo(new Vector2d(-43, -26))
+                .strafeTo(new Vector2d(-43, -23))
                 .build();
 
         Trajectory TrajLeft = drive.trajectoryBuilder(Traj4.end())
-                .strafeTo(new Vector2d(38, -26))
+                .strafeTo(new Vector2d(43, -23))
                 .build();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -145,7 +145,7 @@ public class AutonomousRightMerlijn extends LinearOpMode {
             else
             {
                 telemetry.addLine("Don't see tag of interest :(");
-
+                tagOfInterest = null;
                 if(tagOfInterest == null)
                 {
                     telemetry.addLine("PRIDE");
