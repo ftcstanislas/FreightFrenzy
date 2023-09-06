@@ -33,20 +33,21 @@ public class dracula extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y; // y direction is reversed
+            double y = gamepad1.left_stick_y; // y direction is reversed
             double x = gamepad1.left_stick_x;
             double rotate = gamepad1.right_stick_x;
             double speedAdder = gamepad1.right_trigger * 0.4;
 
-            boolean intakeBtn = gamepad2.x;
-            boolean low = gamepad2.a;
-            boolean mid = gamepad2.b;
+            boolean intakeBtn = gamepad1.x;
+            boolean low = gamepad1.a;
+            boolean mid = gamepad1.b;
             boolean high = gamepad2.y;
 
-            double armPower = -gamepad2.right_stick_y;
+            double armPower = gamepad1.right_trigger - gamepad1.left_trigger;
 
-            boolean up = gamepad2.dpad_up;
-            boolean down = gamepad2.dpad_down;
+
+            boolean up = gamepad1.right_bumper;
+            boolean down = gamepad1.left_bumper;
             Drivetrain.maxSpeed = 0.6 + speedAdder;
 
             if (intakeBtn) {
